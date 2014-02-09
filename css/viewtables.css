@@ -1,0 +1,44 @@
+div.task span{
+    font-weight: bold;
+    margin-left: 3px;
+}
+
+div.task table{
+    border-collapse:collapse;
+    border:1px solid green;
+    margin: 3px;
+}
+
+div.task table th{
+    background-color:green;
+    color:white;
+    border: 1px solid black;
+}
+
+div.task table td {
+    border: 1px solid black;
+}
+
+div.task table tr:nth-child(odd) {
+    background-color: cornsilk;
+}
+div.task table tr:nth-child(even) {
+    background-color: aquamarine;
+}
+
+#container{
+    width: 100%;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    box-sizing: border-box;
+}

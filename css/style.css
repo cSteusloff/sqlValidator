@@ -1,0 +1,27 @@
+/* Text-Area */
+.FormText {
+    width: 100%;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    box-sizing: border-box;
+    margin: 5px 0px;
+}
+
+.FormText h2 {
+    margin: 0px;
+    padding: 10px 0px;
+}
+
+.FormText p {
+    padding-left: 10px;
+}
