@@ -120,7 +120,6 @@ error_reporting(E_ALL);
 //        fwrite($fp,$s);
 //        fclose($fp);
         ?>
-
         <div class="alert alert-warning">
             <strong>Demo!</strong> Your Username is '<?php echo $_SESSION["username"]; ?>'<br>
         </div>
