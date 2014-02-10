@@ -5,6 +5,7 @@
  * Date: 05.02.14
  * Time: 21:00
  */
+session_start();
 
 require_once("lib/define.inc.php");
 require_once("lib/sqlConnection.class.php");
@@ -74,7 +75,7 @@ $db->execute();
         </div>
     <?php } elseif(isset($_GET["s"]) && $_GET["s"] == 0) { ?>
         <div class="alert alert-danger">
-            <strong>Error!</strong> Please change the information and submitting again.
+            <strong>Error!</strong> <?php echo isset($_SESSION["error"]) ? $_SESSION["error"] : "";?>
         </div>
     <?php } ?>
 

@@ -10,7 +10,7 @@ class oracleConnection extends sqlConnection {
     /**
      * @var oci-object - error massage
      */
-    private $errortext;
+    private $errortext = null;
 
     /**
      * @return string
@@ -253,6 +253,51 @@ class oracleConnection extends sqlConnection {
     }
 
     /**
+     * get names of header from table
+     *
+     * @param bool $toString
+     * @return array|string
+     */
+    public function getHeader($toString = false){
+        if(!empty($this->recordset)){
+            $arr = array();
+            for($i=1;$i <= $this->numColumns();$i++){
+                $arr[] = $this->getFieldname($i);
+            }
+        }
+        if($toString){
+            return serialize($arr);
+        } else {
+            return $arr;
+        }
+    }
+
+    /**
+     * get data from table
+     *
+     * @param bool $toString
+     * @return array|string
+     */
+    public function getContent($toString = false){
+        $arr = array();
+        $row = 0;
+        while($this->Fetch()){
+            $column = 0;
+            foreach($this->row as $item){
+                $arr[$row][$column++] = ($item !== null ? $item : "");
+            }
+            $row++;
+        }
+        if($toString){
+            return serialize($arr);
+        } else {
+            return $arr;
+        }
+    }
+
+
+
+    /**
      * Returns a complete table
      *
      * @param string $classname - css class from table
@@ -294,4 +339,7 @@ class oracleConnection extends sqlConnection {
             return "";
         }
     }
+
+
+
 }

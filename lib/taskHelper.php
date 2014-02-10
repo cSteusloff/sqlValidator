@@ -100,6 +100,40 @@ class taskHelper {
     private $table_ids;
     private $table_names;
 
+    private $tableHeader;
+
+    /**
+     * @param mixed $tableData
+     */
+    public function setTableContent($tableData)
+    {
+        $this->tableData = $tableData;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTableData()
+    {
+        return $this->tableData;
+    }
+
+    /**
+     * @param mixed $tableHeader
+     */
+    public function setTableHeader($tableHeader)
+    {
+        $this->tableHeader = $tableHeader;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTableHeader()
+    {
+        return $this->tableHeader;
+    }
+    private $tableData;
 
 //    /**
 //     * @var string sql Query
@@ -289,22 +323,26 @@ class taskHelper {
      * @param int array $permission - access rights of table
      * @param string $solution - SQL query
      */
-    public function createTask($topic,$text,$tables,$permission,$solution){
+    public function createTask($topic,$text,$tables,$permission,$solution,$tableHeader,$tableContent){
 
         // set object-attributes
         $this->setTopic($topic);
         $this->setText($text);
         $this->setPermission($permission);
         $this->setSolution($solution);
+        $this->setTableHeader($tableHeader);
+        $this->setTableContent($tableContent);
 
         // create Task in SYS_TASK
-        $this->dbConnection->setQuery("INSERT INTO SYS_TASK (Taskname,tasktext,permission,solution)
+        $this->dbConnection->setQuery("INSERT INTO SYS_TASK (Taskname,tasktext,permission,solution,tableheader,tablecontent)
                     VALUES ('".$this->getTopic()."',
                             '".$this->getText()."',
                             '".$this->getPermission()."',
-                            '".$this->getSolution()."')");
+                            '".$this->getSolution()."',
+                            '".$tableHeader."',
+                            '".$tableContent."')");
         $this->dbConnection->execute();
-        echo("<pre>");
+        $errors = $this->dbConnection->getErrorText();
 
         // get task-id from last new task (this current create task)
         $this->dbConnection->setQuery("SELECT MAX(ID) FROM SYS_TASK WHERE taskname = '".$this->getTopic()."'");
@@ -322,9 +360,7 @@ class taskHelper {
         // set object-attribute table-name and table-id
         $this->setDatabaseTables();
 
-
-        $errors = $this->dbConnection->getErrorText();
-        return empty($errors);
+        return $errors;
     }
 
     public function __construct($sqlConnection) {
@@ -395,7 +431,9 @@ class taskHelper {
         $this->dbConnection->setQuery("SELECT taskname,
                            tasktext,
                            permission,
-                           solution
+                           solution,
+                           tableheader,
+                           tablecontent
                     FROM SYS_TASK WHERE ID = {$task_id}");
         $this->dbConnection->execute();
         $this->dbConnection->Fetch();
@@ -403,6 +441,8 @@ class taskHelper {
         $this->setText($this->dbConnection->row['TASKTEXT']);
         $this->setPermission($this->dbConnection->row['PERMISSION']);
         $this->setSolution($this->dbConnection->row['SOLUTION']);
+        $this->setTableHeader($this->dbConnection->row['TABLEHEADER']);
+        $this->setTableContent($this->dbConnection->row['TABLECONTENT']);
         $this->setTaskId($task_id);
         $this->setUserId($user_id);
         $this->setDatabaseTables();
