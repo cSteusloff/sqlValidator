@@ -343,6 +343,8 @@ class taskHelper {
                             '".$tableContent."')");
         $this->dbConnection->execute();
         $errors = $this->dbConnection->getErrorText();
+//        var_dump($this->dbConnection->sqlquery);
+//        die($errors);
 
         // get task-id from last new task (this current create task)
         $this->dbConnection->setQuery("SELECT MAX(ID) FROM SYS_TASK WHERE taskname = '".$this->getTopic()."'");

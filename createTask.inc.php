@@ -33,8 +33,12 @@ $master->rollbackSavePoint();
 $_SESSION['title'] = $_POST['title'];
 $_SESSION['text'] = $_POST['text'];
 $_SESSION['table'] = $_POST['table'];
-// TODO radio: $_SESSION['right']
-$_SESSION['sql'] = $_POST['sql'];
+// TODO radio: $_SESSION['right'
+$_SESSION['sql'] = SqlFormatter::format($_POST["sql"],false);
+
+//echo("<pre>");
+//var_dump($_SESSION);
+//die();
 
 if($master->getErrortext()){
     $_SESSION["error"] = $master->getErrortext();
@@ -51,7 +55,7 @@ if($master->getErrortext()){
     if(is_null($error)){
         header("LOCATION: createTask.php?s=1");
     } else {
-        $_SESSION["error"] = "Aufgabe existiert bereits! ".$error;
+        $_SESSION["error"] = "Aufgabe existiert bereits oder Felder nicht korrekt ausgefüllt! ".$error;
         header("LOCATION: createTask.php?s=0");
     }
 }

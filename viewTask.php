@@ -169,7 +169,8 @@ error_reporting(E_ALL);
 
                         <div class="col-sm-8">
                             <textarea id="sql" class="form-control"
-                                      name="sql"><?php echo (isset($last_sql)) ? $last_sql : ""; ?></textarea>
+                                      name="sql"><?php echo $task->getLastUserQuery();?></textarea>
+<!--                                --><?php //echo (isset($last_sql)) ? $last_sql : ""; ?>
                         </div>
                         <div class="col-sm-3">
                             <h4>Infos</h4>
@@ -178,6 +179,7 @@ error_reporting(E_ALL);
                             <ol>
                                 <li>Use ' instead of "</li>
                                 <li>Don't use semicolon (;) at the end</li>
+                                <li>Avoid unnecessary parentheses</li>
                             </ol>
                             </p>
                         </div>
@@ -207,9 +209,15 @@ error_reporting(E_ALL);
             <div class="alert alert-success">
                 <strong>Well done!</strong> Correct sql query.
             </div>
-
-
-        <?php } ?>
+        <?php }
+        // unset Alert
+        $_SESSION["error"] = null;
+        unset($_SESSION["error"]);
+        $_SESSION["valid"] = null;
+        unset($_SESSION["valid"]);
+        $_SESSION["correct"] = null;
+        unset($_SESSION["correct"]);
+        ?>
 
         <div class="FormText">
             <h2>your result</h2>

@@ -62,7 +62,8 @@ $querySlave = $qT->translate($queryTry,"user".$_SESSION["id"]."_");
 // rewrite the correct query with real names of table
 $slave->setQuery($querySlave);
 
-$_SESSION["answer_".$task_id] = $slave->sqlquery;
+// TODO: letzt Anfrage in DB speichern und darüber in viewTask aufrufen??
+//$_SESSION["answer_".$task_id] = $slave->sqlquery;
 
 // Master-Solution ohne MASTER_
 $querySolution = $task->getSolution();

@@ -11,8 +11,7 @@ require_once("lib/define.inc.php");
 require_once("lib/sqlConnection.class.php");
 require_once("lib/oracleConnection.class.php");
 $db = new oracleConnection();
-$prefix = "MASTER_";
-$db->setQuery("SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) LIKE '{$prefix}%'");
+$db->setQuery("SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) LIKE '".ADMIN_TAB_PREFIX."%'");
 $db->execute();
 
 ?>
@@ -77,7 +76,11 @@ $db->execute();
         <div class="alert alert-danger">
             <strong>Error!</strong> <?php echo isset($_SESSION["error"]) ? $_SESSION["error"] : "";?>
         </div>
-    <?php } ?>
+    <?php }
+    // unset Alert
+    $_SESSION["error"] = null;
+    unset($_SESSION["error"]);
+    ?>
 
     <form class="form-horizontal" role="form" action="createTask.inc.php" method="post">
         <fieldset>
@@ -89,7 +92,9 @@ $db->execute();
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="title">task title</label>
                 <div class="col-sm-10">
-                    <input id="title" name="title" type="text" placeholder="task title" class="input-xlarge form-control" required="">
+                    <input id="title" name="title" type="text" placeholder="task title"
+                           class="input-xlarge form-control" required=""
+                           value="<?php echo isset($_SESSION["title"]) ? $_SESSION["title"] : "";?>">
                 </div>
             </div>
 
@@ -97,7 +102,7 @@ $db->execute();
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="text">task text</label>
                 <div class="col-sm-10">
-                    <textarea id="text" class="form-control" rows="4" name="text"></textarea>
+                    <textarea id="text" class="form-control" rows="4" name="text"><?php echo isset($_SESSION["text"]) ? $_SESSION["text"] : "";?></textarea>
                 </div>
             </div>
 
@@ -108,7 +113,15 @@ $db->execute();
                     <select id="table" name="table[]" class="form-control" multiple="multiple" size="10">
                         <?php
                         while($db->Fetch(false)){
-                            echo("<option value='{$db->row[0]}'>".substr(strtoupper($db->row[0]),strlen($prefix))."</option>");
+                            $tablename = substr(strtoupper($db->row[0]),strlen(ADMIN_TAB_PREFIX));
+                            var_dump($db->row[0]);
+                            var_dump($_SESSION["table"]);
+
+                            if(in_array($db->row[0],$_SESSION["table"])){
+                                echo("<option value='{$db->row[0]}' selected=selected>".$tablename."</option>");
+                            } else {
+                                echo("<option value='{$db->row[0]}'>".$tablename."</option>");
+                            }
                         }
                         ?>
                     </select>
@@ -142,7 +155,8 @@ $db->execute();
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="sql">SQL query</label>
                 <div class="col-sm-10">
-                    <textarea id="sql" class="form-control" name="sql"></textarea>
+                    <textarea id="sql" class="form-control"
+                              name="sql"><?php echo isset($_SESSION["sql"]) ? $_SESSION["sql"] : "";?></textarea>
                 </div>
             </div>
 
