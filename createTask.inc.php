@@ -28,7 +28,7 @@ $empty = 0;
 !empty($_POST['text']) ? $_SESSION['text'] = $_POST['text'] : $empty++;
 !empty($_POST['table']) ? $_SESSION['table'] = $_POST['table'] : $empty++;
 !empty($_POST['right']) ? $_SESSION['right'] = $_POST['right'] : $empty++;
-if(empty($_POST["sql"]) && (isset($_POST["right"][0]) || isset($_POST["right"][1]))) $empty++;
+if(empty($_POST["sql"]) && (in_array("1",$_POST["right"]) || in_array("2",$_POST["right"]))) $empty++;
 $_SESSION['sql'] = SqlFormatter::format($_POST["sql"],false);
 
 if($empty > 0){

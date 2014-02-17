@@ -132,7 +132,7 @@ $db->execute();
             <!-- Multiple Checkboxes -->
             <!-- it's possible to change radio-Button to checkbox, the taskHelper can handle it.
                  At Moment one task for one operation, so use radio.
-                 Change this: <input type="radio" name="right[#]" id="right-#" value="#">
+                 Change this: <input type="radio" name="right[0]" id="right-#" value="#">
                  to this: <input type="checkbox" name="right[#]" id="right-#" value="#">
                  -->
             <div class="form-group">
@@ -147,21 +147,21 @@ $db->execute();
                         </label></div>
                     <div class="checkbox checkbox-inline"><label class="" for="right-1">
                             <input type="radio"
-                                   name="right[1]"
+                                   name="right[0]"
                                    <?php echo isset($_SESSION["right"][1]) ? 'checked="checked"' : '';?>
                                    id="right-1" value="2">
                             Insert/Update/Delete
                         </label></div>
                     <div class="checkbox checkbox-inline"><label class="" for="right-2">
                             <input type="radio"
-                                   name="right[2]"
+                                   name="right[0]"
                                    <?php echo isset($_SESSION["right"][2]) ? 'checked="checked"' : '';?>
                                    id="right-2" value="4">
                             Create/Alter
                         </label></div>
                     <div class="checkbox checkbox-inline"><label class="" for="right-3">
                             <input type="radio"
-                                   name="right[3]"
+                                   name="right[0]"
                                    <?php echo isset($_SESSION["right"][3]) ? 'checked="checked"' : '';?>
                                    id="right-3" value="8">
                             Drop
