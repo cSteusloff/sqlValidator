@@ -52,33 +52,24 @@ if(!$allow){
     $_SESSION["error"] = $slave->getStatementType($_POST["sql"])." not allowed by this task";
     session_write_close();
     header("LOCATION: viewTask.php?id=".$_POST["taskid"]);
+    // TODO: notwendig oder else?
+    die();
 }
 
-// input from user
+// USER-solution without prefix
 $queryTry = $_POST["sql"];
-//var_dump($_POST["sql"]);
+// to correct table
 $querySlave = $qT->translate($queryTry,"user".$_SESSION["id"]."_");
-//var_dump(SqlFormatter::format($querySlave));
-// rewrite the correct query with real names of table
+// slave connection with user-query
 $slave->setQuery($querySlave);
 
-// TODO: letzt Anfrage in DB speichern und darüber in viewTask aufrufen??
-//$_SESSION["answer_".$task_id] = $slave->sqlquery;
 
-// Master-Solution ohne MASTER_
+// Master-Solution without prefix
 $querySolution = $task->getSolution();
-// to correct Table
-$queryMaster = $qT->translate($querySolution,"MASTER_");
-// master connection with solution
+// to correct table
+$queryMaster = $qT->translate($querySolution,ADMIN_TAB_PREFIX);
+// master connection with solution-query
 $master->setQuery($queryMaster);
-$master->executeNoCommit();
-
-
-// User-Solution ohne USERNAME_
-$slave->execute();
-$_SESSION["error"] = $slave->getErrortext();
-
-
 
 $validator = new sqlValidator($master,$slave);
 if($validator->validate()){
@@ -86,6 +77,10 @@ if($validator->validate()){
     $task->saveCorrectUserQuery(SqlFormatter::format($_POST["sql"],false));
 }
 $_SESSION["valid"] = $validator->getMistake();
+
+
+$slave->execute();
+$_SESSION["error"] = $slave->getErrortext();
 
 session_write_close();
 header("LOCATION: viewTask.php?id=".$_POST["taskid"]."#end");

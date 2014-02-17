@@ -90,6 +90,7 @@ error_reporting(E_ALL);
         $task->loadTask($_GET["id"],$_SESSION["id"]);
 
         // create table for task depending on user
+        // TODO Darf natürlich nicht ausgeführt werden, wenn das Formular hier gesendet wurde!!!!
         $task->resetTask();
 
         $last_sql = $task->getLastUserQuery();
@@ -140,19 +141,22 @@ error_reporting(E_ALL);
 
         <div class="FormText">
             <h2>solution output</h2>
-            <!--        <div class="col-sm-6">-->
-            <!--            TODO Tabellenausgabe-->
-            <!--        </div>-->
-            <!--        <div class="col-sm-6">-->
-            <!--            Muster-Query-->
-            <!--        </div>-->
-
             <?php
-                        $querySolution = $task->getSolution();
-                        $queryMaster = $qT->translate($querySolution,"MASTER_");
-                        $db->setQuery($queryMaster);
-                        $db->execute();
-                        echo $db->printTable("task");
+                $db->setSavePoint();
+
+                $querySolution = $task->getSolution();
+                $queryMaster = $qT->translate($querySolution,"MASTER_");
+                $db->setQuery($queryMaster);
+
+                if($db->getStatementType() == "SELECT"){
+                    $db->execute();
+                    echo $db->printTable("task");
+                } else {
+                    $db->executeNoCommit();
+                    echo($task->printTable("task",false));
+                }
+
+                $db->rollbackSavePoint();
             ?>
 
         </div>

@@ -10,6 +10,8 @@ session_start();
 require_once("lib/define.inc.php");
 require_once("lib/sqlConnection.class.php");
 require_once("lib/oracleConnection.class.php");
+require_once("lib/frontendHelper.class.php");
+$fH = new frontendHelper();
 $db = new oracleConnection();
 $db->setQuery("SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) LIKE '".ADMIN_TAB_PREFIX."%'");
 $db->execute();
@@ -78,8 +80,7 @@ $db->execute();
         </div>
     <?php }
     // unset Alert
-    $_SESSION["error"] = null;
-    unset($_SESSION["error"]);
+    $fH->unsetSession($_SESSION,"error");
     ?>
 
     <form class="form-horizontal" role="form" action="createTask.inc.php" method="post">
@@ -102,7 +103,7 @@ $db->execute();
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="text">task text</label>
                 <div class="col-sm-10">
-                    <textarea id="text" class="form-control" rows="4" name="text"><?php echo isset($_SESSION["text"]) ? $_SESSION["text"] : "";?></textarea>
+                    <textarea id="text" class="form-control" rows="4" required="" name="text"><?php echo isset($_SESSION["text"]) ? $_SESSION["text"] : "";?></textarea>
                 </div>
             </div>
 
@@ -110,7 +111,7 @@ $db->execute();
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="table2">table in use</label>
                 <div class="col-sm-10">
-                    <select id="table" name="table[]" class="form-control" multiple="multiple" size="10">
+                    <select id="table" name="table[]" required="" class="form-control" multiple="multiple" size="10">
                         <?php
                         while($db->Fetch(false)){
                             $tablename = substr(strtoupper($db->row[0]),strlen(ADMIN_TAB_PREFIX));
@@ -129,23 +130,40 @@ $db->execute();
             </div>
 
             <!-- Multiple Checkboxes -->
+            <!-- it's possible to change radio-Button to checkbox, the taskHelper can handle it.
+                 At Moment one task for one operation, so use radio.
+                 Change this: <input type="radio" name="right[#]" id="right-#" value="#">
+                 to this: <input type="checkbox" name="right[#]" id="right-#" value="#">
+                 -->
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="right">right</label>
                 <div class="col-sm-10">
                     <div class="checkbox checkbox-inline"><label class="" for="right-0">
-                            <input type="checkbox" name="right[]" id="right-0" value="1">
+                            <input type="radio"
+                                   name="right[0]"
+                                   <?php echo isset($_SESSION["right"][0]) ? 'checked="checked"' : '';?>
+                                   id="right-0" value="1">
                             Select
                         </label></div>
                     <div class="checkbox checkbox-inline"><label class="" for="right-1">
-                            <input type="checkbox" name="right[]" id="right-1" value="2">
+                            <input type="radio"
+                                   name="right[1]"
+                                   <?php echo isset($_SESSION["right"][1]) ? 'checked="checked"' : '';?>
+                                   id="right-1" value="2">
                             Insert/Update/Delete
                         </label></div>
                     <div class="checkbox checkbox-inline"><label class="" for="right-2">
-                            <input type="checkbox" name="right[]" id="right-2" value="4">
+                            <input type="radio"
+                                   name="right[2]"
+                                   <?php echo isset($_SESSION["right"][2]) ? 'checked="checked"' : '';?>
+                                   id="right-2" value="4">
                             Create/Alter
                         </label></div>
                     <div class="checkbox checkbox-inline"><label class="" for="right-3">
-                            <input type="checkbox" name="right[]" id="right-3" value="8">
+                            <input type="radio"
+                                   name="right[3]"
+                                   <?php echo isset($_SESSION["right"][3]) ? 'checked="checked"' : '';?>
+                                   id="right-3" value="8">
                             Drop
                         </label></div>
                 </div>
@@ -168,6 +186,11 @@ $db->execute();
                 </div>
             </div>
         </fieldset>
+        <?php
+        // unset variables from Session
+        $fH->unsetSession($_SESSION,array("title","text","table","right","sql"));
+        session_destroy();
+        ?>
     </form>
 
 </div> <!-- /container -->

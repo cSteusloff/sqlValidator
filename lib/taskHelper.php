@@ -575,7 +575,7 @@ class taskHelper {
         $this->dbConnection->execute();
     }
 
-    public function printTable($classname = null){
+    public function printTable($classname = null,$commit = true){
         if(is_null($classname)){
             $classname = "defaultTableClassName";
         }
@@ -583,7 +583,11 @@ class taskHelper {
         $tablestr = "";
         foreach($this->getTableNames() as $table){
             $this->dbConnection->setQuery("SELECT * FROM {$table}");
-            $this->dbConnection->execute();
+            if($commit){
+                $this->dbConnection->execute();
+            } else {
+                $this->dbConnection->executeNoCommit();
+            }
             $tablestr .= $this->dbConnection->printTable($classname,substr(strtoupper($table),strlen(ADMIN_TAB_PREFIX)));
         }
         return $tablestr;

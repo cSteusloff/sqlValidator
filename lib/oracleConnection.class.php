@@ -91,7 +91,9 @@ class oracleConnection extends sqlConnection {
     }
 
     public function setSavePoint($name = null){
-        $this->savepoint = is_null($name) ? 'point' : $name;
+        // TODO: Statt String wird hier time() getestet
+        $point = "p".time();
+        $this->savepoint = is_null($name) ? $point : $name;
         $query = 'SAVEPOINT '.$this->savepoint;
         $stid = oci_parse($this->conn, $query);
         oci_execute($stid, OCI_NO_AUTO_COMMIT);
@@ -165,7 +167,7 @@ class oracleConnection extends sqlConnection {
      *
      * @return int
      */
-    public function numRows()
+    public function numRows($commit = true)
     {
         $numRows = 0;
         if(!empty($this->recordset)){
@@ -173,11 +175,11 @@ class oracleConnection extends sqlConnection {
             if(strcasecmp($this->getStatementType(),"SELECT") == 0){
                 $tmp = $this->sqlquery;
                 $this->setQuery('SELECT COUNT(*) AS NUM FROM ('.$this->sqlquery.')');
-                $this->execute();
+                ($commit) ? $this->execute() : $this->executeNoCommit();
                 $this->Fetch();
                 $numRows = $this->row["NUM"];
                 $this->setQuery($tmp);
-                $this->execute();
+                ($commit) ? $this->execute() : $this->executeNoCommit();
             } else {
                 return $this->affectedRows();
             }

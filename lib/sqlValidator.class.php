@@ -63,24 +63,54 @@ class sqlValidator {
     }
 
     public function validate(){
+
+        // nur fuer insert/update/delete wichtig
+        // Alter/Drop auch
+
+        // Master darf sich nicht ändern und User bei validate auch nicht!
+        // Das User sich ändert muss expliziet aufgerufen werden.
+
+        // Mit Tricks ist es möglich, INSERT/UPDATE/DELETE/DROP auf mehrere Tabellen anzuwenden,
+        // daher erlaubt die Aufgabenertellung auch mehrere Tabellen.
+        // Das heißt die Ausgabe danach sollte einfach mit allen "notwendigen" Tabellen durchgeführt werden
+        // Ergebnis vergleich --> SELECT * --> FERTIG
+        $this->masterConnection->setSavePoint();
+        $this->slaveConnection->setSavePoint();
+        $this->checkConnection->setSavePoint();
+
+        // TODO: notwendig?
+        $this->masterConnection->executeNoCommit();
+        $this->slaveConnection->executeNoCommit();
+
+        // validate at moment only select
+        $var = $this->_validate();
+
+        $this->masterConnection->rollbackSavePoint();
+        $this->slaveConnection->rollbackSavePoint();
+        $this->checkConnection->rollbackSavePoint();
+
+        return $var;
+    }
+
+    private function _validate(){
         // check same number of columns
         if($this->masterConnection->numColumns() == $this->slaveConnection->numColumns()){
             // check same number of rows
-            if($this->masterConnection->numRows() == $this->slaveConnection->numRows()){
+            if($this->masterConnection->numRows(false) == $this->slaveConnection->numRows(false)){
                 // master without ORDER BY
                 if(strpos($this->masterConnection->sqlquery,"ORDER BY") === false){
                     // TODO: remove ORDER BY from user_con->sqlquery
                     // if is query output the same - MINUS return empty content
                     $this->checkConnection->setQuery($this->masterConnection->sqlquery." MINUS ".$this->slaveConnection->sqlquery);
-                    $this->checkConnection->execute();
+                    $this->checkConnection->executeNoCommit();
                     // must be zero
-                    $emptyContentOneDirection = $this->checkConnection->numRows();
+                    $emptyContentOneDirection = $this->checkConnection->numRows(false);
                     // String as HTML-Table with names of header
                     $headerOneDirection = $this->checkConnection->printTable();
                     $this->checkConnection->setQuery($this->slaveConnection->sqlquery." MINUS ".$this->masterConnection->sqlquery);
-                    $this->checkConnection->execute();
+                    $this->checkConnection->executeNoCommit();
                     // must be zero
-                    $emptyContentOtherDirection = $this->checkConnection->numRows();
+                    $emptyContentOtherDirection = $this->checkConnection->numRows(false);
                     // String as HTML-Table with names of header
                     $headerOtherDirection = $this->checkConnection->printTable();
                     if($emptyContentOneDirection == 0 && $emptyContentOtherDirection == 0){
