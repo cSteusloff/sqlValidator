@@ -35,7 +35,7 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   SVN: $Id: SelectStatementBuilder.php 1005 2014-01-13 11:12:29Z phosco@gmx.de $
+ * @version   SVN: $Id$
  * 
  */
 
@@ -93,7 +93,10 @@ class SelectStatementBuilder implements Builder {
     }
 
     public function build(array $parsed) {
-        $sql = $this->buildSELECT($parsed['SELECT']);
+        $sql = "";
+        if (isset($parsed['SELECT'])) {
+            $sql .= $this->buildSELECT($parsed['SELECT']);
+        }
         if (isset($parsed['FROM'])) {
             $sql .= " " . $this->buildFROM($parsed['FROM']);
         }

@@ -1,9 +1,9 @@
 <?php
 /**
- * SelectExpressionBuilder.php
+ * BracketProcessor.php
  *
- * Builds simple expressions within a SELECT statement.
- *
+ * This file implements the processor for the parentheses around the statements.
+ * 
  * PHP version 5
  *
  * LICENSE:
@@ -31,46 +31,50 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
-require_once dirname(__FILE__) . '/SubTreeBuilder.php';
-require_once dirname(__FILE__) . '/AliasBuilder.php';
-require_once dirname(__FILE__) . '/Builder.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once dirname(__FILE__) . '/DefaultProcessor.php';
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
 
 /**
- * This class implements the builder for simple expressions within a SELECT statement. 
- * You can overwrite all functions to achieve another handling.
- *
+ * This class processes the parentheses around the statement.
+ * 
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ * 
  */
-class SelectExpressionBuilder implements Builder {
+class BracketProcessor extends AbstractProcessor {
 
-    protected function buildSubTree($parsed, $delim) {
-        $builder = new SubTreeBuilder();
-        return $builder->build($parsed, $delim);
+    protected function processTopLevel($sql) {
+        $processor = new DefaultProcessor();
+        return $processor->process($sql);
     }
+    
+    public function process($tokens) {
 
-    protected function buildAlias($parsed) {
-        $builder = new AliasBuilder();
-        return $builder->build($parsed);
-    }
+        $token = $this->removeParenthesisFromStart($tokens[0]);
+        $subtree = $this->processTopLevel($token);
 
-    public function build(array $parsed) {
-        if ($parsed['expr_type'] !== ExpressionType::EXPRESSION) {
-            return "";
+        if (isset($subtree['BRACKET'])) {
+            $subtree = $subtree['BRACKET'];
         }
-        $sql = $this->buildSubTree($parsed, " ");
-        $sql .= $this->buildAlias($parsed);
-        return $sql;
+
+        if (isset($subtree['SELECT'])) {
+            $subtree = array(array('expr_type' => ExpressionType::QUERY, 'base_expr' => $token, 'sub_tree' => $subtree));
+        }
+
+        return array(
+                array('expr_type' => ExpressionType::BRACKET_EXPRESSION, 'base_expr' => trim($tokens[0]),
+                        'sub_tree' => $subtree));
     }
+
 }
+
 ?>

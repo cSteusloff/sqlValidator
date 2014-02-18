@@ -36,7 +36,7 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   SVN: $Id: ExpressionType.php 1039 2014-01-23 22:08:48Z phosco@gmx.de $
+ * @version   SVN: $Id$
  * 
  */
 
@@ -140,5 +140,7 @@ class ExpressionType {
     const SUBPARTITION_MAX_ROWS = 'sub-partition-max-rows';
     const SUBPARTITION_MIN_ROWS = 'sub-partition-min-rows';
     const SUBPARTITION_KEY_ALGORITHM = 'sub-partition-key-algorithm';
+    
+    const QUERY = 'query';
 }
 ?>

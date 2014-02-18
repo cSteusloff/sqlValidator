@@ -1,8 +1,8 @@
 <?php
 /**
- * SelectExpressionBuilder.php
+ * QueryBuilder.php
  *
- * Builds simple expressions within a SELECT statement.
+ * Builds the SELECT statements within parentheses.
  *
  * PHP version 5
  *
@@ -39,24 +39,37 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/SubTreeBuilder.php';
+require_once dirname(__FILE__) . '/RefClauseBuilder.php';
+require_once dirname(__FILE__) . '/RefTypeBuilder.php';
+require_once dirname(__FILE__) . '/JoinBuilder.php';
 require_once dirname(__FILE__) . '/AliasBuilder.php';
 require_once dirname(__FILE__) . '/Builder.php';
+require_once dirname(__FILE__) . '/SelectStatementBuilder.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
- * This class implements the builder for simple expressions within a SELECT statement. 
+ * This class implements the builder for queries within parentheses (no subqueries). 
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class SelectExpressionBuilder implements Builder {
+class QueryBuilder implements Builder {
 
-    protected function buildSubTree($parsed, $delim) {
-        $builder = new SubTreeBuilder();
-        return $builder->build($parsed, $delim);
+    protected function buildRefClause($parsed) {
+        $builder = new RefClauseBuilder();
+        return $builder->build($parsed);
+    }
+
+    protected function buildRefType($parsed) {
+        $builder = new RefTypeBuilder();
+        return $builder->build($parsed);
+    }
+
+    protected function buildJoin($parsed) {
+        $builder = new JoinBuilder();
+        return $builder->build($parsed);
     }
 
     protected function buildAlias($parsed) {
@@ -64,12 +77,25 @@ class SelectExpressionBuilder implements Builder {
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
-        if ($parsed['expr_type'] !== ExpressionType::EXPRESSION) {
-            return "";
+    protected function buildSelectStatement($parsed) {
+        $builder = new SelectStatementBuilder();
+        return $builder->build($parsed);
+    }
+
+    public function build(array $parsed, $index = 0) {
+        if ($parsed['expr_type'] !== ExpressionType::QUERY) {
+            return '';
         }
-        $sql = $this->buildSubTree($parsed, " ");
+
+        // TODO: should we add a numeric level (0) between sub_tree and SELECT?
+        $sql = $this->buildSelectStatement($parsed['sub_tree']);
         $sql .= $this->buildAlias($parsed);
+
+        if ($index !== 0) {
+            $sql = $this->buildJoin($parsed['join_type']) . $sql;
+            $sql .= $this->buildRefType($parsed['ref_type']);
+            $sql .= $parsed['ref_clause'] === false ? '' : $this->buildRefClause($parsed['ref_clause']);
+        }
         return $sql;
     }
 }

@@ -1,8 +1,8 @@
 <?php
 /**
- * SelectExpressionBuilder.php
+ * GroupByAliasBuilder.php
  *
- * Builds simple expressions within a SELECT statement.
+ * Builds an alias within a GROUP-BY clause.
  *
  * PHP version 5
  *
@@ -39,38 +39,24 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/SubTreeBuilder.php';
-require_once dirname(__FILE__) . '/AliasBuilder.php';
-require_once dirname(__FILE__) . '/Builder.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once dirname(__FILE__) . '/Builder.php';
 
 /**
- * This class implements the builder for simple expressions within a SELECT statement. 
+ * This class implements the builder for an alias within the GROUP-BY clause. 
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class SelectExpressionBuilder implements Builder {
-
-    protected function buildSubTree($parsed, $delim) {
-        $builder = new SubTreeBuilder();
-        return $builder->build($parsed, $delim);
-    }
-
-    protected function buildAlias($parsed) {
-        $builder = new AliasBuilder();
-        return $builder->build($parsed);
-    }
+class GroupByAliasBuilder implements Builder {
 
     public function build(array $parsed) {
-        if ($parsed['expr_type'] !== ExpressionType::EXPRESSION) {
+        if ($parsed['expr_type'] !== ExpressionType::ALIAS) {
             return "";
         }
-        $sql = $this->buildSubTree($parsed, " ");
-        $sql .= $this->buildAlias($parsed);
-        return $sql;
+        return $parsed['base_expr'];
     }
 }
 ?>

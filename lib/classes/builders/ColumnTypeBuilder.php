@@ -35,7 +35,7 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   SVN: $Id: ColumnTypeBuilder.php 1005 2014-01-13 11:12:29Z phosco@gmx.de $
+ * @version   SVN: $Id$
  * 
  */
 
@@ -43,6 +43,7 @@ require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php'
 require_once dirname(__FILE__) . '/ReservedBuilder.php';
 require_once dirname(__FILE__) . '/ColumnTypeBracketExpressionBuilder.php';
 require_once dirname(__FILE__) . '/DataTypeBuilder.php';
+require_once dirname(__FILE__) . '/DefaultValueBuilder.php';
 require_once dirname(__FILE__) . '/Builder.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 /**
@@ -70,6 +71,11 @@ class ColumnTypeBuilder implements Builder {
         return $builder->build($parsed);
     }
     
+    protected function buildDefaultValue($parsed) {
+        $builder = new DefaultValueBuilder();
+        return $builder->build($parsed);
+    }
+    
     public function build(array $parsed) {
         if ($parsed['expr_type'] !== ExpressionType::COLUMN_TYPE) {
             return "";
@@ -80,6 +86,7 @@ class ColumnTypeBuilder implements Builder {
             $sql .= $this->buildDataType($v);
             $sql .= $this->buildColumnTypeBracketExpression($v);
             $sql .= $this->buildReserved($v);
+            $sql .= $this->buildDefaultValue($v);
             
             if ($len == strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE column-type subtree', $k, $v, 'expr_type');

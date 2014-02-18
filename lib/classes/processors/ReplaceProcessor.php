@@ -35,7 +35,7 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   SVN: $Id: ReplaceProcessor.php 1004 2014-01-13 10:09:44Z phosco@gmx.de $
+ * @version   SVN: $Id$
  *
  */
 

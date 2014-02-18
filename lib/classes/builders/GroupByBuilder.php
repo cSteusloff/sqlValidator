@@ -35,7 +35,7 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   SVN: $Id: GroupByBuilder.php 1005 2014-01-13 11:12:29Z phosco@gmx.de $
+ * @version   SVN: $Id$
  * 
  */
 
@@ -43,6 +43,7 @@ require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php'
 require_once dirname(__FILE__) . '/PositionBuilder.php';
 require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
 require_once dirname(__FILE__) . '/FunctionBuilder.php';
+require_once dirname(__FILE__) . '/GroupByAliasBuilder.php';
 require_once dirname(__FILE__) . '/Builder.php';
 
 /**
@@ -69,7 +70,12 @@ class GroupByBuilder implements Builder {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
-        
+    
+    protected function buildGroupByAlias($parsed) {
+        $builder = new GroupByAliasBuilder();
+        return $builder->build($parsed);
+    }
+            
     public function build(array $parsed) {
         $sql = "";
         foreach ($parsed as $k => $v) {
@@ -77,7 +83,8 @@ class GroupByBuilder implements Builder {
             $sql .= $this->buildColRef($v);
             $sql .= $this->buildPosition($v);
             $sql .= $this->buildFunction($v);
-
+            $sql .= $this->buildGroupByAlias($v);
+            
             if ($len == strlen($sql)) {
                 throw new UnableToCreateSQLException('GROUP', $k, $v, 'expr_type');
             }

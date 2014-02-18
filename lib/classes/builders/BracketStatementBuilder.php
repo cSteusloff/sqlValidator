@@ -1,8 +1,8 @@
 <?php
 /**
- * SelectExpressionBuilder.php
+ * BracketStatementBuilder.php
  *
- * Builds simple expressions within a SELECT statement.
+ * Builds the parentheses around a statement.
  *
  * PHP version 5
  *
@@ -39,38 +39,41 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/SubTreeBuilder.php';
-require_once dirname(__FILE__) . '/AliasBuilder.php';
+require_once dirname(__FILE__) . '/SelectBracketExpressionBuilder.php';
+require_once dirname(__FILE__) . '/SelectStatementBuilder.php';
 require_once dirname(__FILE__) . '/Builder.php';
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
- * This class implements the builder for simple expressions within a SELECT statement. 
+ * This class implements the builder for the parentheses around a statement. 
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class SelectExpressionBuilder implements Builder {
+class BracketStatementBuilder implements Builder {
 
-    protected function buildSubTree($parsed, $delim) {
-        $builder = new SubTreeBuilder();
-        return $builder->build($parsed, $delim);
+    protected function buildSelectBracketExpression($parsed) {
+        $builder = new SelectBracketExpressionBuilder();
+        return $builder->build($parsed, " ");
     }
 
-    protected function buildAlias($parsed) {
-        $builder = new AliasBuilder();
+    protected function buildSelectStatement($parsed) {
+        $builder = new SelectStatementBuilder();
         return $builder->build($parsed);
     }
 
     public function build(array $parsed) {
-        if ($parsed['expr_type'] !== ExpressionType::EXPRESSION) {
-            return "";
+        $sql = "";
+        foreach ($parsed['BRACKET'] as $k => $v) {
+            $len = strlen($sql);
+            $sql .= $this->buildSelectBracketExpression($v);
+
+            if ($len == strlen($sql)) {
+                throw new UnableToCreateSQLException('BRACKET', $k, $v, 'expr_type');
+            }
         }
-        $sql = $this->buildSubTree($parsed, " ");
-        $sql .= $this->buildAlias($parsed);
-        return $sql;
+        return trim($sql . " " . trim($this->buildSelectStatement($parsed)));
     }
 }
 ?>

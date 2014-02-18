@@ -35,7 +35,7 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   SVN: $Id: SubTreeBuilder.php 1005 2014-01-13 11:12:29Z phosco@gmx.de $
+ * @version   SVN: $Id$
  * 
  */
 
@@ -48,6 +48,7 @@ require_once dirname(__FILE__) . '/FunctionBuilder.php';
 require_once dirname(__FILE__) . '/OperatorBuilder.php';
 require_once dirname(__FILE__) . '/ConstantBuilder.php';
 require_once dirname(__FILE__) . '/SubQueryBuilder.php';
+require_once dirname(__FILE__) . '/QueryBuilder.php';
 require_once dirname(__FILE__) . '/Builder.php';
 
 /**
@@ -90,6 +91,11 @@ class SubTreeBuilder implements Builder {
         return $builder->build($parsed);
     }
 
+    protected function buildQuery($parsed) {
+        $builder = new QueryBuilder();
+        return $builder->build($parsed);
+    }
+    
     protected function buildSelectBracketExpression($parsed) {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
@@ -109,6 +115,7 @@ class SubTreeBuilder implements Builder {
             $sql .= $this->buildSubQuery($v);
             $sql .= $this->buildSelectBracketExpression($v);
             $sql .= $this->buildReserved($v);
+            $sql .= $this->buildQuery($v);
 
             if ($len == strlen($sql)) {
                 throw new UnableToCreateSQLException('expression subtree', $k, $v, 'expr_type');

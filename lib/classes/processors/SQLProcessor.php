@@ -35,7 +35,7 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   SVN: $Id: SQLProcessor.php 977 2014-01-09 23:11:51Z phosco@gmx.de $
+ * @version   SVN: $Id$
  *
  */
 
@@ -69,7 +69,8 @@ class SQLProcessor extends SQLChunkProcessor {
 
             // if it starts with an "(", it should follow a SELECT
             if ($trim !== "" && $trim[0] === "(" && $token_category === "") {
-                $token_category = 'SELECT';
+                $token_category = 'BRACKET';
+                $prev_category = $token_category;
             }
 
             /*

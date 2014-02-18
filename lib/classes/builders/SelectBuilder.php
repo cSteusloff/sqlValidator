@@ -35,7 +35,7 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   SVN: $Id: SelectBuilder.php 1005 2014-01-13 11:12:29Z phosco@gmx.de $
+ * @version   SVN: $Id$
  * 
  */
 require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
@@ -93,7 +93,7 @@ class SelectBuilder implements Builder {
      * @return a string, which is added right after the expression
      */
     protected function getDelimiter($parsed) {
-        return ($parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' '));
+        return (!isset($parsed['delim']) || $parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' '));
     }
 
     public function build(array $parsed) {

@@ -35,7 +35,7 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   SVN: $Id: TableExpressionBuilder.php 1019 2014-01-13 12:19:20Z phosco@gmx.de $
+ * @version   SVN: $Id$
  * 
  */
 
