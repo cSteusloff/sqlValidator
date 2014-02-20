@@ -72,6 +72,8 @@ error_reporting(E_ALL);
     require_once("lib/sqlValidator.class.php");
     require_once("lib/taskHelper.php");
     require_once("lib/queryTranslator.class.php");
+    require_once("lib/frontendHelper.class.php");
+    $fH = new frontendHelper();
 
     $db = new oracleConnection();
     $qT = new queryTranslator();
@@ -149,7 +151,7 @@ error_reporting(E_ALL);
                 $db->setQuery($queryMaster);
 
                 if($db->getStatementType() == "SELECT"){
-                    $db->execute();
+                    $db->executeNoCommit();
                     echo $db->printTable("task");
                 } else {
                     $db->executeNoCommit();
@@ -214,22 +216,14 @@ error_reporting(E_ALL);
                 <strong>Well done!</strong> Correct sql query.
             </div>
         <?php }
-        // unset Alert
-        $_SESSION["error"] = null;
-        unset($_SESSION["error"]);
-        $_SESSION["valid"] = null;
-        unset($_SESSION["valid"]);
-        $_SESSION["correct"] = null;
-        unset($_SESSION["correct"]);
         ?>
 
         <div class="FormText">
             <h2>your result</h2>
             <p>
                 <?php
-                if(isset($_SESSION["answer_".$task_id])){
-                    $queryTry = $_SESSION["answer_".$task_id];
-                    $db->setQuery($queryTry);
+                if(isset($_SESSION["userquery"])){
+                    $db->setQuery($_SESSION["userquery"]);
                     $db->execute();
                     echo $db->printTable("task");
                 }
@@ -269,7 +263,8 @@ TABHEAD;
         $db->closeConnection();
 
     }
-
+    // unset variables from Session
+    $fH->unsetSession($_SESSION,array("error","valid","correct","userquery"));
 
     ?>
 

@@ -18,6 +18,7 @@ $db = new oracleConnection();
 $master = new oracleConnection();
 $slave = new oracleConnection();
 
+
 $qT = new queryTranslator();
 
 $task_id = $_POST["taskid"];
@@ -64,23 +65,32 @@ $querySlave = $qT->translate($queryTry,"user".$_SESSION["id"]."_");
 $slave->setQuery($querySlave);
 
 
-// Master-Solution without prefix
-$querySolution = $task->getSolution();
-// to correct table
-$queryMaster = $qT->translate($querySolution,ADMIN_TAB_PREFIX);
-// master connection with solution-query
-$master->setQuery($queryMaster);
-
-$validator = new sqlValidator($master,$slave);
-if($validator->validate()){
-    $_SESSION["correct"] = true;
-    $task->saveCorrectUserQuery(SqlFormatter::format($_POST["sql"],false));
-}
-$_SESSION["valid"] = $validator->getMistake();
-
-
-$slave->execute();
+// Syntax-Error
+$slave->setSavePoint();
+@$slave->executeNoCommit();
 $_SESSION["error"] = $slave->getErrortext();
+$slave->rollbackSavePoint();
+
+
+
+if(empty($_SESSION["error"])){
+    // save query by user
+    $_SESSION["userquery"] = $querySlave;
+    // Master-Solution without prefix
+    $querySolution = $task->getSolution();
+    // to correct table
+    $queryMaster = $qT->translate($querySolution,ADMIN_TAB_PREFIX);
+    // master connection with solution-query
+    $master->setQuery($queryMaster);
+
+    $validator = new sqlValidator($master,$slave);
+    if($validator->validate()){
+        $_SESSION["correct"] = true;
+        $task->saveCorrectUserQuery(SqlFormatter::format($_POST["sql"],false));
+    }
+    $_SESSION["valid"] = $validator->getMistake();
+}
+
 
 session_write_close();
 header("LOCATION: viewTask.php?id=".$_POST["taskid"]."#end");

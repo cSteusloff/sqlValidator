@@ -189,7 +189,6 @@ $db->execute();
         <?php
         // unset variables from Session
         $fH->unsetSession($_SESSION,array("title","text","table","right","sql"));
-        session_destroy();
         ?>
     </form>
 
