@@ -30,8 +30,13 @@ print_r($qT->translate("
 class queryTranslator {
 	
 	//Add $username in front of every tablename of $inputquery
-	
-	public function translate($inputquery, $username){	
+
+    /**
+     * @param $inputquery
+     * @param $username
+     * @return Exception|mixed|string
+     */
+    public function translate($inputquery, $username){
 		if (stristr($inputquery, "MINUS")===false)
 		{		
 		try{
@@ -55,8 +60,12 @@ class queryTranslator {
 		else
 			return $this->translate_Minus($inputquery, $username);
 	}
-	
-	
+
+    /**
+     * @param $inputquery
+     * @param $username
+     * @return Exception|mixed|string
+     */
     private function translate_Minus($inputquery, $username){	
 		$first = true;
 		$inputquery = str_ireplace("minus","MINUS",$inputquery);
@@ -108,7 +117,11 @@ class queryTranslator {
 		return $answer;			
     }
 	//Search for Names in Query
-	private function nameSearch($parsedarray){	
+    /**
+     * @param $parsedarray
+     * @return array|ArrayObject
+     */
+    private function nameSearch($parsedarray){
 
 		//Change if other type required
 		//$tempresult = search($parsedarray, "expr_type", "table");
@@ -125,6 +138,11 @@ class queryTranslator {
 		return $answer;
 	}
 
+    /**
+     * @param $array
+     * @param $key
+     * @return array
+     */
     private function search2($array, $key) {
         $results = array();
 
@@ -138,6 +156,12 @@ class queryTranslator {
         return $results;
     }
 
+    /**
+     * @param $array
+     * @param $key
+     * @param $value
+     * @return array
+     */
     private function search($array, $key, $value) {
         $results = array();
 

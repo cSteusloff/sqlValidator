@@ -391,6 +391,9 @@ class taskHelper {
     }
 
 
+    /**
+     * @param string $correctQuery - save solution by user
+     */
     public function saveCorrectUserQuery($correctQuery){
         $this->dbConnection->setQuery("MERGE INTO SYS_USER_TASK U
                                        USING (
@@ -408,6 +411,10 @@ class taskHelper {
                                             VALUES(N.USER_ID,N.TASK_ID,N.QUERY_LAST,N.QUERY_CORRECT)");
         $this->dbConnection->execute();
     }
+
+
+
+
 
     public function getLastUserQuery(){
         $this->dbConnection->setQuery("SELECT QUERY_LAST
@@ -563,7 +570,10 @@ class taskHelper {
 
     }
 
-
+    /**
+     * @param int $task_id - task ID
+     * @param int[] $table_ids - necessary tables for task
+     */
     private function setNeedTables($task_id,$table_ids){
         $insert_query = "INSERT ALL ";
         foreach($table_ids as $id){
