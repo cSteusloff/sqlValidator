@@ -183,8 +183,8 @@ error_reporting(E_ALL);
 
                             <p>
                             <ol>
-                                <li>Use ' instead of "</li>
-                                <li>Don't use semicolon (;) at the end</li>
+                                <li>" becomes '</li>
+                                <li>; at the end is not necessary</li>
                                 <li>Avoid unnecessary parentheses</li>
                             </ol>
                             </p>

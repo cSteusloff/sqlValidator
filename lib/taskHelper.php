@@ -372,7 +372,28 @@ class taskHelper {
 //        }
     }
 
+    /**
+     * @param string $query - input by user
+     * @return string - without ; and '
+     */
+    public function clearQuery($query){
+        $newQuery = $query;
+        if(strpos($newQuery,";") !== false){
+            $piece = explode(";",$newQuery);
+
+            var_dump($piece);
+            $newQuery = $piece[0];
+        }
+        if(strpos($newQuery,'"') !== false){
+            $newQuery = str_replace('"',"'",$newQuery);
+        }
+
+        return $newQuery;
+    }
+
     public function saveLastUserQuery($lastQuery){
+        // mask ' with double '
+        $lastQuery = str_replace("'","''",$lastQuery);
         $this->dbConnection->setQuery("MERGE INTO SYS_USER_TASK U
                                        USING (
                                             SELECT ".$this->getUserId()." as USER_ID,

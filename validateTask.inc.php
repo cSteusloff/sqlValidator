@@ -26,10 +26,16 @@ $task_id = $_POST["taskid"];
 $task = new taskHelper($db);
 $task->loadTask($_POST["taskid"],$_SESSION["id"]);
 
+
+$_POST["sql"] = $task->clearQuery($_POST["sql"]);
+
+
 // this query has wrong names of table , at this time only check the allow statement type
 $slave->setQuery($_POST["sql"]);
+
 // SQL Query to correct format
 $task->saveLastUserQuery(SqlFormatter::format($_POST["sql"],false));
+
 
 $allow = false;
 switch($slave->getStatementType()){
@@ -61,6 +67,7 @@ if(!$allow){
 $queryTry = $_POST["sql"];
 // to correct table
 $querySlave = $qT->translate($queryTry,"user".$_SESSION["id"]."_");
+
 // slave connection with user-query
 $slave->setQuery($querySlave);
 
