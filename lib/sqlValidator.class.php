@@ -53,7 +53,6 @@ class sqlValidator {
     {
         return $this->mistake;
     }
-
     /**
      * @param sqlConnection $sqlConnection
      */
@@ -63,7 +62,6 @@ class sqlValidator {
     }
 
     public function validate(){
-
         // nur fuer insert/update/delete wichtig
         // Alter/Drop auch
 
@@ -82,8 +80,18 @@ class sqlValidator {
         $this->masterConnection->executeNoCommit();
         $this->slaveConnection->executeNoCommit();
 
-        // validate at moment only select
-        $var = $this->_validate();
+        //1. Check if query is equal ignoring case and spaces
+        //echo("<pre>");
+        //var_dump(preg_replace( '/\s+/', '',$this->masterConnection->origsqlquery).preg_replace( '/\s+/', '',$this->slaveConnection->origsqlquery));
+        //var_dump(strcasecmp(preg_replace( '/\s+/', '',$this->masterConnection->origsqlquery), preg_replace( '/\s+/', '',$this->slaveConnection->origsqlquery)));
+        //die();
+        if (strcasecmp(preg_replace( '/\s+/', '',$this->masterConnection->origsqlquery), preg_replace( '/\s+/', '',$this->slaveConnection->origsqlquery))== 0){
+            $var=true;
+        }
+        else{
+            // validate only select
+            $var = $this->validate_select();
+        }
 
         $this->masterConnection->rollbackSavePoint();
         $this->slaveConnection->rollbackSavePoint();
@@ -92,7 +100,7 @@ class sqlValidator {
         return $var;
     }
 
-    private function _validate(){
+    private function validate_select(){
         // check same number of columns
         if($this->masterConnection->numColumns() == $this->slaveConnection->numColumns()){
             // check same number of rows

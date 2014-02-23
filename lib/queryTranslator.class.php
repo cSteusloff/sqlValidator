@@ -4,9 +4,7 @@
  * Date: 09.12.13
  * Time: 21:43
  */
-?>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<?php 
+
 require_once("classes/PHPSQLParser.php");
 //https://code.google.com/p/php-sql-parser/
 /*
@@ -27,16 +25,26 @@ print_r($qT->translate("
 )
 ", "Jens_"));
 */
+class translation {
+    public $query = null;
+    public $has_OrderBy = false;
+    public $OrderBy = null;
+    public $exception = null;
+}
+
+
+
 class queryTranslator {
-	
-	//Add $username in front of every tablename of $inputquery
 
     /**
+     * Add $username in front of every tablename of $inputquery
      * @param $inputquery
      * @param $username
      * @return Exception|mixed|string
      */
     public function translate($inputquery, $username){
+        $translation = new translation();
+        $result_Query = null;
 		if (stristr($inputquery, "MINUS")===false)
 		{		
 		try{
@@ -44,35 +52,40 @@ class queryTranslator {
 			$parsed = $parser->parse($inputquery, TRUE);
 			//print_r($parsed);
 			$positions = $this->nameSearch($parsed);
-		
+            $result_Query = $inputquery;
 			$i=0;
 			foreach($positions as $pos){
-				$inputquery = substr_replace($inputquery, $username, $pos+strlen($username)*$i, 0);
+                $result_Query = substr_replace($result_Query, $username, $pos+strlen($username)*$i, 0);
 				++$i;
 			}
 		}
 		catch( Exception $e)
 		{
-			return $e;
+			$translation->exception=$e;
 		}		
-		return $inputquery;
+		$translation->query =  $result_Query;
 		}
-		else
-			return $this->translate_Minus($inputquery, $username);
+		else{
+            $this->translate_Minus($inputquery, $username, $translation);
+        }
+        //TODO: return whole translation
+        return $translation->query;
 	}
+
 
     /**
      * @param $inputquery
      * @param $username
      * @return Exception|mixed|string
      */
-    private function translate_Minus($inputquery, $username){	
+    private function translate_Minus($inputquery, $username, $translation){
 		$first = true;
 		$inputquery = str_ireplace("minus","MINUS",$inputquery);
         $parts = explode("MINUS",$inputquery);
 		foreach($parts as $part)
 		{			
-		//TODO: remove double white spaces?
+		//Remove double white spaces
+        $part = preg_replace( '/\s+/', ' ',$part);
 		//Remove superfluous brackets
 		$supBrackets = false;
 		$position1 = strpos($part, "(");
@@ -98,7 +111,8 @@ class queryTranslator {
 		}
 		catch( Exception $e)
 		{
-			return $e;
+            $translation->exception = $e;
+            return;
 		}
 		//Insert removed Brackets
 		if($supBrackets){
@@ -114,7 +128,7 @@ class queryTranslator {
 			$answer .="MINUS".$part;			
 		}
 		
-		return $answer;			
+		$translation->query = $answer;
     }
 	//Search for Names in Query
     /**
@@ -173,10 +187,5 @@ class queryTranslator {
                 $results = array_merge($results, $this->search($subarray, $key, $value));
         }
         return $results;
-    }
-
-    //TODO: check for forbidden commands
-    private function checkForbidden(){
-
     }
 } 

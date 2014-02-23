@@ -68,8 +68,10 @@ $queryTry = $_POST["sql"];
 // to correct table
 $querySlave = $qT->translate($queryTry,"user".$_SESSION["id"]."_");
 
+
 // slave connection with user-query
 $slave->setQuery($querySlave);
+$slave->setOrigQuery($queryTry);
 
 
 // Syntax-Error
@@ -89,6 +91,7 @@ if(empty($_SESSION["error"])){
     $queryMaster = $qT->translate($querySolution,ADMIN_TAB_PREFIX);
     // master connection with solution-query
     $master->setQuery($queryMaster);
+    $master->setOrigQuery($querySolution);
 
     $validator = new sqlValidator($master,$slave);
     if($validator->validate()){

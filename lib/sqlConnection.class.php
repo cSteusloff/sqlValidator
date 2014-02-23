@@ -70,6 +70,9 @@ abstract class sqlConnection {
      */
     public $sqlquery;
 
+
+    public $origsqlquery;
+
     /**
      * Savepoint for rollback - state of database
      *
@@ -96,6 +99,9 @@ abstract class sqlConnection {
      * @return mixed
      */
     abstract public function setQuery($sql = '');
+
+
+    abstract public function setOrigQuery($sql = '');
 
 
     /**

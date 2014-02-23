@@ -39,6 +39,7 @@ if($empty > 0){
 
     // test query - no commit to database
     $master->setQuery($qT->translate($_POST['sql'],"MASTER_"));
+    $master->setOrigQuery($_POST['sql']);
     $master->executeNoCommit();
     $tableHeader = $master->getHeader(true);
     $tableContent = $master->getContent(true);

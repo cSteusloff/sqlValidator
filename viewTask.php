@@ -149,6 +149,7 @@ error_reporting(E_ALL);
                 $querySolution = $task->getSolution();
                 $queryMaster = $qT->translate($querySolution,"MASTER_");
                 $db->setQuery($queryMaster);
+                $db->setOrigQuery($querySolution);
 
                 if($db->getStatementType() == "SELECT"){
                     $db->executeNoCommit();
