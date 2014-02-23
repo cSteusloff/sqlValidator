@@ -9,17 +9,17 @@
 class sqlValidator {
 
     /**
-     * @var masterConnection
+     * @var sqlConnection
      */
     private $masterConnection = null;
 
     /**
-     * @var slaveConnection
+     * @var sqlConnection
      */
     private $slaveConnection = null;
 
     /**
-     * @var checkConnection
+     * @var sqlConnection
      */
     private $checkConnection = null;
 
@@ -96,7 +96,10 @@ class sqlValidator {
         }
         else{
             // validate only select
-            $var = $this->validate_select();
+            //$this->masterConnection->getStatementType();
+            //$this->task->getTaskType();
+
+
         }
 
 
