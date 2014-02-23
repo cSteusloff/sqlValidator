@@ -56,8 +56,8 @@ class taskHelper {
      *
      * Select = 1
      * Insert/Update/Delete = 2
-     * Create = 3
-     * Drop = 4
+     * Create = 4
+     * Drop = 8
      *
      *
      * @param int (array) $permission
@@ -69,8 +69,16 @@ class taskHelper {
         } else {
             $this->permission = $permission;
         }
+
         return $this->getPermission();
     }
+
+//    private function pemissionToType(){
+//        // TODO: Permission = Zahl 1 bis 15
+//        // Type ist SELECT, UPDATE etc. Jedoch steht 2 für INSERT, UPDATE oder DELETE
+//        // Type als String-Array?
+//        // Oder kurz Solution laden als Connection und gucken, was es ist.
+//    }
 
     /**
      * @return int
@@ -92,6 +100,51 @@ class taskHelper {
      * @var string - sql query solution
      */
     private $solution;
+
+    /**
+     * @var string - sql query by user
+     */
+    private $userInput;
+
+
+    /**
+     * @var string SELECT, UPDATE, etc.
+     */
+    private $taskType;
+
+    /**
+     * @param string $taskType
+     */
+    public function setTaskType()
+    {
+        $this->dbConnection->setQuery($this->getSolution());
+        $this->taskType = $this->dbConnection->getStatementType();
+    }
+
+    /**
+     * @return string
+     */
+    public function getTaskType()
+    {
+        return $this->taskType;
+    }
+
+    /**
+     * @param string $user_input
+     */
+    public function setUserInput($user_input)
+    {
+        $this->userInput = $user_input;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserInput()
+    {
+        return $this->userInput;
+    }
+
     /**
      * @var string array - necessary tables
      */
@@ -332,6 +385,7 @@ class taskHelper {
         $this->setSolution($solution);
         $this->setTableHeader($tableHeader);
         $this->setTableContent($tableContent);
+        $this->setTaskType();
 
         // create Task in SYS_TASK
         $this->dbConnection->setQuery("INSERT INTO SYS_TASK (Taskname,tasktext,permission,solution,tableheader,tablecontent)
@@ -392,6 +446,7 @@ class taskHelper {
     }
 
     public function saveLastUserQuery($lastQuery){
+        $this->setUserInput($lastQuery);
         // mask ' with double '
         $lastQuery = str_replace("'","''",$lastQuery);
         $this->dbConnection->setQuery("MERGE INTO SYS_USER_TASK U
@@ -444,7 +499,9 @@ class taskHelper {
                                        AND TASK_ID = ".$this->getTaskId());
         $this->dbConnection->execute();
         $this->dbConnection->Fetch();
-        return $this->dbConnection->row["QUERY_LAST"];
+        $lastQuery = $this->dbConnection->row["QUERY_LAST"];
+        $this->setUserInput($lastQuery);
+        return $lastQuery;
     }
 
     public function getCorrectUserQuery(){
@@ -476,6 +533,8 @@ class taskHelper {
         $this->setTaskId($task_id);
         $this->setUserId($user_id);
         $this->setDatabaseTables();
+        $this->setTaskType();
+
     }
 
     /*

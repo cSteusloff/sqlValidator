@@ -71,7 +71,7 @@ abstract class sqlConnection {
     public $sqlquery;
 
 
-    public $origsqlquery;
+//    public $origsqlquery;
 
     /**
      * Savepoint for rollback - state of database

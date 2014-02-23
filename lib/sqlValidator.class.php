@@ -24,13 +24,19 @@ class sqlValidator {
     private $checkConnection = null;
 
     /**
+     * @var taskHelper - Task
+     */
+    private $task = null;
+
+    /**
      * @param null $sqlConnection
      */
-    public function setSqlConnection(sqlConnection $masterConnection, sqlConnection $slaveConnection)
+    public function setSqlConnection(sqlConnection $masterConnection, sqlConnection $slaveConnection, taskHelper $task)
     {
         $this->masterConnection = $masterConnection;
         $this->slaveConnection = $slaveConnection;
         $this->checkConnection = clone $slaveConnection;
+        $this->task = $task;
     }
 
     /**
@@ -56,9 +62,9 @@ class sqlValidator {
     /**
      * @param sqlConnection $sqlConnection
      */
-    function __construct(sqlConnection $masterConnection, sqlConnection $slaveConnection)
+    function __construct(sqlConnection $masterConnection, sqlConnection $slaveConnection, taskHelper $task)
     {
-        $this->setSqlConnection($masterConnection,$slaveConnection);
+        $this->setSqlConnection($masterConnection,$slaveConnection,$task);
     }
 
     public function validate(){
@@ -85,13 +91,15 @@ class sqlValidator {
         //var_dump(preg_replace( '/\s+/', '',$this->masterConnection->origsqlquery).preg_replace( '/\s+/', '',$this->slaveConnection->origsqlquery));
         //var_dump(strcasecmp(preg_replace( '/\s+/', '',$this->masterConnection->origsqlquery), preg_replace( '/\s+/', '',$this->slaveConnection->origsqlquery)));
         //die();
-        if (strcasecmp(preg_replace( '/\s+/', '',$this->masterConnection->origsqlquery), preg_replace( '/\s+/', '',$this->slaveConnection->origsqlquery))== 0){
+        if (strcasecmp(preg_replace( '/\s+/', '',$this->task->getSolution()), preg_replace( '/\s+/', '',$this->task->getUserInput()))== 0){
             $var=true;
         }
         else{
             // validate only select
             $var = $this->validate_select();
         }
+
+
 
         $this->masterConnection->rollbackSavePoint();
         $this->slaveConnection->rollbackSavePoint();

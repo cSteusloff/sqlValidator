@@ -75,11 +75,11 @@ class oracleConnection extends sqlConnection {
         }
     }
 
-    //TODO: Why does setQuery have all that stuff?!
-    public function setOrigQuery($sql = '')
-    {
-        $this->origsqlquery = empty($sql) ? $this->origsqlquery : $sql;
-    }
+//    //TODO: Why does setQuery have all that stuff?!
+//    public function setOrigQuery($sql = '')
+//    {
+//        $this->origsqlquery = empty($sql) ? $this->origsqlquery : $sql;
+//    }
 
     /**
      * running SQL query
