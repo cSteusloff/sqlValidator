@@ -95,6 +95,14 @@ class sqlValidator {
             $var=true;
         }
         else{
+            if($this->task->getTaskType() == "SELECT"){
+                // only Select oder $this->task->getPermissionSelect
+
+            } elseif($this->task->getPermissionModify()){
+
+            }
+
+
             // validate only select
             //$this->masterConnection->getStatementType();
             //$this->task->getTaskType();
