@@ -214,7 +214,7 @@ error_reporting(E_ALL);
             </div>
         <?php } elseif (isset($_SESSION["valid"])) { ?>
             <div class="alert alert-warning">
-                <strong>Misstake!</strong> Your syntax is right but it's wrong answer.<br>
+                <strong>Mistake!</strong> Your syntax is right but the answer is wrong.<br>
                 <?= $_SESSION["valid"]; ?>
             </div>
         <?php } elseif (isset($_SESSION["correct"])) { ?>
