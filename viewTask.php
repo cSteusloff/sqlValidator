@@ -226,19 +226,28 @@ error_reporting(E_ALL);
 
         <div class="FormText">
             <h2>your result</h2>
-            <p>
+            <div class="js-masonry" data-masonry-options='{ "columnWidth": 2, "itemSelector": ".task" }'>
                 <?php
                 if(isset($_SESSION["userquery"])){
                     $db->setQuery($_SESSION["userquery"]);
                     $db->execute();
-                    echo $db->printTable("task");
+                    if(strtoupper($db->getStatementType()) == "SELECT"){
+                        echo $db->printTable("task");
+                    } else {
+
+                        foreach($task->getTableNames() as $table){
+                            // TODO: only for presentation - fix it!!!
+                            $userTab = str_replace(ADMIN_TAB_PREFIX,"user2_",$table);
+                            $db->setQuery("SELECT * FROM {$userTab}");
+                            $db->execute();
+                            echo $db->printTable("task");
+                        }
+                    }
                 }
                 ?>
-            </p>
+            </div>
         </div>
         <a name="end"></a>
-
-
 
     <?php
 

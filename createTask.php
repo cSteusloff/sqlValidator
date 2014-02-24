@@ -25,7 +25,6 @@ $db->execute();
     <meta name="description" content="SQLValidator">
     <meta name="author" content="Christian Steusloff, Jens Wiemann">
     <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
-
     <title>SQL-Validator</title>
 
     <!-- SQL-Syntax Highlighting -->
@@ -195,7 +194,6 @@ $db->execute();
         $fH->unsetSession($_SESSION,array("title","text","table","right","sql"));
         ?>
     </form>
-    Hallo<span id="test"></span>
 </div> <!-- /container -->
 
 
@@ -210,11 +208,11 @@ $db->execute();
 <script src="js/sql.js"></script>
 <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js">-->
 <!--<script>-->
-<!--$(document).ready(function){-->
-<!--    $('#right-3').click(function(){-->
-<!--        $('#sql').append("DROP TABLE"));-->
-<!--    })-->
-<!--}-->
+<!--    $(document).ready(function){-->
+<!--        $('#right-3').click(function(){-->
+<!--            $('#sql').append("DROP TABLE"));-->
+<!--        })-->
+<!--    }-->
 <!---->
 <!--</script>-->
 <script>
