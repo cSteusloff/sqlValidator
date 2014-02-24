@@ -36,10 +36,8 @@ if($empty > 0){
     header("LOCATION: createTask.php?s=0");
 } else {
     $master->setSavePoint();
-
     // test query - no commit to database
-    $master->setQuery($qT->translate($_POST['sql'],"MASTER_"));
-    $master->setOrigQuery($_POST['sql']);
+    $master->setQuery($qT->translate($_POST['sql'],ADMIN_TAB_PREFIX));
     $master->executeNoCommit();
     $tableHeader = $master->getHeader(true);
     $tableContent = $master->getContent(true);

@@ -551,6 +551,20 @@ class taskHelper {
             @$this->dbConnection->execute();
             $this->dbConnection->setQuery($query_create);
             $this->dbConnection->execute();
+
+        }
+
+        // TODO: Zur Sicherheit anlegen ohne Benutzer-Namen
+        foreach ($this->getTableNames() as $table) {
+            $tmpTable = str_replace(ADMIN_TAB_PREFIX,"",$table);
+            $query_drop = "DROP TABLE ".$tmpTable;
+            $query_create = "CREATE TABLE ".$tmpTable." AS (SELECT * FROM ".$table.")";
+            $this->dbConnection->setQuery($query_drop);
+            // Oracle don't have drop if exist, don't show error
+            @$this->dbConnection->execute();
+            $this->dbConnection->setQuery($query_create);
+            $this->dbConnection->execute();
+
         }
     }
 

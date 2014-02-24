@@ -83,7 +83,7 @@ $db->execute();
     $fH->unsetSession($_SESSION,"error");
     ?>
 
-    <form class="form-horizontal" role="form" action="createTask.inc.php" method="post">
+    <form class="form-horizontal" role="form" name="createTask" action="createTask.inc.php" method="post">
         <fieldset>
 
             <!-- Form Name -->
@@ -141,28 +141,32 @@ $db->execute();
                     <div class="checkbox checkbox-inline"><label class="" for="right-0">
                             <input type="radio"
                                    name="right[0]"
-                                   <?php echo isset($_SESSION["right"][0]) ? 'checked="checked"' : '';?>
+                                   <?php echo (isset($_SESSION["right"][0]) &&
+                                               $_SESSION["right"][0] == 1) ? 'checked="checked"' : '';?>
                                    id="right-0" value="1">
                             Select
                         </label></div>
                     <div class="checkbox checkbox-inline"><label class="" for="right-1">
                             <input type="radio"
                                    name="right[0]"
-                                   <?php echo isset($_SESSION["right"][1]) ? 'checked="checked"' : '';?>
+                                   <?php echo (isset($_SESSION["right"][0]) &&
+                                               $_SESSION["right"][0] == 2) ? 'checked="checked"' : '';?>
                                    id="right-1" value="2">
                             Insert/Update/Delete
                         </label></div>
                     <div class="checkbox checkbox-inline"><label class="" for="right-2">
                             <input type="radio"
                                    name="right[0]"
-                                   <?php echo isset($_SESSION["right"][2]) ? 'checked="checked"' : '';?>
+                                   <?php echo (isset($_SESSION["right"][0]) &&
+                                               $_SESSION["right"][0] == 4) ? 'checked="checked"' : '';?>
                                    id="right-2" value="4">
                             Create/Alter
                         </label></div>
                     <div class="checkbox checkbox-inline"><label class="" for="right-3">
                             <input type="radio"
                                    name="right[0]"
-                                   <?php echo isset($_SESSION["right"][3]) ? 'checked="checked"' : '';?>
+                                   <?php echo (isset($_SESSION["right"][0]) &&
+                                               $_SESSION["right"][0] == 8) ? 'checked="checked"' : '';?>
                                    id="right-3" value="8">
                             Drop
                         </label></div>
@@ -191,7 +195,7 @@ $db->execute();
         $fH->unsetSession($_SESSION,array("title","text","table","right","sql"));
         ?>
     </form>
-
+    Hallo<span id="test"></span>
 </div> <!-- /container -->
 
 
@@ -204,8 +208,24 @@ $db->execute();
 ================================================== -->
 <script src="js/codemirror.js"></script>
 <script src="js/sql.js"></script>
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js">-->
+<!--<script>-->
+<!--$(document).ready(function){-->
+<!--    $('#right-3').click(function(){-->
+<!--        $('#sql').append("DROP TABLE"));-->
+<!--    })-->
+<!--}-->
+<!---->
+<!--</script>-->
 <script>
     window.onload = function() {
+//        var radio = document.getElementById('right-3')
+//        radio.onclick = function() {
+//            alert("test")
+//           document.getElementById('test').value = "DROP TABLE HALLO"
+//        }
+
+
         window.editor = CodeMirror.fromTextArea(document.getElementById('sql'), {
             mode: 'text/x-mysql',
             indentWithTabs: true,

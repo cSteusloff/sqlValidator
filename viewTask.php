@@ -144,22 +144,27 @@ error_reporting(E_ALL);
         <div class="FormText">
             <h2>solution output</h2>
             <?php
-                $db->setSavePoint();
-
-                $querySolution = $task->getSolution();
-                $queryMaster = $qT->translate($querySolution,"MASTER_");
-                $db->setQuery($queryMaster);
-                $db->setOrigQuery($querySolution);
-
-                if($db->getStatementType() == "SELECT"){
-                    $db->executeNoCommit();
-                    echo $db->printTable("task");
+                if($task->getTaskType() == "CREATE" ){
+                    echo("See above!");
+                } elseif($task->getTaskType() == "DROP" ){
+                    echo("No output!");
                 } else {
-                    $db->executeNoCommit();
-                    echo($task->printTable("task",false));
-                }
+                    $db->setSavePoint();
 
-                $db->rollbackSavePoint();
+                    $querySolution = $task->getSolution();
+                    $queryMaster = $qT->translate($querySolution,"MASTER_");
+                    $db->setQuery($queryMaster);
+
+                    if($db->getStatementType() == "SELECT"){
+                        $db->executeNoCommit();
+                        echo $db->printTable("task");
+                    } else {
+                        $db->executeNoCommit();
+                        echo($task->printTable("task",false));
+                    }
+
+                    $db->rollbackSavePoint();
+                }
             ?>
 
         </div>

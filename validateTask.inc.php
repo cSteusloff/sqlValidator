@@ -36,24 +36,27 @@ $slave->setQuery($_POST["sql"]);
 // SQL Query to correct format
 $task->saveLastUserQuery(SqlFormatter::format($_POST["sql"],false));
 
+// TODO: folgendes sollte genügen!
+$allow = ($slave->getStatementType() == $task->getTaskType());
 
-$allow = false;
-switch($slave->getStatementType()){
-    case 'SELECT' : $allow = $task->getPermissionSelect();
-        break;
-    case 'INSERT' :
-    case 'DELETE' :
-    case 'UPDATE' : $allow = $task->getPermissionModify();
-        break;
-    case 'ALTER' :
-    case 'CREATE' : $allow = $task->getPermissionCreate();
-        break;
-    case 'DROP' : $allow = $task->getPermissionDrop();
-        break;
-    default : $allow = false;
-        // CALL, BEGIN, DECLARE, UNKNOWN
-        break;
-}
+// Old way:
+//$allow = false;
+//switch($slave->getStatementType()){
+//    case 'SELECT' : $allow = $task->getPermissionSelect();
+//        break;
+//    case 'INSERT' :
+//    case 'DELETE' :
+//    case 'UPDATE' : $allow = $task->getPermissionModify();
+//        break;
+//    case 'ALTER' :
+//    case 'CREATE' : $allow = $task->getPermissionCreate();
+//        break;
+//    case 'DROP' : $allow = $task->getPermissionDrop();
+//        break;
+//    default : $allow = false;
+//        // CALL, BEGIN, DECLARE, UNKNOWN
+//        break;
+//}
 if(!$allow){
     // set error-message
     $_SESSION["error"] = $slave->getStatementType($_POST["sql"])." not allowed by this task";
@@ -71,7 +74,6 @@ $querySlave = $qT->translate($queryTry,"user".$_SESSION["id"]."_");
 
 // slave connection with user-query
 $slave->setQuery($querySlave);
-$slave->setOrigQuery($queryTry);
 
 
 // Syntax-Error
@@ -91,9 +93,8 @@ if(empty($_SESSION["error"])){
     $queryMaster = $qT->translate($querySolution,ADMIN_TAB_PREFIX);
     // master connection with solution-query
     $master->setQuery($queryMaster);
-    $master->setOrigQuery($querySolution);
 
-    $validator = new sqlValidator($master,$slave);
+    $validator = new sqlValidator($master,$slave,$task);
     if($validator->validate()){
         $_SESSION["correct"] = true;
         $task->saveCorrectUserQuery(SqlFormatter::format($_POST["sql"],false));

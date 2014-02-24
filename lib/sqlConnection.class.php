@@ -101,7 +101,7 @@ abstract class sqlConnection {
     abstract public function setQuery($sql = '');
 
 
-    abstract public function setOrigQuery($sql = '');
+    //abstract public function setOrigQuery($sql = '');
 
 
     /**

@@ -347,7 +347,4 @@ class oracleConnection extends sqlConnection {
             return "";
         }
     }
-
-
-
 }
