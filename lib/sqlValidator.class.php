@@ -301,13 +301,14 @@ class sqlValidator
         //       return true;
         //    }
         // } else
-
+/*
         var_dump($content1);
         var_dump($content2);
         var_dump($this->array_diff2($content1, $content2));
         var_dump($this->array_diff2($content2, $content1));
         var_dump(!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1));
         die();
+*/
 
         if (!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1)) {
             return true;
