@@ -105,6 +105,12 @@ class sqlValidator
                 case "UPDATE":
                     $var = $this->validateUpdate();
                     break;
+                case "INSERT":
+                    $var = $this->validateUpdate();
+                    break;
+                case "DELETE":
+                    $var = $this->validateUpdate();
+                    break;
                 case "CREATE":
                     $var = $this->validateCreate();
                     break;
@@ -169,7 +175,68 @@ class sqlValidator
     private function validateUpdate()
     {
         if ($this->validateDimensions()) {
-            return $this->validateContentiO();
+
+
+
+            // TODO: only for presentation - fix it!!!
+            $tables = "";
+            $first = true;
+            foreach($this->task->getTableNames() as $table){
+                if ($first){
+                    $tables .= $table;
+                    $first = false;
+                }
+                else{
+                    $tables .= ", ".$table;
+                }
+            }
+
+            $this->checkConnection->setQuery($this->masterConnection->sqlquery);
+            $this->checkConnection->executeNoCommit();
+            $this->checkConnection->setQuery("SELECT * FROM {$tables}");
+            $this->checkConnection->executeNoCommit();
+            $content1 = $this->checkConnection->getContent();
+
+            // TODO: only for presentation - fix it!!!
+            $tables = "";
+            $first = true;
+            foreach($this->task->getTableNames() as $table){
+                $userTab = str_replace(ADMIN_TAB_PREFIX,"user2_",$table);
+                if ($first){
+                    $tables .= $userTab;
+                    $first = false;
+                }
+                else{
+                    $tables .= ", ".$userTab;
+                }
+            }
+
+            $this->checkConnection->setQuery($this->slaveConnection->sqlquery);
+            $this->checkConnection->executeNoCommit();
+            $this->checkConnection->setQuery("SELECT * FROM {$tables}");
+            $this->checkConnection->executeNoCommit();
+            $content2 = $this->checkConnection->getContent();
+
+
+            //if (sort($content1) && sort($content2)) {
+            //    if ($content1 == $content2) {
+            //       return true;
+            //    }
+            // } else
+/*
+            var_dump($content1);
+            var_dump($content2);
+            var_dump($this->array_diff2($content1, $content2));
+            var_dump($this->array_diff2($content2, $content1));
+            var_dump(!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1));
+            die();
+*/
+            if (!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1)) {
+                return true;
+            }
+
+            $this->setMistake("incorrect Solution - content differs");
+            return false;
         }
         return false;
     }
@@ -234,6 +301,13 @@ class sqlValidator
         //       return true;
         //    }
         // } else
+
+        var_dump($content1);
+        var_dump($content2);
+        var_dump($this->array_diff2($content1, $content2));
+        var_dump($this->array_diff2($content2, $content1));
+        var_dump(!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1));
+        die();
 
         if (!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1)) {
             return true;
