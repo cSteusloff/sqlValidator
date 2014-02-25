@@ -176,6 +176,8 @@ class sqlValidator
     {
         if ($this->validateDimensions()) {
 
+            // TODO: hier ist der FEHLER!!!!
+            // du hättest das foreach um die beiden machen müssen!
 
 
             // TODO: only for presentation - fix it!!!
@@ -211,6 +213,8 @@ class sqlValidator
                 }
             }
 
+
+
             $this->checkConnection->setQuery($this->slaveConnection->sqlquery);
             $this->checkConnection->executeNoCommit();
             $this->checkConnection->setQuery("SELECT * FROM {$tables}");
@@ -223,20 +227,20 @@ class sqlValidator
             //       return true;
             //    }
             // } else
-/*
-            var_dump($content1);
-            var_dump($content2);
-            var_dump($this->array_diff2($content1, $content2));
-            var_dump($this->array_diff2($content2, $content1));
-            var_dump(!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1));
-            die();
-*/
+
+//            var_dump($content1);
+//            var_dump($content2);
+//            var_dump($this->array_diff2($content1, $content2));
+//            var_dump($this->array_diff2($content2, $content1));
+//            var_dump(!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1));
+//            die();
+
             if (!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1)) {
                 return true;
+            } else {
+                $this->setMistake("incorrect Solution - content differs");
+                return false;
             }
-
-            $this->setMistake("incorrect Solution - content differs");
-            return false;
         }
         return false;
     }

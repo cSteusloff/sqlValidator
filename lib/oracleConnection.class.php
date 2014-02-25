@@ -20,6 +20,10 @@ class oracleConnection extends sqlConnection {
         return $this->errortext['message'];
     }
 
+    public function getErrorPosition(){
+        return $this->errortext['offset'];
+    }
+
     /**
      * @param string $host
      * @param string $database

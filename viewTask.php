@@ -182,7 +182,6 @@ error_reporting(E_ALL);
                         <div class="col-sm-8">
                             <textarea id="sql" class="form-control"
                                       name="sql"><?php echo $task->getLastUserQuery();?></textarea>
-<!--                                --><?php //echo (isset($last_sql)) ? $last_sql : ""; ?>
                         </div>
                         <div class="col-sm-3">
                             <h4>Infos</h4>
@@ -208,16 +207,16 @@ error_reporting(E_ALL);
                 </fieldset>
             </form>
         </div>
-        <?php if (isset($_SESSION["error"])) { ?>
+        <?php if (isset($_SESSION["error"]) && !is_null($_SESSION["error"])) { ?>
             <div class="alert alert-danger">
                 <strong>Error!</strong> <?= $_SESSION["error"]; ?>
             </div>
-        <?php } elseif (isset($_SESSION["valid"])) { ?>
+        <?php } elseif (isset($_SESSION["valid"]) && !is_null($_SESSION["valid"])) { ?>
             <div class="alert alert-warning">
                 <strong>Mistake!</strong> Your syntax is right but the answer is wrong.<br>
                 <?= $_SESSION["valid"]; ?>
             </div>
-        <?php } elseif (isset($_SESSION["correct"])) { ?>
+        <?php } elseif (isset($_SESSION["correct"]) && !is_null($_SESSION["correct"])) { ?>
             <div class="alert alert-success">
                 <strong>Well done!</strong> Correct sql query.
             </div>
@@ -278,8 +277,14 @@ TABHEAD;
         $db->closeConnection();
 
     }
+//    echo("<pre>");
+//    var_dump($_SESSION);
+
     // unset variables from Session
     $fH->unsetSession($_SESSION,array("error","valid","correct","userquery"));
+
+//    echo("<pre>");
+//    var_dump($_SESSION);
 
     ?>
 
