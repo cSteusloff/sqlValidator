@@ -29,6 +29,12 @@ class sqlValidator
      */
     private $task = null;
 
+
+    /**
+     * @var string - table prefix user + userId + "_"
+     */
+    private $tablePrefix = null;
+
     /**
      * @param null oracleConnection
      */
@@ -38,6 +44,7 @@ class sqlValidator
         $this->slaveConnection = $slaveConnection;
         $this->checkConnection = clone $slaveConnection;
         $this->task = $task;
+        $this->tablePrefix = "user2_";
     }
 
     /**
@@ -179,67 +186,33 @@ class sqlValidator
             // TODO: hier ist der FEHLER!!!!
             // du hättest das foreach um die beiden machen müssen!
 
+            $this->masterConnection->executeNoCommit();
+            $this->slaveConnection->executeNoCommit();
 
-            // TODO: only for presentation - fix it!!!
-            $tables = "";
-            $first = true;
-            foreach($this->task->getTableNames() as $table){
-                if ($first){
-                    $tables .= $table;
-                    $first = false;
-                }
-                else{
-                    $tables .= ", ".$table;
-                }
-            }
+            $TrueArray = array();
 
-            $this->checkConnection->setQuery($this->masterConnection->sqlquery);
-            $this->checkConnection->executeNoCommit();
-            $this->checkConnection->setQuery("SELECT * FROM {$tables}");
-            $this->checkConnection->executeNoCommit();
-            $content1 = $this->checkConnection->getContent();
+            foreach($this->task->getTableNames() as $masterTable){
+                $this->masterConnection->setQuery("SELECT * FROM {$masterTable}");
+                $this->masterConnection->executeNoCommit();
+                $content1 = $this->masterConnection->getContent();
 
-            // TODO: only for presentation - fix it!!!
-            $tables = "";
-            $first = true;
-            foreach($this->task->getTableNames() as $table){
-                $userTab = str_replace(ADMIN_TAB_PREFIX,"user2_",$table);
-                if ($first){
-                    $tables .= $userTab;
-                    $first = false;
-                }
-                else{
-                    $tables .= ", ".$userTab;
+                $userTable = str_replace(ADMIN_TAB_PREFIX,$this->tablePrefix,$masterTable);
+                $this->slaveConnection->setQuery("SELECT * FROM {$userTable}");
+                $this->slaveConnection->executeNoCommit();
+                $content2 = $this->slaveConnection->getContent();
+
+                if(!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1)){
+                    $TrueArray[] = true;
+                } else {
+                    $TrueArray[] = false;
                 }
             }
 
-
-
-            $this->checkConnection->setQuery($this->slaveConnection->sqlquery);
-            $this->checkConnection->executeNoCommit();
-            $this->checkConnection->setQuery("SELECT * FROM {$tables}");
-            $this->checkConnection->executeNoCommit();
-            $content2 = $this->checkConnection->getContent();
-
-
-            //if (sort($content1) && sort($content2)) {
-            //    if ($content1 == $content2) {
-            //       return true;
-            //    }
-            // } else
-
-//            var_dump($content1);
-//            var_dump($content2);
-//            var_dump($this->array_diff2($content1, $content2));
-//            var_dump($this->array_diff2($content2, $content1));
-//            var_dump(!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1));
-//            die();
-
-            if (!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1)) {
-                return true;
-            } else {
-                $this->setMistake("incorrect Solution - content differs");
+            if(in_array(false,$TrueArray)){
+                $this->setMistake("Wrong content");
                 return false;
+            } else {
+                return true;
             }
         }
         return false;
