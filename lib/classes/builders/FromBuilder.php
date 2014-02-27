@@ -31,12 +31,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
@@ -51,26 +51,31 @@ require_once dirname(__FILE__) . '/Builder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class FromBuilder implements Builder {
+class FromBuilder implements Builder
+{
 
-    protected function buildTable($parsed, $key) {
+    protected function buildTable($parsed, $key)
+    {
         $builder = new TableBuilder();
         return $builder->build($parsed, $key);
     }
 
-    protected function buildTableExpression($parsed, $key) {
+    protected function buildTableExpression($parsed, $key)
+    {
         $builder = new TableExpressionBuilder();
         return $builder->build($parsed, $key);
     }
 
-    protected function buildSubQuery($parsed, $key) {
+    protected function buildSubQuery($parsed, $key)
+    {
         $builder = new SubQueryBuilder();
         return $builder->build($parsed, $key);
     }
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = "";
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
@@ -85,4 +90,5 @@ class FromBuilder implements Builder {
         return "FROM " . $sql;
     }
 }
+
 ?>

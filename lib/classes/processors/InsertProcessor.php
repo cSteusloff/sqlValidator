@@ -2,7 +2,7 @@
 /**
  * InsertProcessor.php
  *
- * This file implements the processor for the INSERT statements. 
+ * This file implements the processor for the INSERT statements.
  *
  * PHP version 5
  *
@@ -49,11 +49,13 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class InsertProcessor extends AbstractProcessor {
+class InsertProcessor extends AbstractProcessor
+{
 
-    public function process($tokenList, $token_category = 'INSERT') {
+    public function process($tokenList, $token_category = 'INSERT')
+    {
         $table = "";
         $cols = false;
         $parsed = array();
@@ -97,7 +99,7 @@ class InsertProcessor extends AbstractProcessor {
         }
 
         $tokenList[$token_category][] = array('expr_type' => ExpressionType::TABLE, 'table' => $table, 'base_expr' => $table,
-                                              'no_quotes' => $this->revokeQuotation($table));
+            'no_quotes' => $this->revokeQuotation($table));
         if (!empty($parsed)) {
             $tokenList[$token_category][] = $parsed;
         }
@@ -106,4 +108,5 @@ class InsertProcessor extends AbstractProcessor {
     }
 
 }
+
 ?>

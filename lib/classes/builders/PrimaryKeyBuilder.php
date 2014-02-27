@@ -31,12 +31,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
@@ -50,46 +50,54 @@ require_once dirname(__FILE__) . '/IndexParserBuilder.php';
 require_once dirname(__FILE__) . '/Builder.php';
 
 /**
- * This class implements the builder for the PRIMARY KEY  statement part of CREATE TABLE. 
+ * This class implements the builder for the PRIMARY KEY  statement part of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class PrimaryKeyBuilder implements Builder {
+class PrimaryKeyBuilder implements Builder
+{
 
-    protected function buildColumnList($parsed) {
+    protected function buildColumnList($parsed)
+    {
         $builder = new ColumnListBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstraint($parsed) {
+    protected function buildConstraint($parsed)
+    {
         $builder = new ConstraintBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildIndexType($parsed) {
+    protected function buildIndexType($parsed)
+    {
         $builder = new IndexTypeBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildIndexSize($parsed) {
+
+    protected function buildIndexSize($parsed)
+    {
         $builder = new IndexSizeBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildIndexParser($parsed) {
+
+    protected function buildIndexParser($parsed)
+    {
         $builder = new IndexParserBuilder();
         return $builder->build($parsed);
     }
-    
-    public function build(array $parsed) {
+
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::PRIMARY_KEY) {
             return "";
         }
@@ -112,4 +120,5 @@ class PrimaryKeyBuilder implements Builder {
         return substr($sql, 0, -1);
     }
 }
+
 ?>

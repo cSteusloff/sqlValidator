@@ -31,12 +31,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
@@ -46,31 +46,36 @@ require_once dirname(__FILE__) . '/Builder.php';
 require_once dirname(__FILE__) . '/FunctionBuilder.php';
 
 /**
- * This class implements the builder for the ORDER-BY clause. 
+ * This class implements the builder for the ORDER-BY clause.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class OrderByBuilder implements Builder {
+class OrderByBuilder implements Builder
+{
 
-    protected function buildFunction($parsed) {
+    protected function buildFunction($parsed)
+    {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildColRef($parsed) {
+
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildOrderByAlias($parsed) {
+    protected function buildOrderByAlias($parsed)
+    {
         $builder = new OrderByAliasBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = "";
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
@@ -88,4 +93,5 @@ class OrderByBuilder implements Builder {
         return "ORDER BY " . $sql;
     }
 }
+
 ?>

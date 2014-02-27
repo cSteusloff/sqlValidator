@@ -35,31 +35,36 @@ include_once($rootdir . '/classes/adodb/adodb.inc.php');
 
 $_ENV['DEBUG'] = 1;
 
-class OracleSQLTranslator extends PHPSQLCreator {
+class OracleSQLTranslator extends PHPSQLCreator
+{
 
     private $con; # this is the database connection from LimeSurvey
     private $preventColumnRefs = array();
     private $allTables = array();
     const ASTERISK_ALIAS = "[#RePl#]";
 
-    public function __construct($con) {
+    public function __construct($con)
+    {
         parent::__construct();
         $this->con = $con;
         $this->initGlobalVariables();
     }
 
-    private function initGlobalVariables() {
+    private function initGlobalVariables()
+    {
         $this->preventColumnRefs = false;
         $this->allTables = array();
     }
 
-    public static function dbgprint($txt) {
+    public static function dbgprint($txt)
+    {
         if (isset($_ENV['DEBUG'])) {
             print $txt;
         }
     }
 
-    public static function preprint($s, $return = false) {
+    public static function preprint($s, $return = false)
+    {
         $x = "<pre>";
         $x .= print_r($s, 1);
         $x .= "</pre>";
@@ -69,7 +74,8 @@ class OracleSQLTranslator extends PHPSQLCreator {
         self::dbgprint($x . "<br/>\n");
     }
 
-    protected function processAlias($parsed) {
+    protected function processAlias($parsed)
+    {
         if ($parsed === false) {
             return "";
         }
@@ -78,14 +84,16 @@ class OracleSQLTranslator extends PHPSQLCreator {
         return $sql;
     }
 
-    protected function processDELETE($parsed) {
+    protected function processDELETE($parsed)
+    {
         if (count($parsed['TABLES']) > 1) {
             die("cannot translate delete statement into Oracle dialect, multiple tables are not allowed.");
         }
         return "DELETE";
     }
 
-    public static function getColumnNameFor($column) {
+    public static function getColumnNameFor($column)
+    {
         if (strtolower($column) === 'uid') {
             $column = "uid_";
         }
@@ -93,7 +101,8 @@ class OracleSQLTranslator extends PHPSQLCreator {
         return $column;
     }
 
-    public static function getShortTableNameFor($table) {
+    public static function getShortTableNameFor($table)
+    {
         if (strtolower($table) === 'surveys_languagesettings') {
             $table = 'surveys_lngsettings';
         }
@@ -101,7 +110,8 @@ class OracleSQLTranslator extends PHPSQLCreator {
         return $table;
     }
 
-    protected function processTable($parsed, $index) {
+    protected function processTable($parsed, $index)
+    {
         if ($parsed['expr_type'] !== 'table') {
             return "";
         }
@@ -124,12 +134,14 @@ class OracleSQLTranslator extends PHPSQLCreator {
         return $sql;
     }
 
-    protected function processFROM($parsed) {
+    protected function processFROM($parsed)
+    {
         $this->allTables[] = array('tables' => array(), 'alias' => '');
         return parent::processFROM($parsed);
     }
 
-    protected function processTableExpression($parsed, $index) {
+    protected function processTableExpression($parsed, $index)
+    {
         if ($parsed['expr_type'] !== 'table_expression') {
             return "";
         }
@@ -152,7 +164,8 @@ class OracleSQLTranslator extends PHPSQLCreator {
         return $sql;
     }
 
-    private function getTableNameFromExpression($expr) {
+    private function getTableNameFromExpression($expr)
+    {
         $pos = strpos($expr, ".");
         if ($pos === false) {
             $pos = -1;
@@ -160,7 +173,8 @@ class OracleSQLTranslator extends PHPSQLCreator {
         return trim(substr($expr, 0, $pos + 1), ".");
     }
 
-    private function getColumnNameFromExpression($expr) {
+    private function getColumnNameFromExpression($expr)
+    {
         $pos = strpos($expr, ".");
         if ($pos === false) {
             $pos = -1;
@@ -168,14 +182,16 @@ class OracleSQLTranslator extends PHPSQLCreator {
         return substr($expr, $pos + 1);
     }
 
-    private function isCLOBColumnInDB($table, $column) {
+    private function isCLOBColumnInDB($table, $column)
+    {
         $res = $this->con->GetOne(
-                "SELECT count(*) FROM user_lobs WHERE table_name='" . strtoupper($table) . "' AND column_name='"
-                        . strtoupper($column) . "'");
+            "SELECT count(*) FROM user_lobs WHERE table_name='" . strtoupper($table) . "' AND column_name='"
+            . strtoupper($column) . "'");
         return ($res >= 1);
     }
 
-    protected function isCLOBColumn($table, $column) {
+    protected function isCLOBColumn($table, $column)
+    {
         $tables = end($this->allTables);
 
         if ($table === "") {
@@ -190,7 +206,8 @@ class OracleSQLTranslator extends PHPSQLCreator {
         # check the aliases, $table cannot be empty
         foreach ($tables['tables'] as $k => $v) {
             if ((strtolower($v['alias']) === strtolower($table))
-                    || (strtolower($tables['alias']) === strtolower($table))) {
+                || (strtolower($tables['alias']) === strtolower($table))
+            ) {
                 if ($this->isCLOBColumnInDB($v['table'], $column)) {
                     return true;
                 }
@@ -201,7 +218,8 @@ class OracleSQLTranslator extends PHPSQLCreator {
         return $this->isCLOBColumnInDB($table, $column);
     }
 
-    protected function processOrderByExpression($parsed) {
+    protected function processOrderByExpression($parsed)
+    {
         if ($parsed['type'] !== 'expression') {
             return "";
         }
@@ -219,7 +237,8 @@ class OracleSQLTranslator extends PHPSQLCreator {
         return $sql . " " . $parsed['direction'];
     }
 
-    protected function processColRef($parsed) {
+    protected function processColRef($parsed)
+    {
         if ($parsed['expr_type'] !== 'colref') {
             return "";
         }
@@ -248,7 +267,8 @@ class OracleSQLTranslator extends PHPSQLCreator {
         return (($table !== "") ? ($table . "." . $col) : $col) . $alias;
     }
 
-    protected function processFunctionOnSelect($parsed) {
+    protected function processFunctionOnSelect($parsed)
+    {
         $old = end($this->preventColumnRefs);
         $sql = $this->processFunction($parsed);
 
@@ -261,7 +281,8 @@ class OracleSQLTranslator extends PHPSQLCreator {
         return $sql;
     }
 
-    protected function processSELECT($parsed) {
+    protected function processSELECT($parsed)
+    {
         $this->preventColumnRefs[] = false;
 
         $sql = "";
@@ -282,7 +303,8 @@ class OracleSQLTranslator extends PHPSQLCreator {
         return "SELECT " . $sql;
     }
 
-    private function correctColRefStatement($sql) {
+    private function correctColRefStatement($sql)
+    {
         $alias = "";
         $tables = end($this->allTables);
 
@@ -303,7 +325,8 @@ class OracleSQLTranslator extends PHPSQLCreator {
         return $sql;
     }
 
-    protected function processSelectStatement($parsed) {
+    protected function processSelectStatement($parsed)
+    {
         $sql = $this->processSELECT($parsed['SELECT']);
         $from = $this->processFROM($parsed['FROM']);
 
@@ -329,22 +352,24 @@ class OracleSQLTranslator extends PHPSQLCreator {
         return $sql;
     }
 
-    public function create($parsed) {
+    public function create($parsed)
+    {
         $k = key($parsed);
         switch ($k) {
-        case "USE":
-        # this statement is not an Oracle statement
-            $this->created = "";
-            break;
+            case "USE":
+                # this statement is not an Oracle statement
+                $this->created = "";
+                break;
 
-        default:
-            $this->created = parent::create($parsed);
-            break;
+            default:
+                $this->created = parent::create($parsed);
+                break;
         }
         return $this->created;
     }
 
-    public function process($sql) {
+    public function process($sql)
+    {
         self::dbgprint($sql . "<br/>");
 
         $this->initGlobalVariables();

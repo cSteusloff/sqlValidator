@@ -33,17 +33,20 @@
 require_once(dirname(__FILE__) . '/SetProcessor.php');
 
 /**
- * 
+ *
  * This class processes the DUPLICATE statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
-class DuplicateProcessor extends SetProcessor {
+class DuplicateProcessor extends SetProcessor
+{
 
-    public function process($tokens) {
+    public function process($tokens)
+    {
         return parent::process($tokens, false);
     }
 
 }
+
 ?>

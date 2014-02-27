@@ -19,9 +19,6 @@ $master = new oracleConnection();
 $task = new taskHelper($master);
 $qT = new queryTranslator();
 
-//echo("<pre>");
-//var_dump($_POST);
-//die();
 // check inputs
 $empty = 0;
 !empty($_POST['title']) ? $_SESSION['title'] = $_POST['title'] : $empty++;

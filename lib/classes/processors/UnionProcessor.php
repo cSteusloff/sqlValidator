@@ -36,15 +36,17 @@ require_once(dirname(__FILE__) . '/DefaultProcessor.php');
 require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 
 /**
- * 
+ *
  * This class processes the UNION statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
-class UnionProcessor extends AbstractProcessor {
+class UnionProcessor extends AbstractProcessor
+{
 
-    public static function isUnion($queries) {
+    public static function isUnion($queries)
+    {
         $unionTypes = array('UNION', 'UNION ALL');
         foreach ($unionTypes as $unionType) {
             if (!empty($queries[$unionType])) {
@@ -64,7 +66,8 @@ class UnionProcessor extends AbstractProcessor {
      * is supported in each UNION block. (select)(select)union(select) is not legal.
      * The extra queries will be silently ignored.
      */
-    protected function processMySQLUnion($queries) {
+    protected function processMySQLUnion($queries)
+    {
         $unionTypes = array('UNION', 'UNION ALL');
         foreach ($unionTypes as $unionType) {
 
@@ -96,7 +99,8 @@ class UnionProcessor extends AbstractProcessor {
         return $queries;
     }
 
-    public function process($inputArray) {
+    public function process($inputArray)
+    {
         $outputArray = array();
 
         // ometimes the parser needs to skip ahead until a particular
@@ -165,4 +169,5 @@ class UnionProcessor extends AbstractProcessor {
     }
 
 }
+
 ?>

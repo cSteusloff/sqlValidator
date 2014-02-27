@@ -3,7 +3,7 @@
  * BracketProcessor.php
  *
  * This file implements the processor for the parentheses around the statements.
- * 
+ *
  * PHP version 5
  *
  * LICENSE:
@@ -45,19 +45,22 @@ require_once dirname(__FILE__) . '/AbstractProcessor.php';
 
 /**
  * This class processes the parentheses around the statement.
- * 
+ *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * 
+ *
  */
-class BracketProcessor extends AbstractProcessor {
+class BracketProcessor extends AbstractProcessor
+{
 
-    protected function processTopLevel($sql) {
+    protected function processTopLevel($sql)
+    {
         $processor = new DefaultProcessor();
         return $processor->process($sql);
     }
-    
-    public function process($tokens) {
+
+    public function process($tokens)
+    {
 
         $token = $this->removeParenthesisFromStart($tokens[0]);
         $subtree = $this->processTopLevel($token);
@@ -71,8 +74,8 @@ class BracketProcessor extends AbstractProcessor {
         }
 
         return array(
-                array('expr_type' => ExpressionType::BRACKET_EXPRESSION, 'base_expr' => trim($tokens[0]),
-                        'sub_tree' => $subtree));
+            array('expr_type' => ExpressionType::BRACKET_EXPRESSION, 'base_expr' => trim($tokens[0]),
+                'sub_tree' => $subtree));
     }
 
 }

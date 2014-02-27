@@ -76,9 +76,11 @@ require_once dirname(__FILE__) . '/BracketProcessor.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class SQLChunkProcessor extends AbstractProcessor {
+class SQLChunkProcessor extends AbstractProcessor
+{
 
-    protected function moveLIKE(&$out) {
+    protected function moveLIKE(&$out)
+    {
         if (!isset($out['TABLE']['like'])) {
             return;
         }
@@ -86,7 +88,8 @@ class SQLChunkProcessor extends AbstractProcessor {
         unset($out['TABLE']['like']);
     }
 
-    public function process($out) {
+    public function process($out)
+    {
         if (!$out) {
             return false;
         }
@@ -199,4 +202,5 @@ class SQLChunkProcessor extends AbstractProcessor {
         return $out;
     }
 }
+
 ?>

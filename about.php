@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="SQLValidator">
     <meta name="author" content="Christian Steusloff, Jens Wiemann">
-    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
 
     <title>SQL-Validator</title>
 
@@ -69,16 +69,18 @@
     $master_con = new oracleConnection();
     $slave_con = new oracleConnection();
 
-//    $master_con->setQuery("SELECT * From tab");
+/*//    $master_con->setQuery("SELECT * From tab");
 //    $master_con->execute();
 
-    $master_con->sqlquery = "SELECT cname,cid FROM MASTER_COCKTAIL WHERE gid between 5 AND 12";
-    $master_con->Query();
+    $master_con->setQuery("SELECT cname,cid FROM MASTER_COCKTAIL WHERE gid between 5 AND 12");
+
+    //$this->checkConnection->executeNoCommit();
+
     echo $master_con->printTable();
 
     echo("<br>");
 
-    $slave_con->Query("SELECT cname,gid FROM MASTER_COCKTAIL WHERE gid >= 5 AND gid < 12");
+    $slave_con->setQuery("SELECT cname,gid FROM MASTER_COCKTAIL WHERE gid >= 5 AND gid < 12");
     echo $slave_con->printTable();
 
     echo("<br>");
@@ -89,13 +91,7 @@
         echo("correct");
     } else {
         echo $valid->getMistake();
-    }
-
-
-
-
-
-
+    }*/
 
     ?>
 

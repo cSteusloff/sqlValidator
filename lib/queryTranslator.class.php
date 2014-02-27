@@ -5,56 +5,14 @@
  * Time: 21:43
  */
 
-require_once("classes/PHPSQLParser.php");
+//php-sql-browser
 //https://code.google.com/p/php-sql-parser/
-/*
-echo("<pre>");
-$qT = new queryTranslator();
-print_r($qT->translate("
-(
-  select 
-    cname 
-  from 
-    cocktail
-) minus (
-  select 
-    cname 
-  from 
-    cocktail natural 
-    join zutat_cocktail
-)
-", "Jens_"));
-*/
+require_once("classes/PHPSQLParser.php");
 
-
-/**
- * Class translation
- */
-class translation
-{
-    /**
-     * @var null
-     */
-    public $query = null;
-    /**
-     * @var bool
-     */
-    public $has_OrderBy = false;
-    /**
-     * @var null
-     */
-    public $OrderBy = null;
-    /**
-     * @var null
-     */
-    public $exception = null;
-}
 
 
 class queryTranslator
 {
-
-
     /**
      * Add $username in front of every tablename of $inputquery
      * @param $inputquery
@@ -63,13 +21,11 @@ class queryTranslator
      */
     public function translate($inputquery, $username)
     {
-        $translation = new translation();
         $result_Query = null;
         if (stristr($inputquery, "MINUS") === false) {
             try {
                 $parser = new PHPSQLParser();
                 $parsed = $parser->parse($inputquery, TRUE);
-                //print_r($parsed);
                 $positions = $this->nameSearch($parsed);
                 $result_Query = $inputquery;
                 $i = 0;
@@ -78,58 +34,22 @@ class queryTranslator
                     ++$i;
                 }
             } catch (Exception $e) {
-                $translation->exception = $e;
+                //TODO: Handle
             }
-            //$result_Query = $this->extractOrder($inputquery, $translation);
-            $translation->query = $result_Query;
         } else {
-            $this->translate_Minus($inputquery, $username, $translation);
+            $result_Query = $this->translate_Minus($inputquery, $username);
         }
-        //TODO: return whole translation
-        return $translation->query;
+        return $result_Query;
     }
-
-    /**
-     * @param $inputquery
-     * @param $translation
-     * @return null
-     */
-    private function extractOrder($inputquery, $translation)
-    {
-        if (stripos($inputquery, "ORDER BY") === false) {
-            return $inputquery;
-        } else {
-            $translation->has_OrderBy = true;
-            //TODO: complete
-           /* try {
-                $parser = new PHPSQLParser();
-                $parsed = $parser->parse($inputquery, TRUE);
-                //print_r($parsed);
-                $positions = $this->nameSearch($parsed);
-                $result_Query = $inputquery;
-                $i = 0;
-                foreach ($positions as $pos) {
-                    $result_Query = substr_replace($result_Query, "", $pos + strlen($username) * $i, 0);
-                    ++$i;
-                }
-            } catch (Exception $e) {
-                $translation->exception = $e;
-            }
-
-*/
-            return $inputquery;
-        }
-
-    }
-
 
     /**
      * @param $inputquery
      * @param $username
      * @return Exception|mixed|string
      */
-    private function translate_Minus($inputquery, $username, $translation)
+    private function translate_Minus($inputquery, $username)
     {
+        $answer = null;
         $first = true;
         $inputquery = str_ireplace("minus", "MINUS", $inputquery);
         $parts = explode("MINUS", $inputquery);
@@ -139,6 +59,7 @@ class queryTranslator
             //Remove superfluous brackets
             $supBrackets = false;
             $position1 = strpos($part, "(");
+            $position2 = null;
             if ($position1 === 0 || $position1 === 1 || $position1 === 2 || $position1 === 3) {
                 $position2 = strrpos($part, ")");
                 if ($position2 != 0) {
@@ -150,7 +71,6 @@ class queryTranslator
             try {
                 $parser = new PHPSQLParser();
                 $parsed = $parser->parse($part, TRUE);
-                //print_r($parsed);
                 $positions = $this->nameSearch($parsed);
 
                 $i = 0;
@@ -159,8 +79,8 @@ class queryTranslator
                     ++$i;
                 }
             } catch (Exception $e) {
-                $translation->exception = $e;
-                return;
+                //TODO: Handle
+                return null;
             }
             //Insert removed Brackets
             if ($supBrackets) {
@@ -175,10 +95,12 @@ class queryTranslator
                 $answer .= "MINUS" . $part;
         }
 
-        $translation->query = $answer;
+        return $answer;
     }
-    //Search for Names in Query
+
     /**
+     * Search for Names in Query
+     *
      * @param $parsedarray
      * @return array|ArrayObject
      */
@@ -186,7 +108,6 @@ class queryTranslator
     {
 
         //Change if other type required
-        //$tempresult = search($parsedarray, "expr_type", "table");
         $tempresult = $this->search2($parsedarray, "table");
         $answer = new ArrayObject();
 

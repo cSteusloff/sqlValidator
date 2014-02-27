@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Project: sqlValidator
  * User: Christian Steusloff
@@ -7,21 +8,30 @@
  *
  * only for Frontend
  */
+class frontendHelper
+{
 
-class frontendHelper {
-
-
-    public function unsetSession(&$session,$stringVariable){
-        if(is_array($stringVariable)){
-            foreach($stringVariable as $value){
-                $this->_unsetSession($session,$value);
+    /**
+     * @param $session
+     * @param $stringVariable
+     */
+    public function unsetSession(&$session, $stringVariable)
+    {
+        if (is_array($stringVariable)) {
+            foreach ($stringVariable as $value) {
+                $this->_unsetSession($session, $value);
             }
         } else {
-            $this->_unsetSession($session,$stringVariable);
+            $this->_unsetSession($session, $stringVariable);
         }
     }
 
-    private function _unsetSession(&$session,$var){
+    /**
+     * @param $session
+     * @param $var
+     */
+    private function _unsetSession(&$session, $var)
+    {
         $session[$var] = null;
         unset($session[$var]);
     }

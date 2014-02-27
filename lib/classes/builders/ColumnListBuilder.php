@@ -31,34 +31,38 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
 require_once dirname(__FILE__) . '/IndexColumnBuilder.php';
 require_once dirname(__FILE__) . '/Builder.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+
 /**
- * This class implements the builder for column-list parts of CREATE TABLE. 
+ * This class implements the builder for column-list parts of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class ColumnListBuilder implements Builder {
+class ColumnListBuilder implements Builder
+{
 
-    protected function buildIndexColumn($parsed) {
+    protected function buildIndexColumn($parsed)
+    {
         $builder = new IndexColumnBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::COLUMN_LIST) {
             return "";
         }
@@ -72,9 +76,10 @@ class ColumnListBuilder implements Builder {
             }
 
             $sql .= " ";
-        } 
+        }
         return "(" . substr($sql, 0, -1) . ")";
     }
 
 }
+
 ?>

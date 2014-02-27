@@ -2,7 +2,7 @@
 /**
  * ReplaceProcessor.php
  *
- * This file implements the processor for the REPLACE statements. 
+ * This file implements the processor for the REPLACE statements.
  *
  * PHP version 5
  *
@@ -46,13 +46,16 @@ require_once dirname(__FILE__) . '/InsertProcessor.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class ReplaceProcessor extends InsertProcessor {
+class ReplaceProcessor extends InsertProcessor
+{
 
-    public function process($tokenList) {
+    public function process($tokenList)
+    {
         return parent::process($tokenList, 'REPLACE');
     }
 
 }
+
 ?>

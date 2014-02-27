@@ -33,15 +33,17 @@
 require_once(dirname(__FILE__) . '/OrderByProcessor.php');
 
 /**
- * 
+ *
  * This class processes the GROUP-BY statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
-class GroupByProcessor extends OrderByProcessor {
+class GroupByProcessor extends OrderByProcessor
+{
 
-    public function process($tokens, $select = array()) {
+    public function process($tokens, $select = array())
+    {
         $out = array();
         $parseInfo = $this->initParseInfo();
 
@@ -52,15 +54,15 @@ class GroupByProcessor extends OrderByProcessor {
         foreach ($tokens as $token) {
             $trim = strtoupper(trim($token));
             switch ($trim) {
-            case ',':
-                $parsed = $this->processOrderExpression($parseInfo, $select);
-                unset($parsed['direction']);
+                case ',':
+                    $parsed = $this->processOrderExpression($parseInfo, $select);
+                    unset($parsed['direction']);
 
-                $out[] = $parsed;
-                $parseInfo = $this->initParseInfo();
-                break;
-            default:
-                $parseInfo['base_expr'] .= $token;
+                    $out[] = $parsed;
+                    $parseInfo = $this->initParseInfo();
+                    break;
+                default:
+                    $parseInfo['base_expr'] .= $token;
             }
         }
 
@@ -71,4 +73,5 @@ class GroupByProcessor extends OrderByProcessor {
         return $out;
     }
 }
+
 ?>

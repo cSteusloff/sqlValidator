@@ -31,12 +31,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/LimitBuilder.php';
@@ -47,52 +47,62 @@ require_once dirname(__FILE__) . '/GroupByBuilder.php';
 require_once dirname(__FILE__) . '/HavingBuilder.php';
 require_once dirname(__FILE__) . '/OrderByBuilder.php';
 require_once dirname(__FILE__) . '/Builder.php';
+
 /**
  * This class implements the builder for the whole Select statement. You can overwrite
  * all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class SelectStatementBuilder implements Builder {
+class SelectStatementBuilder implements Builder
+{
 
-    protected function buildSELECT($parsed) {
+    protected function buildSELECT($parsed)
+    {
         $builder = new SelectBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFROM($parsed) {
+    protected function buildFROM($parsed)
+    {
         $builder = new FromBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildWHERE($parsed) {
+    protected function buildWHERE($parsed)
+    {
         $builder = new WhereBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildGROUP($parsed) {
+    protected function buildGROUP($parsed)
+    {
         $builder = new GroupByBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildHAVING($parsed) {
+    protected function buildHAVING($parsed)
+    {
         $builder = new HavingBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildORDER($parsed) {
+
+    protected function buildORDER($parsed)
+    {
         $builder = new OrderByBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildLIMIT($parsed) {
+    protected function buildLIMIT($parsed)
+    {
         $builder = new LimitBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = "";
         if (isset($parsed['SELECT'])) {
             $sql .= $this->buildSELECT($parsed['SELECT']);
@@ -119,4 +129,5 @@ class SelectStatementBuilder implements Builder {
     }
 
 }
+
 ?>

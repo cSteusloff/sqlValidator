@@ -31,12 +31,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/Builder.php';
@@ -47,11 +47,13 @@ require_once dirname(__FILE__) . '/Builder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class DeleteBuilder implements Builder {
+class DeleteBuilder implements Builder
+{
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = "DELETE";
         foreach ($parsed['TABLES'] as $k => $v) {
             $sql .= $v . ",";
@@ -59,4 +61,5 @@ class DeleteBuilder implements Builder {
         return substr($sql, 0, -1);
     }
 }
+
 ?>

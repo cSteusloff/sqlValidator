@@ -22,7 +22,6 @@
 //define('DB_PORT', '1521');
 
 
-
 define('DB_CHARSET', 'UTF8');
 define('DB_HOST', 'oban.cs.uni-magdeburg.de');
 define('DB_DATABASE', 'tox');
@@ -35,5 +34,5 @@ define('TAB_PERMISSION_INSERT_UPDATE_DELETE', '2');
 define('TAB_PERMISSION_CREATE', '4');
 define('TAB_PERMISSION_DROP', '8');
 
-define('ADMIN_TAB_PREFIX','MASTER_');
+define('ADMIN_TAB_PREFIX', 'MASTER_');
 

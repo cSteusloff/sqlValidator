@@ -34,19 +34,22 @@ require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 
 /**
- * 
+ *
  * This class processes the index column lists.
- * 
+ *
  * @author arothe
- * 
+ *
  */
-class IndexColumnListProcessor extends AbstractProcessor {
+class IndexColumnListProcessor extends AbstractProcessor
+{
 
-    protected function initExpression() {
+    protected function initExpression()
+    {
         return array('name' => false, 'no_quotes' => false, 'length' => false, 'dir' => false);
     }
 
-    public function process($sql) {
+    public function process($sql)
+    {
         $tokens = $this->splitSQLIntoTokens($sql);
 
         $expr = $this->initExpression();
@@ -66,34 +69,35 @@ class IndexColumnListProcessor extends AbstractProcessor {
 
             switch ($upper) {
 
-            case 'ASC':
-            case 'DESC':
-            # the optional order
-                $expr['dir'] = $trim;
-                break;
+                case 'ASC':
+                case 'DESC':
+                    # the optional order
+                    $expr['dir'] = $trim;
+                    break;
 
-            case ',':
-            # the next column
-                $result[] = array_merge(array('expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr),
+                case ',':
+                    # the next column
+                    $result[] = array_merge(array('expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr),
                         $expr);
-                $expr = $this->initExpression();
-                $base_expr = "";
-                break;
+                    $expr = $this->initExpression();
+                    $base_expr = "";
+                    break;
 
-            default:
-                if ($upper[0] === '(' && substr($upper, -1) === ')') {
-                    # the optional length
-                    $expr['length'] = $this->removeParenthesisFromStart($trim);
-                    continue 2;
-                }
-                # the col name
-                $expr['name'] = $trim;
-                $expr['no_quotes'] = $this->revokeQuotation($trim);
-                break;
+                default:
+                    if ($upper[0] === '(' && substr($upper, -1) === ')') {
+                        # the optional length
+                        $expr['length'] = $this->removeParenthesisFromStart($trim);
+                        continue 2;
+                    }
+                    # the col name
+                    $expr['name'] = $trim;
+                    $expr['no_quotes'] = $this->revokeQuotation($trim);
+                    break;
             }
         }
         $result[] = array_merge(array('expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr), $expr);
         return $result;
     }
 }
+
 ?>

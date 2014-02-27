@@ -33,7 +33,7 @@
 if (!defined('HAVE_PHP_SQL_PARSER')) {
 
     require_once(dirname(__FILE__) . '/classes/position-calculator.php');
-    require_once(dirname(__FILE__) . '/classes/processors/default-processor.php');
+    require_once(dirname(__FILE__) . '/classes/processors/DefaultProcessor.php');
 
     /**
      * This class implements the parser functionality.
@@ -41,21 +41,24 @@ if (!defined('HAVE_PHP_SQL_PARSER')) {
      * @author greenlion@gmail.com
      * @author arothe@phosco.info
      */
-    class PHPSQLParser {
+    class PHPSQLParser
+    {
 
         public $parsed;
-        
-        public function __construct($sql = false, $calcPositions = false) {
+
+        public function __construct($sql = false, $calcPositions = false)
+        {
             if ($sql) {
                 $this->parse($sql, $calcPositions);
             }
         }
-        
-        public function parse($sql, $calcPositions = false) {
-            
+
+        public function parse($sql, $calcPositions = false)
+        {
+
             $processor = new DefaultProcessor();
             $queries = $processor->process($sql);
-                        
+
             // calc the positions of some important tokens
             if ($calcPositions) {
                 $calculator = new PositionCalculator();
@@ -67,5 +70,6 @@ if (!defined('HAVE_PHP_SQL_PARSER')) {
             return $this->parsed;
         }
     }
+
     define('HAVE_PHP_SQL_PARSER', 1);
 }

@@ -33,16 +33,19 @@
 require_once(dirname(__FILE__) . '/ExplainProcessor.php');
 
 /**
- * 
+ *
  * This class processes the DESCRIBE statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
-class DescribeProcessor extends ExplainProcessor {
+class DescribeProcessor extends ExplainProcessor
+{
 
-    protected function isStatement($keys, $needle = "DESCRIBE") {
+    protected function isStatement($keys, $needle = "DESCRIBE")
+    {
         return parent::isStatement($keys, $needle);
     }
 }
+
 ?>

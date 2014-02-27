@@ -31,12 +31,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
@@ -45,28 +45,32 @@ require_once dirname(__FILE__) . '/ReservedBuilder.php';
 require_once dirname(__FILE__) . '/Builder.php';
 
 /**
- * This class implements the builder for the (LIKE) keyword within a 
- * CREATE TABLE statement. There are difference to LIKE (without parenthesis), 
+ * This class implements the builder for the (LIKE) keyword within a
+ * CREATE TABLE statement. There are difference to LIKE (without parenthesis),
  * the latter is a top-level element of the output array.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class LikeExpressionBuilder implements Builder {
+class LikeExpressionBuilder implements Builder
+{
 
-    protected function buildTable($parsed, $index) {
+    protected function buildTable($parsed, $index)
+    {
         $builder = new TableBuilder();
         return $builder->build($parsed, $index);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::LIKE) {
             return "";
         }
@@ -85,4 +89,5 @@ class LikeExpressionBuilder implements Builder {
         return substr($sql, 0, -1);
     }
 }
+
 ?>

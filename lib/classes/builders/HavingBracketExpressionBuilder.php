@@ -31,12 +31,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
@@ -46,22 +46,25 @@ require_once dirname(__FILE__) . '/WhereBracketExpressionBuilder.php';
 require_once dirname(__FILE__) . '/Builder.php';
 
 /**
- * This class implements the builder for bracket expressions within the HAVING part. 
+ * This class implements the builder for bracket expressions within the HAVING part.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  Ian Barker <ian@theorganicagency.com>
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class HavingBracketExpressionBuilder extends WhereBracketExpressionBuilder implements Builder {
-    
-    protected function buildHavingExpression($parsed) {
+class HavingBracketExpressionBuilder extends WhereBracketExpressionBuilder implements Builder
+{
+
+    protected function buildHavingExpression($parsed)
+    {
         $builder = new HavingExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::BRACKET_EXPRESSION) {
             return "";
         }
@@ -89,4 +92,5 @@ class HavingBracketExpressionBuilder extends WhereBracketExpressionBuilder imple
     }
 
 }
+
 ?>

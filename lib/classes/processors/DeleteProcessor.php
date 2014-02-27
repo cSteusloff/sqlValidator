@@ -33,15 +33,17 @@
 require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 
 /**
- * 
+ *
  * This class processes the DELETE statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
-class DeleteProcessor extends AbstractProcessor {
+class DeleteProcessor extends AbstractProcessor
+{
 
-    public function process($tokens) {
+    public function process($tokens)
+    {
         $tables = array();
         $del = $tokens['DELETE'];
 
@@ -61,4 +63,5 @@ class DeleteProcessor extends AbstractProcessor {
         return $tokens;
     }
 }
+
 ?>

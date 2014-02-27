@@ -24,7 +24,7 @@ $db->execute();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="SQLValidator">
     <meta name="author" content="Christian Steusloff, Jens Wiemann">
-    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
     <title>SQL-Validator</title>
 
     <!-- SQL-Syntax Highlighting -->
@@ -90,9 +90,9 @@ $db->execute();
 
             <!-- Text input-->
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="title">task title</label>
+                <label class="col-sm-2 control-label" for="title">Title</label>
                 <div class="col-sm-10">
-                    <input id="title" name="title" type="text" placeholder="task title"
+                    <input id="title" name="title" type="text"
                            class="input-xlarge form-control" required=""
                            value="<?php echo isset($_SESSION["title"]) ? $_SESSION["title"] : "";?>">
                 </div>
@@ -100,7 +100,7 @@ $db->execute();
 
             <!-- Textarea -->
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="text">task text</label>
+                <label class="col-sm-2 control-label" for="text">Description</label>
                 <div class="col-sm-10">
                     <textarea id="text" class="form-control" rows="4" required="" name="text"><?php echo isset($_SESSION["text"]) ? $_SESSION["text"] : "";?></textarea>
                 </div>
@@ -108,14 +108,14 @@ $db->execute();
 
             <!-- Select Multiple -->
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="table2">table in use</label>
+                <label class="col-sm-2 control-label" for="table2">Provided tables</label>
                 <div class="col-sm-10">
                     <select id="table" name="table[]" required="" class="form-control" multiple="multiple" size="10">
                         <?php
                         while($db->Fetch(false)){
                             $tablename = substr(strtoupper($db->row[0]),strlen(ADMIN_TAB_PREFIX));
-                            var_dump($db->row[0]);
-                            var_dump($_SESSION["table"]);
+                            // var_dump($db->row[0]);
+                            // var_dump($_SESSION["table"]);
 
                             if(in_array($db->row[0],$_SESSION["table"])){
                                 echo("<option value='{$db->row[0]}' selected=selected>".$tablename."</option>");
@@ -135,7 +135,7 @@ $db->execute();
                  to this: <input type="checkbox" name="right[#]" id="right-#" value="#">
                  -->
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="right">right</label>
+                <label class="col-sm-2 control-label" for="right">Rights</label>
                 <div class="col-sm-10">
                     <div class="checkbox checkbox-inline"><label class="" for="right-0">
                             <input type="radio"
@@ -229,7 +229,7 @@ $db->execute();
             indentWithTabs: true,
             smartIndent: true,
             lineNumbers: true,
-            matchBrackets : true,
+            matchBrackets : true
         });
     };
 </script>

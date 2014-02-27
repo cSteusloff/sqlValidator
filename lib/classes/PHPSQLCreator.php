@@ -31,12 +31,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/exceptions/UnsupportedFeatureException.php';
@@ -49,69 +49,73 @@ require_once dirname(__FILE__) . '/builders/ShowStatementBuilder.php';
 require_once dirname(__FILE__) . '/builders/BracketStatementBuilder.php';
 
 /**
- * This class generates SQL from the output of the PHPSQLParser. 
+ * This class generates SQL from the output of the PHPSQLParser.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class PHPSQLCreator {
+class PHPSQLCreator
+{
 
-    public function __construct($parsed = false) {
+    public function __construct($parsed = false)
+    {
         if ($parsed) {
             $this->create($parsed);
         }
     }
 
-    public function create($parsed) {
+    public function create($parsed)
+    {
         $k = key($parsed);
         switch ($k) {
 
-        case 'UNION':
-        case 'UNION ALL':
-            throw new UnsupportedFeatureException($k);
-            break;
-        case 'SELECT':
-            $builder = new SelectStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'INSERT':
-            $builder = new InsertStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'DELETE':
-            $builder = new DeleteStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'UPDATE':
-            $builder = new UpdateStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'RENAME':
-            $this->created = $this->processRenameTableStatement($parsed);
-            break;
-        case 'SHOW':
-            $builder = new ShowStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'CREATE':
-            $builder = new CreateStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'BRACKET':
-            $builder = new BracketStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        default:
-            throw new UnsupportedFeatureException($k);
-            break;
+            case 'UNION':
+            case 'UNION ALL':
+                throw new UnsupportedFeatureException($k);
+                break;
+            case 'SELECT':
+                $builder = new SelectStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'INSERT':
+                $builder = new InsertStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'DELETE':
+                $builder = new DeleteStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'UPDATE':
+                $builder = new UpdateStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'RENAME':
+                $this->created = $this->processRenameTableStatement($parsed);
+                break;
+            case 'SHOW':
+                $builder = new ShowStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'CREATE':
+                $builder = new CreateStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'BRACKET':
+                $builder = new BracketStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            default:
+                throw new UnsupportedFeatureException($k);
+                break;
         }
         return $this->created;
     }
 
     // TODO: we should change that, there are multiple "rename objects" as
     // table, user, database
-    protected function processRenameTableStatement($parsed) {
+    protected function processRenameTableStatement($parsed)
+    {
         $rename = $parsed['RENAME'];
         $sql = "";
         foreach ($rename as $k => $v) {
@@ -128,11 +132,13 @@ class PHPSQLCreator {
         return "RENAME TABLE " . $sql;
     }
 
-    protected function processSourceAndDestTable($v) {
+    protected function processSourceAndDestTable($v)
+    {
         if (!isset($v['source']) || !isset($v['destination'])) {
             return "";
         }
         return $v['source']['base_expr'] . " TO " . $v['destination']['base_expr'];
     }
 }
+
 ?>

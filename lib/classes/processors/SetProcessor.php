@@ -35,17 +35,19 @@ require_once(dirname(__FILE__) . '/ExpressionListProcessor.php');
 require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 
 /**
- * 
+ *
  * This class processes the SET statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
-class SetProcessor extends AbstractProcessor {
+class SetProcessor extends AbstractProcessor
+{
 
     private $expressionListProcessor;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->expressionListProcessor = new ExpressionListProcessor();
     }
 
@@ -53,13 +55,15 @@ class SetProcessor extends AbstractProcessor {
      * A SET list is simply a list of key = value expressions separated by comma (,).
      * This function produces a list of the key/value expressions.
      */
-    protected function getAssignment($base_expr) {
+    protected function getAssignment($base_expr)
+    {
         $assignment = $this->expressionListProcessor->process($this->splitSQLIntoTokens($base_expr));
         return array('expr_type' => ExpressionType::EXPRESSION, 'base_expr' => trim($base_expr),
-                     'sub_tree' => $assignment);
+            'sub_tree' => $assignment);
     }
 
-    public function process($tokens, $isUpdate = false) {
+    public function process($tokens, $isUpdate = false)
+    {
         $result = array();
         $baseExpr = "";
         $assignment = false;
@@ -69,27 +73,27 @@ class SetProcessor extends AbstractProcessor {
             $upper = strtoupper(trim($token));
 
             switch ($upper) {
-            case 'LOCAL':
-            case 'SESSION':
-            case 'GLOBAL':
-                if (!$isUpdate) {
-                    $varType = $this->getVariableType("@@" . $upper . ".");
+                case 'LOCAL':
+                case 'SESSION':
+                case 'GLOBAL':
+                    if (!$isUpdate) {
+                        $varType = $this->getVariableType("@@" . $upper . ".");
+                        $baseExpr = "";
+                        continue 2;
+                    }
+                    break;
+
+                case ',':
+                    $assignment = $this->getAssignment($baseExpr);
+                    if (!$isUpdate && $varType !== false) {
+                        $assignment['sub_tree'][0]['expr_type'] = $varType;
+                    }
+                    $result[] = $assignment;
                     $baseExpr = "";
+                    $varType = false;
                     continue 2;
-                }
-                break;
 
-            case ',':
-                $assignment = $this->getAssignment($baseExpr);
-                if (!$isUpdate && $varType !== false) {
-                    $assignment['sub_tree'][0]['expr_type'] = $varType;
-                }
-                $result[] = $assignment;
-                $baseExpr = "";
-                $varType = false;
-                continue 2;
-
-            default:
+                default:
             }
             $baseExpr .= $token;
         }
@@ -106,4 +110,5 @@ class SetProcessor extends AbstractProcessor {
     }
 
 }
+
 ?>

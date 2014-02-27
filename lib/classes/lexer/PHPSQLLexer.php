@@ -2,9 +2,9 @@
 /**
  * PHPSQLLexer.php
  *
- * This file contains the lexer, which splits and recombines parts of the 
+ * This file contains the lexer, which splits and recombines parts of the
  * SQL statement just before parsing.
- * 
+ *
  * PHP version 5
  *
  * LICENSE:
@@ -32,12 +32,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/LexerSplitter.php';
@@ -46,33 +46,36 @@ require_once dirname(__FILE__) . '/../exceptions/InvalidParameterException.php';
 /**
  * This class splits the SQL string into little parts, which the parser can
  * use to build the result array.
- * 
+ *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class PHPSQLLexer {
+class PHPSQLLexer
+{
 
     protected $splitters;
 
     /**
-     * Constructor. 
-     * 
+     * Constructor.
+     *
      * It initializes some fields.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->splitters = new LexerSplitter();
     }
 
     /**
      * Ends the given string $haystack with the string $needle?
-     * 
+     *
      * @param string $haystack
      * @param string $needle
-     * 
+     *
      * @return boolean true, if the parameter $haystack ends with the character sequences $needle, false otherwise
      */
-    protected function endsWith($haystack, $needle) {
+    protected function endsWith($haystack, $needle)
+    {
         $length = strlen($needle);
         if ($length == 0) {
             return true;
@@ -80,7 +83,8 @@ class PHPSQLLexer {
         return (substr($haystack, -$length) === $needle);
     }
 
-    public function split($sql) {
+    public function split($sql)
+    {
         if (!is_string($sql)) {
             throw new InvalidParameterException($sql);
         }
@@ -128,7 +132,8 @@ class PHPSQLLexer {
         return $tokens;
     }
 
-    protected function concatUserDefinedVariables($tokens) {
+    protected function concatUserDefinedVariables($tokens)
+    {
         $i = 0;
         $cnt = count($tokens);
         $userdef = false;
@@ -160,7 +165,8 @@ class PHPSQLLexer {
         return array_values($tokens);
     }
 
-    protected function concatComments($tokens) {
+    protected function concatComments($tokens)
+    {
 
         $i = 0;
         $cnt = count($tokens);
@@ -203,11 +209,13 @@ class PHPSQLLexer {
         return array_values($tokens);
     }
 
-    protected function isBacktick($token) {
+    protected function isBacktick($token)
+    {
         return ($token === "'" || $token === "\"" || $token === "`");
     }
 
-    protected function balanceBackticks($tokens) {
+    protected function balanceBackticks($tokens)
+    {
         $i = 0;
         $cnt = count($tokens);
         while ($i < $cnt) {
@@ -231,7 +239,8 @@ class PHPSQLLexer {
 
     // backticks are not balanced within one token, so we have
     // to re-combine some tokens
-    protected function balanceCharacter($tokens, $idx, $char) {
+    protected function balanceCharacter($tokens, $idx, $char)
+    {
 
         $token_count = count($tokens);
         $i = $idx + 1;
@@ -258,12 +267,13 @@ class PHPSQLLexer {
     /**
      * This function concats some tokens to a column reference.
      * There are two different cases:
-     * 
+     *
      * 1. If the current token ends with a dot, we will add the next token
-     * 2. If the next token starts with a dot, we will add it to the previous token 
+     * 2. If the next token starts with a dot, we will add it to the previous token
      *
      */
-    protected function concatColReferences($tokens) {
+    protected function concatColReferences($tokens)
+    {
 
         $cnt = count($tokens);
         $i = 0;
@@ -312,7 +322,8 @@ class PHPSQLLexer {
         return array_values($tokens);
     }
 
-    protected function concatEscapeSequences($tokens) {
+    protected function concatEscapeSequences($tokens)
+    {
         $tokenCount = count($tokens);
         $i = 0;
         while ($i < $tokenCount) {
@@ -329,7 +340,8 @@ class PHPSQLLexer {
         return array_values($tokens);
     }
 
-    protected function balanceParenthesis($tokens) {
+    protected function balanceParenthesis($tokens)
+    {
         $token_count = count($tokens);
         $i = 0;
         while ($i < $token_count) {

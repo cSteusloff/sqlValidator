@@ -1,11 +1,12 @@
 <?php
+
 /**
  * User: Christian Steusloff
  * Date: 27.11.13
  * Time: 18:40
  */
-
-abstract class sqlConnection {
+abstract class sqlConnection
+{
     /**
      * The active connection
      *
@@ -70,16 +71,12 @@ abstract class sqlConnection {
      */
     public $sqlquery;
 
-
-//    public $origsqlquery;
-
     /**
      * Savepoint for rollback - state of database
      *
      * @var string - SQL Savepoint
      */
     protected $savepoint;
-
 
     /**
      * Abstract class to handle connections
@@ -100,13 +97,42 @@ abstract class sqlConnection {
      */
     abstract public function setQuery($sql = '');
 
-
-    //abstract public function setOrigQuery($sql = '');
-
+    /**
+     * @param null $name
+     * @return mixed
+     */
+    abstract public function setSavePoint($name = null);
 
     /**
-     * Try to running SQL query
-     *
+     * @return mixed
+     */
+    abstract public function executeNoCommit();
+
+    /**
+     * @param bool $commit
+     * @return mixed
+     */
+    abstract public function rollbackSavePoint($commit = true);
+
+    /**
+     * @param bool $toString
+     * @return mixed
+     */
+    abstract public function getContent($toString = false);
+
+    /**
+     * @return mixed
+     */
+    abstract public function getErrortext();
+
+    /**
+     * @param bool $toString
+     * @return mixed
+     */
+    abstract public function getHeader($toString = false);
+
+    /**
+     * Try running the SQL query
      *
      * @return mixed
      */
@@ -183,7 +209,6 @@ abstract class sqlConnection {
      * @return string
      */
     abstract public function printTable($classname = null);
-
 
     /**
      * Returns the type of SQL query statement

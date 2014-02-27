@@ -8,19 +8,18 @@
  */
 class sqlValidator
 {
-
     /**
-     * @var oracleConnection
+     * @var sqlConnection
      */
     private $masterConnection = null;
 
     /**
-     * @var oracleConnection
+     * @var sqlConnection
      */
     private $slaveConnection = null;
 
     /**
-     * @var oracleConnection
+     * @var sqlConnection
      */
     private $checkConnection = null;
 
@@ -29,16 +28,18 @@ class sqlValidator
      */
     private $task = null;
 
-
     /**
      * @var string - table prefix user + userId + "_"
      */
     private $tablePrefix = null;
 
     /**
-     * @param null oracleConnection
+     * @param sqlConnection $masterConnection
+     * @param sqlConnection $slaveConnection
+     * @param taskHelper $task
+     * @internal param \sqlConnection $null
      */
-    public function setSqlConnection(oracleConnection $masterConnection, oracleConnection $slaveConnection, taskHelper $task)
+    public function setSqlConnection(sqlConnection $masterConnection, sqlConnection $slaveConnection, taskHelper $task)
     {
         $this->masterConnection = $masterConnection;
         $this->slaveConnection = $slaveConnection;
@@ -69,25 +70,21 @@ class sqlValidator
     }
 
     /**
-     * @param sqlConnection $sqlConnection
+     * @param sqlConnection $masterConnection
+     * @param sqlConnection $slaveConnection
+     * @param taskHelper $task
+     * @internal param \sqlConnection $sqlConnection
      */
     function __construct(sqlConnection $masterConnection, sqlConnection $slaveConnection, taskHelper $task)
     {
         $this->setSqlConnection($masterConnection, $slaveConnection, $task);
     }
 
+    /**
+     * @return bool if answer is correct
+     */
     public function validate()
     {
-        // nur fuer insert/update/delete wichtig
-        // Alter/Drop auch
-
-        // Master darf sich nicht ändern und User bei validate auch nicht!
-        // Das User sich ändert muss expliziet aufgerufen werden.
-
-        // Mit Tricks ist es möglich, INSERT/UPDATE/DELETE/DROP auf mehrere Tabellen anzuwenden,
-        // daher erlaubt die Aufgabenertellung auch mehrere Tabellen.
-        // Das heißt die Ausgabe danach sollte einfach mit allen "notwendigen" Tabellen durchgeführt werden
-        // Ergebnis vergleich --> SELECT * --> FERTIG
         $this->masterConnection->setSavePoint();
         $this->slaveConnection->setSavePoint();
         $this->checkConnection->setSavePoint();
@@ -96,11 +93,6 @@ class sqlValidator
         $this->masterConnection->executeNoCommit();
         $this->slaveConnection->executeNoCommit();
 
-        //1. Check if query is equal ignoring case and spaces
-        //echo("<pre>");
-        //var_dump($this->task->getTaskType());
-        //var_dump(strcasecmp(preg_replace( '/\s+/', '',$this->masterConnection->origsqlquery), preg_replace( '/\s+/', '',$this->slaveConnection->origsqlquery)));
-        //die();
         $var = false;
         if (strcasecmp(preg_replace('/\s+/', '', $this->task->getSolution()), preg_replace('/\s+/', '', $this->task->getUserInput())) == 0) {
             $var = true;
@@ -122,15 +114,9 @@ class sqlValidator
                     $var = $this->validateCreate();
                     break;
                 case "DROP":
+                    $var = $this->validateDrop();
                     break;
-
             }
-
-            // validate only select
-            //$this->masterConnection->getStatementType();
-            //$this->task->getTaskType();
-
-
         }
         $this->masterConnection->rollbackSavePoint();
         $this->slaveConnection->rollbackSavePoint();
@@ -139,6 +125,19 @@ class sqlValidator
         return $var;
     }
 
+    /**
+     * @return bool
+     */
+    private function validateDrop()
+    {
+        //TODO: check if Tables still exist
+        $this->task->getTableNames();
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
     private function validateSelect()
     {
         if ($this->validateDimensions()) {
@@ -146,28 +145,6 @@ class sqlValidator
             if (stripos($this->masterConnection->sqlquery, "ORDER BY") === false) {
                 if ($this->validateHeader())
                     return $this->validateContentiO();
-
-                /*
-                // TODO: remove ORDER BY from slaveConnection->sqlquery
-                // if is query output the same - MINUS return empty content
-                $this->checkConnection->setQuery($this->masterConnection->sqlquery . " MINUS " . $this->slaveConnection->sqlquery);
-                $this->checkConnection->executeNoCommit();
-                // must be zero
-                $emptyContentOneDirection = $this->checkConnection->numRows(false);
-                // String as HTML-Table with names of header
-                $this->checkConnection->setQuery($this->slaveConnection->sqlquery . " MINUS " . $this->masterConnection->sqlquery);
-                $this->checkConnection->executeNoCommit();
-                // must be zero
-                $emptyContentOtherDirection = $this->checkConnection->numRows(false);
-                // String as HTML-Table with names of header
-                if ($emptyContentOneDirection == 0 && $emptyContentOtherDirection == 0) {
-                    return $this->validateHeader();
-                } else {
-                    $this->setMistake("incorrect Solution - content differs");
-                    return false;
-                }
-                */
-
             } else {
                 if ($this->validateHeader())
                     return $this->validateContent();
@@ -175,40 +152,40 @@ class sqlValidator
         } else {
             return false;
         }
-
         return false;
     }
 
+    /**
+     * @return bool
+     */
     private function validateUpdate()
     {
         if ($this->validateDimensions()) {
-
-            // TODO: hier ist der FEHLER!!!!
-            // du hättest das foreach um die beiden machen müssen!
 
             $this->masterConnection->executeNoCommit();
             $this->slaveConnection->executeNoCommit();
 
             $TrueArray = array();
 
-            foreach($this->task->getTableNames() as $masterTable){
+            foreach ($this->task->getTableNames() as $masterTable) {
                 $this->masterConnection->setQuery("SELECT * FROM {$masterTable}");
                 $this->masterConnection->executeNoCommit();
                 $content1 = $this->masterConnection->getContent();
 
-                $userTable = str_replace(ADMIN_TAB_PREFIX,$this->tablePrefix,$masterTable);
+                $userTable = str_replace(ADMIN_TAB_PREFIX, $this->tablePrefix, $masterTable);
                 $this->slaveConnection->setQuery("SELECT * FROM {$userTable}");
                 $this->slaveConnection->executeNoCommit();
                 $content2 = $this->slaveConnection->getContent();
 
-                if(!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1)){
+                if (!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1)) {
                     $TrueArray[] = true;
                 } else {
-                    $TrueArray[] = false;
+                    $this->setMistake("Wrong content");
+                    return false;
                 }
             }
 
-            if(in_array(false,$TrueArray)){
+            if (in_array(false, $TrueArray)) {
                 $this->setMistake("Wrong content");
                 return false;
             } else {
@@ -218,6 +195,9 @@ class sqlValidator
         return false;
     }
 
+    /**
+     * @return bool
+     */
     private function validateCreate()
     {
         if ($this->validateHeader()) {
@@ -227,7 +207,9 @@ class sqlValidator
         return false;
     }
 
-
+    /**
+     * @return bool
+     */
     private function validateHeader()
     {
         $this->checkConnection->setQuery($this->masterConnection->sqlquery);
@@ -244,6 +226,9 @@ class sqlValidator
 
     }
 
+    /**
+     * @return bool
+     */
     private function validateContent()
     {
         $this->checkConnection->setQuery($this->masterConnection->sqlquery);
@@ -261,7 +246,9 @@ class sqlValidator
         return false;
     }
 
-    //Ignore Order
+    /**
+     * @return bool
+     */
     private function validateContentiO()
     {
         $this->checkConnection->setQuery($this->masterConnection->sqlquery);
@@ -272,21 +259,6 @@ class sqlValidator
         $this->checkConnection->executeNoCommit();
         $content2 = $this->checkConnection->getContent();
 
-
-        //if (sort($content1) && sort($content2)) {
-        //    if ($content1 == $content2) {
-        //       return true;
-        //    }
-        // } else
-/*
-        var_dump($content1);
-        var_dump($content2);
-        var_dump($this->array_diff2($content1, $content2));
-        var_dump($this->array_diff2($content2, $content1));
-        var_dump(!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1));
-        die();
-*/
-
         if (!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1)) {
             return true;
         }
@@ -295,6 +267,11 @@ class sqlValidator
         return false;
     }
 
+    /**
+     * @param $array1
+     * @param $array2
+     * @return array
+     */
     private function array_diff2($array1, $array2)
     {
         array_walk($array1, function (&$arr) {
@@ -306,7 +283,9 @@ class sqlValidator
         return array_diff($array1, $array2);
     }
 
-
+    /**
+     * @return bool
+     */
     private function validateDimensions()
     {
         // check same number of columns

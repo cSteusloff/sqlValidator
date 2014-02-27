@@ -33,15 +33,17 @@
 require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 
 /**
- * 
+ *
  * This class processes the LIMIT statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
-class LimitProcessor extends AbstractProcessor {
+class LimitProcessor extends AbstractProcessor
+{
 
-    public function process($tokens) {
+    public function process($tokens)
+    {
         $rowcount = "";
         $offset = "";
 
@@ -80,4 +82,5 @@ class LimitProcessor extends AbstractProcessor {
         return array('offset' => trim($offset), 'rowcount' => trim($rowcount));
     }
 }
+
 ?>

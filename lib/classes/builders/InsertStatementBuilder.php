@@ -31,12 +31,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/InsertBuilder.php';
@@ -50,26 +50,31 @@ require_once dirname(__FILE__) . '/Builder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class InsertStatementBuilder implements Builder {
+class InsertStatementBuilder implements Builder
+{
 
-    protected function buildVALUES($parsed) {
+    protected function buildVALUES($parsed)
+    {
         $builder = new ValuesBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildINSERT($parsed) {
+    protected function buildINSERT($parsed)
+    {
         $builder = new InsertBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSELECT($parsed) {
+    protected function buildSELECT($parsed)
+    {
         $builder = new SelectStatementBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         // TODO: are there more than one tables possible (like [INSERT][1])
         $sql = $this->buildINSERT($parsed['INSERT']);
         if (isset($parsed['VALUES'])) {
@@ -81,4 +86,5 @@ class InsertStatementBuilder implements Builder {
         return $sql;
     }
 }
+
 ?>

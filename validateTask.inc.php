@@ -71,6 +71,7 @@ if(!$allow){
 
 
 // TODO: Auslagern
+
 function getErrorPositionInFormattedQuery($formattedQueryInput,$posError,$formattedDelimiter = "\n"){
     $lines = explode($formattedDelimiter,$formattedQueryInput);
     $row = 1;
@@ -119,16 +120,8 @@ $queryTry = $_POST["sql"];
 // to correct table
 $querySlave = $qT->translate($queryTry,"user".$_SESSION["id"]."_");
 
-
 // slave connection with user-query
 $slave->setQuery($querySlave);
-
-
-
-
-//echo("<pre>");
-//var_dump($_SESSION);
-
 
 if(empty($_SESSION["error"])){
 
@@ -149,7 +142,6 @@ if(empty($_SESSION["error"])){
     $_SESSION["valid"] = $validator->getMistake();
 
 }
-
 
 session_write_close();
 header("LOCATION: viewTask.php?id=".$_POST["taskid"]."#end");

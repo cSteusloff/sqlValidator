@@ -1,4 +1,5 @@
 <?php
+
 /**
  * exceptions.php
  *
@@ -30,15 +31,16 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-class UnableToCreateSQLException extends Exception {
+class UnableToCreateSQLException extends Exception
+{
 
     protected $part;
     protected $partkey;
     protected $entry;
     protected $entrykey;
 
-    public function __construct($part, $partkey, $entry, $entrykey) {
+    public function __construct($part, $partkey, $entry, $entrykey)
+    {
         $this->part = $part;
         $this->partkey = $partkey;
         $this->entry = $entry;
@@ -46,67 +48,81 @@ class UnableToCreateSQLException extends Exception {
         parent::__construct("unknown " . $entrykey . " in " . $part . "[" . $partkey . "] " . $entry[$entrykey], 15);
     }
 
-    public function getEntry() {
+    public function getEntry()
+    {
         return $this->entry;
     }
 
-    public function getEntryKey() {
+    public function getEntryKey()
+    {
         return $this->entrykey;
     }
 
-    public function getSQLPart() {
+    public function getSQLPart()
+    {
         return $this->part;
     }
 
-    public function getSQLPartKey() {
+    public function getSQLPartKey()
+    {
         return $this->partkey;
     }
 }
 
-class UnsupportedFeatureException extends Exception {
+class UnsupportedFeatureException extends Exception
+{
 
     protected $key;
 
-    public function __construct($key) {
+    public function __construct($key)
+    {
         $this->key = $key;
         parent::__construct($key . " not implemented.", 20);
     }
 
-    public function getKey() {
+    public function getKey()
+    {
         return $this->key;
     }
 }
 
-class InvalidParameterException extends InvalidArgumentException {
+class InvalidParameterException extends InvalidArgumentException
+{
 
     protected $argument;
 
-    public function __construct($argument) {
+    public function __construct($argument)
+    {
         $this->argument = $argument;
         parent::__construct("no SQL string to parse: \n" . $argument, 10);
     }
 
-    public function getArgument() {
+    public function getArgument()
+    {
         return $this->argument;
     }
 }
 
-class UnableToCalculatePositionException extends Exception {
+class UnableToCalculatePositionException extends Exception
+{
 
     protected $needle;
     protected $haystack;
 
-    public function __construct($needle, $haystack) {
+    public function __construct($needle, $haystack)
+    {
         $this->needle = $needle;
         $this->haystack = $haystack;
         parent::__construct("cannot calculate position of " . $needle . " within " . $haystack, 5);
     }
 
-    public function getNeedle() {
+    public function getNeedle()
+    {
         return $this->needle;
     }
 
-    public function getHaystack() {
+    public function getHaystack()
+    {
         return $this->haystack;
     }
 }

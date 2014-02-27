@@ -34,20 +34,23 @@
 /**
  * This exception will occur in the parser, if the given SQL statement
  * is not a String type.
- * 
+ *
  * @author arothe
  *
  */
-class InvalidParameterException extends InvalidArgumentException {
+class InvalidParameterException extends InvalidArgumentException
+{
 
     protected $argument;
 
-    public function __construct($argument) {
+    public function __construct($argument)
+    {
         $this->argument = $argument;
         parent::__construct("no SQL string to parse: \n" . $argument, 10);
     }
 
-    public function getArgument() {
+    public function getArgument()
+    {
         return $this->argument;
     }
 }

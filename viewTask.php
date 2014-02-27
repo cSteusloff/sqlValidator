@@ -16,7 +16,7 @@ error_reporting(E_ALL);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="SQLValidator">
     <meta name="author" content="Christian Steusloff, Jens Wiemann">
-    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
 
     <title>SQL-Validator</title>
 
@@ -190,9 +190,7 @@ error_reporting(E_ALL);
                             <ol>
                                 <li>" becomes '</li>
                                 <li>; at the end is not necessary</li>
-                                <li>Avoid unnecessary parentheses</li>
                             </ol>
-                            </p>
                         </div>
                     </div>
 
@@ -260,8 +258,8 @@ error_reporting(E_ALL);
             <thead>
             <tr>
                 <th>#</th>
-                <th>title</th>
-                <th>text</th>
+                <th>Title</th>
+                <th>Description</th>
             </tr>
             </thead>
             <tbody>

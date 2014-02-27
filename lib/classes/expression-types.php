@@ -1,8 +1,9 @@
 <?php
+
 /**
  * expression-types.php
  *
- * This file implements the constants for the expression types of 
+ * This file implements the constants for the expression types of
  * the output of the PHPSQLParser.
  *
  * Copyright (c) 2010-2012, Justin Swanhart
@@ -30,8 +31,8 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-class ExpressionType {
+class ExpressionType
+{
 
     const USER_VARIABLE = "user_variable";
     const SESSION_VARIABLE = "session_variable";

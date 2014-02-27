@@ -31,27 +31,29 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/../exceptions/UnsupportedFeatureException.php';
 
 /**
- * This class implements the references type within a JOIN. 
+ * This class implements the references type within a JOIN.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class RefTypeBuilder {
+class RefTypeBuilder
+{
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         if ($parsed === false) {
             return "";
         }
@@ -65,4 +67,5 @@ class RefTypeBuilder {
         throw new UnsupportedFeatureException($parsed);
     }
 }
+
 ?>

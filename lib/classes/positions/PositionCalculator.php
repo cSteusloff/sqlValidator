@@ -2,7 +2,7 @@
 /**
  * PositionCalculator.php
  *
- * This class implements the calculator for the string positions of the 
+ * This class implements the calculator for the string positions of the
  * base_expr elements within the output of the PHPSQLParser.
  *
  * PHP version 5
@@ -32,71 +32,74 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/../utils/PHPSQLParserConstants.php';
 require_once dirname(__FILE__) . '/../exceptions/UnableToCalculatePositionException.php';
 
 /**
- * This class implements the calculator for the string positions of the 
+ * This class implements the calculator for the string positions of the
  * base_expr elements within the output of the PHPSQLParser.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class PositionCalculator {
+class PositionCalculator
+{
 
     protected static $allowedOnOperator = array("\t", "\n", "\r", " ", ",", "(", ")", "_", "'", "\"");
     protected static $allowedOnOther = array("\t", "\n", "\r", " ", ",", "(", ")", "<", ">", "*", "+", "-", "/", "|",
-                                             "&", "=", "!", ";");
+        "&", "=", "!", ";");
 
     protected $flippedBacktrackingTypes;
     protected static $backtrackingTypes = array(ExpressionType::EXPRESSION, ExpressionType::SUBQUERY,
-                                                ExpressionType::BRACKET_EXPRESSION, ExpressionType::TABLE_EXPRESSION,
-                                                ExpressionType::RECORD, ExpressionType::IN_LIST,
-                                                ExpressionType::MATCH_ARGUMENTS, ExpressionType::TABLE,
-                                                ExpressionType::TEMPORARY_TABLE, ExpressionType::COLUMN_TYPE,
-                                                ExpressionType::COLDEF, ExpressionType::PRIMARY_KEY,
-                                                ExpressionType::CONSTRAINT, ExpressionType::COLUMN_LIST,
-                                                ExpressionType::CHECK, ExpressionType::COLLATE, ExpressionType::LIKE,
-                                                ExpressionType::INDEX, ExpressionType::INDEX_TYPE,
-                                                ExpressionType::INDEX_SIZE, ExpressionType::INDEX_PARSER,
-                                                ExpressionType::FOREIGN_KEY, ExpressionType::REFERENCE,
-                                                ExpressionType::PARTITION, ExpressionType::PARTITION_HASH,
-                                                ExpressionType::PARTITION_COUNT, ExpressionType::PARTITION_KEY,
-                                                ExpressionType::PARTITION_KEY_ALGORITHM,
-                                                ExpressionType::PARTITION_RANGE, ExpressionType::PARTITION_LIST,
-                                                ExpressionType::PARTITION_DEF, ExpressionType::PARTITION_VALUES,
-                                                ExpressionType::SUBPARTITION_DEF, ExpressionType::PARTITION_DATA_DIR,
-                                                ExpressionType::PARTITION_INDEX_DIR, ExpressionType::PARTITION_COMMENT,
-                                                ExpressionType::PARTITION_MAX_ROWS, ExpressionType::PARTITION_MIN_ROWS,
-                                                ExpressionType::SUBPARTITION_COMMENT,
-                                                ExpressionType::SUBPARTITION_DATA_DIR,
-                                                ExpressionType::SUBPARTITION_INDEX_DIR,
-                                                ExpressionType::SUBPARTITION_KEY,
-                                                ExpressionType::SUBPARTITION_KEY_ALGORITHM,
-                                                ExpressionType::SUBPARTITION_MAX_ROWS,
-                                                ExpressionType::SUBPARTITION_MIN_ROWS, ExpressionType::SUBPARTITION,
-                                                ExpressionType::SUBPARTITION_HASH, ExpressionType::SUBPARTITION_COUNT,
-                                                ExpressionType::CHARSET, ExpressionType::ENGINE, ExpressionType::QUERY);
+        ExpressionType::BRACKET_EXPRESSION, ExpressionType::TABLE_EXPRESSION,
+        ExpressionType::RECORD, ExpressionType::IN_LIST,
+        ExpressionType::MATCH_ARGUMENTS, ExpressionType::TABLE,
+        ExpressionType::TEMPORARY_TABLE, ExpressionType::COLUMN_TYPE,
+        ExpressionType::COLDEF, ExpressionType::PRIMARY_KEY,
+        ExpressionType::CONSTRAINT, ExpressionType::COLUMN_LIST,
+        ExpressionType::CHECK, ExpressionType::COLLATE, ExpressionType::LIKE,
+        ExpressionType::INDEX, ExpressionType::INDEX_TYPE,
+        ExpressionType::INDEX_SIZE, ExpressionType::INDEX_PARSER,
+        ExpressionType::FOREIGN_KEY, ExpressionType::REFERENCE,
+        ExpressionType::PARTITION, ExpressionType::PARTITION_HASH,
+        ExpressionType::PARTITION_COUNT, ExpressionType::PARTITION_KEY,
+        ExpressionType::PARTITION_KEY_ALGORITHM,
+        ExpressionType::PARTITION_RANGE, ExpressionType::PARTITION_LIST,
+        ExpressionType::PARTITION_DEF, ExpressionType::PARTITION_VALUES,
+        ExpressionType::SUBPARTITION_DEF, ExpressionType::PARTITION_DATA_DIR,
+        ExpressionType::PARTITION_INDEX_DIR, ExpressionType::PARTITION_COMMENT,
+        ExpressionType::PARTITION_MAX_ROWS, ExpressionType::PARTITION_MIN_ROWS,
+        ExpressionType::SUBPARTITION_COMMENT,
+        ExpressionType::SUBPARTITION_DATA_DIR,
+        ExpressionType::SUBPARTITION_INDEX_DIR,
+        ExpressionType::SUBPARTITION_KEY,
+        ExpressionType::SUBPARTITION_KEY_ALGORITHM,
+        ExpressionType::SUBPARTITION_MAX_ROWS,
+        ExpressionType::SUBPARTITION_MIN_ROWS, ExpressionType::SUBPARTITION,
+        ExpressionType::SUBPARTITION_HASH, ExpressionType::SUBPARTITION_COUNT,
+        ExpressionType::CHARSET, ExpressionType::ENGINE, ExpressionType::QUERY);
 
     /**
      * Constructor.
-     * 
+     *
      * It initializes some fields.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->flippedBacktrackingTypes = array_flip(self::$backtrackingTypes);
     }
 
-    protected function printPos($text, $sql, $charPos, $key, $parsed, $backtracking) {
+    protected function printPos($text, $sql, $charPos, $key, $parsed, $backtracking)
+    {
         if (!isset($_ENV['DEBUG'])) {
             return;
         }
@@ -110,17 +113,19 @@ class PositionCalculator {
         }
         $holdem = substr($sql, 0, $charPos) . "^" . substr($sql, $charPos);
         echo $spaces . $text . " key:" . $key . "  parsed:" . $parsed . " back:" . serialize($backtracking) . " "
-                . $holdem . "\n";
+            . $holdem . "\n";
     }
 
-    public function setPositionsWithinSQL($sql, $parsed) {
+    public function setPositionsWithinSQL($sql, $parsed)
+    {
         $charPos = 0;
         $backtracking = array();
         $this->lookForBaseExpression($sql, $charPos, $parsed, 0, $backtracking);
         return $parsed;
     }
 
-    protected function findPositionWithinString($sql, $value, $expr_type) {
+    protected function findPositionWithinString($sql, $value, $expr_type)
+    {
 
         $offset = 0;
         $ok = false;
@@ -148,12 +153,12 @@ class PositionCalculator {
             if ($expr_type === 'operator') {
 
                 $ok = ($before === "" || in_array($before, self::$allowedOnOperator, true))
-                        || (strtolower($before) >= 'a' && strtolower($before) <= 'z')
-                        || ($before >= '0' && $before <= '9');
+                    || (strtolower($before) >= 'a' && strtolower($before) <= 'z')
+                    || ($before >= '0' && $before <= '9');
                 $ok = $ok
-                        && ($after === "" || in_array($after, self::$allowedOnOperator, true)
-                                || (strtolower($after) >= 'a' && strtolower($after) <= 'z')
-                                || ($after >= '0' && $after <= '9') || ($after === '?') || ($after === '@'));
+                    && ($after === "" || in_array($after, self::$allowedOnOperator, true)
+                        || (strtolower($after) >= 'a' && strtolower($after) <= 'z')
+                        || ($after >= '0' && $after <= '9') || ($after === '?') || ($after === '@'));
 
                 if (!$ok) {
                     $offset = $pos + 1;
@@ -179,11 +184,13 @@ class PositionCalculator {
         return $pos;
     }
 
-    protected function lookForBaseExpression($sql, &$charPos, &$parsed, $key, &$backtracking) {
+    protected function lookForBaseExpression($sql, &$charPos, &$parsed, $key, &$backtracking)
+    {
         if (!is_numeric($key)) {
             if (($key === 'UNION' || $key === 'UNION ALL')
-                    || ($key === 'expr_type' && isset($this->flippedBacktrackingTypes[$parsed]))
-                    || ($key === 'select-option' && $parsed !== false) || ($key === 'alias' && $parsed !== false)) {
+                || ($key === 'expr_type' && isset($this->flippedBacktrackingTypes[$parsed]))
+                || ($key === 'select-option' && $parsed !== false) || ($key === 'alias' && $parsed !== false)
+            ) {
                 // we hold the current position and come back after the next base_expr
                 // we do this, because the next base_expr contains the complete expression/subquery/record
                 // and we have to look into it too
@@ -227,7 +234,7 @@ class PositionCalculator {
 
                 $subject = substr($sql, $charPos);
                 $pos = $this->findPositionWithinString($subject, $value,
-                        isset($parsed['expr_type']) ? $parsed['expr_type'] : 'alias');
+                    isset($parsed['expr_type']) ? $parsed['expr_type'] : 'alias');
                 if ($pos === false) {
                     throw new UnableToCalculatePositionException($value, $subject);
                 }

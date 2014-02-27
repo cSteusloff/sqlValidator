@@ -1,14 +1,15 @@
 <?php
+
 /**
  * User: Christian Steusloff
  * Date: 27.11.13
  * Time: 19:26
  */
-
-class oracleConnection extends sqlConnection {
+class oracleConnection extends sqlConnection
+{
 
     /**
-     * @var oci-object - error massage
+     * @var null oci-object - error massage
      */
     private $errortext = null;
 
@@ -20,7 +21,11 @@ class oracleConnection extends sqlConnection {
         return $this->errortext['message'];
     }
 
-    public function getErrorPosition(){
+    /**
+     * @return mixed
+     */
+    public function getErrorPosition()
+    {
         return $this->errortext['offset'];
     }
 
@@ -31,7 +36,8 @@ class oracleConnection extends sqlConnection {
      * @param string $password
      * @param string $port
      */
-    public function __construct($host =DB_HOST, $database = DB_DATABASE, $user = DB_USER, $password = DB_PASSWORD, $port = DB_PORT) {
+    public function __construct($host = DB_HOST, $database = DB_DATABASE, $user = DB_USER, $password = DB_PASSWORD, $port = DB_PORT)
+    {
         $this->hostname = $host;
         $this->database = $database;
         $this->username = $user;
@@ -47,14 +53,13 @@ class oracleConnection extends sqlConnection {
      */
     public function openConnection()
     {
-        try{
-            //var_dump($this->username,$this->password,$this->hostname.'/'.$this->database.':'.$this->port,DB_CHARSET);
-            $this->conn = oci_connect($this->username,$this->password,$this->hostname.'/'.$this->database.':'.$this->port,DB_CHARSET);
-            if(!$this->conn){
-                $e = oci_error();
+        try {
+            $this->conn = oci_connect($this->username, $this->password, $this->hostname . '/' . $this->database . ':' . $this->port, DB_CHARSET);
+            if (!$this->conn) {
+                //$e = oci_error();
                 // TODO Ausgabe
             }
-        } catch(Exception $e){
+        } catch (Exception $e) {
             // TODO Ausgabe
         }
     }
@@ -67,56 +72,68 @@ class oracleConnection extends sqlConnection {
      */
     public function setQuery($sql = '')
     {
-        try{
-            if(is_resource($this->recordset)){
+        try {
+            if (is_resource($this->recordset)) {
                 // Frees resources associated with Oracle's cursor or statement
                 oci_free_statement($this->recordset);
             }
             $this->sqlquery = empty($sql) ? $this->sqlquery : $sql;
-            $this->recordset = oci_parse($this->conn,$this->sqlquery);
-        } catch(Exception $e){
+            $this->recordset = oci_parse($this->conn, $this->sqlquery);
+        } catch (Exception $e) {
             // TODO Ausgabe
         }
     }
-
-//    //TODO: Why does setQuery have all that stuff?!
-//    public function setOrigQuery($sql = '')
-//    {
-//        $this->origsqlquery = empty($sql) ? $this->origsqlquery : $sql;
-//    }
 
     /**
      * running SQL query
      * @return void
      */
-    public function execute(){
+    public function execute()
+    {
         oci_execute($this->recordset);
         $this->errortext = oci_error($this->recordset);
     }
 
-
-    public function executeNoCommit(){
+    /**
+     * @return mixed|void
+     */
+    public function executeNoCommit()
+    {
         oci_execute($this->recordset, OCI_NO_AUTO_COMMIT);
         $this->errortext = oci_error($this->recordset);
     }
 
-    public function setSavePoint($name = null){
+    /**
+     * @param null $name
+     * @return mixed|void
+     */
+    public function setSavePoint($name = null)
+    {
         // TODO: Statt String wird hier time() getestet
-        $point = "p".time();
+        $point = "p" . time();
         $this->savepoint = is_null($name) ? $point : $name;
-        $query = 'SAVEPOINT '.$this->savepoint;
+        $query = 'SAVEPOINT ' . $this->savepoint;
         $stid = oci_parse($this->conn, $query);
         oci_execute($stid, OCI_NO_AUTO_COMMIT);
     }
 
-    public function rollbackSavePoint($commit = true){
-        $query = 'ROLLBACK TO SAVEPOINT '.$this->savepoint;
+    /**
+     * @param bool $commit
+     * @return mixed|void
+     */
+    public function rollbackSavePoint($commit = true)
+    {
+        $query = 'ROLLBACK TO SAVEPOINT ' . $this->savepoint;
         $stid = oci_parse($this->conn, $query);
         oci_execute($stid, OCI_NO_AUTO_COMMIT);
-        if($commit) $this->commit();
+        if ($commit) $this->commit();
     }
 
-    public function commit(){
+    /**
+     * Commit to DB
+     */
+    public function commit()
+    {
         oci_commit($this->conn);
     }
 
@@ -128,20 +145,19 @@ class oracleConnection extends sqlConnection {
      */
     public function Fetch($assoc = true)
     {
-        if(!empty($this->recordset)){
-            try{
-                if($assoc == true){
+        if (!empty($this->recordset)) {
+            try {
+                if ($assoc == true) {
                     $this->row = @oci_fetch_assoc($this->recordset);
                 } else {
                     $this->row = @oci_fetch_array($this->recordset);
                 }
                 return is_array($this->row);
-            } catch(Exception $e){
+            } catch (Exception $e) {
                 // TODO Ausgabe
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -151,7 +167,7 @@ class oracleConnection extends sqlConnection {
      */
     public function affectedRows()
     {
-        if(!empty($this->recordset)){
+        if (!empty($this->recordset)) {
             return oci_num_rows($this->conn);
         } else {
             return 0;
@@ -165,7 +181,7 @@ class oracleConnection extends sqlConnection {
      */
     public function numColumns()
     {
-        if(!empty($this->recordset)){
+        if (!empty($this->recordset)) {
             return oci_num_fields($this->recordset);
         } else {
             return 0;
@@ -175,16 +191,17 @@ class oracleConnection extends sqlConnection {
     /**
      * Returns the number of rows by SQL query
      *
+     * @param bool $commit
      * @return int
      */
     public function numRows($commit = true)
     {
         $numRows = 0;
-        if(!empty($this->recordset)){
+        if (!empty($this->recordset)) {
             $this->getStatementType();
-            if(strcasecmp($this->getStatementType(),"SELECT") == 0){
+            if (strcasecmp($this->getStatementType(), "SELECT") == 0) {
                 $tmp = $this->sqlquery;
-                $this->setQuery('SELECT COUNT(*) AS NUM FROM ('.$this->sqlquery.')');
+                $this->setQuery('SELECT COUNT(*) AS NUM FROM (' . $this->sqlquery . ')');
                 ($commit) ? $this->execute() : $this->executeNoCommit();
                 $this->Fetch();
                 $numRows = $this->row["NUM"];
@@ -194,7 +211,6 @@ class oracleConnection extends sqlConnection {
                 return $this->affectedRows();
             }
         }
-
         return $numRows;
     }
 
@@ -203,23 +219,23 @@ class oracleConnection extends sqlConnection {
      *
      * @return string
      */
-    public function getStatementType(){
-        if(!empty($this->recordset)){
+    public function getStatementType()
+    {
+        if (!empty($this->recordset)) {
             return oci_statement_type($this->recordset);
         } else {
             return "unknown";
         }
-
     }
-
 
     /**
      * Destroy
      */
-    public function __destruct(){
-        try{
+    public function __destruct()
+    {
+        try {
             $this->closeConnection();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             // TODO Ausgabe
         }
     }
@@ -233,7 +249,7 @@ class oracleConnection extends sqlConnection {
     {
         // get database type
         $type = (is_resource($this->conn) ? get_resource_type($this->conn) : 'unknown');
-        if(strstr($type,"oci8")){
+        if (strstr($type, "oci8")) {
             oci_close($this->conn);
         } else {
             // TODO Ausgabe
@@ -247,18 +263,20 @@ class oracleConnection extends sqlConnection {
      */
     public function connectionInfo()
     {
-        return $this->username.'@'.$this->database.':'.$this->hostname;
+        return $this->username . '@' . $this->database . ':' . $this->hostname;
     }
 
     /**
      * Returns the columnname
      *
-     * @param $number
+     * @param $num
+     * @internal param $number
      * @return string
      */
-    public function getFieldname($num){
-        if(!empty($this->recordset)){
-            return oci_field_name($this->recordset,$num);
+    public function getFieldname($num)
+    {
+        if (!empty($this->recordset)) {
+            return oci_field_name($this->recordset, $num);
         } else {
             return '';
         }
@@ -270,14 +288,16 @@ class oracleConnection extends sqlConnection {
      * @param bool $toString
      * @return array|string
      */
-    public function getHeader($toString = false){
-        if(!empty($this->recordset)){
+    public function getHeader($toString = false)
+    {
+        $arr = null;
+        if (!empty($this->recordset)) {
             $arr = array();
-            for($i=1;$i <= $this->numColumns();$i++){
+            for ($i = 1; $i <= $this->numColumns(); $i++) {
                 $arr[] = $this->getFieldname($i);
             }
         }
-        if($toString){
+        if ($toString) {
             return serialize($arr);
         } else {
             return $arr;
@@ -290,17 +310,18 @@ class oracleConnection extends sqlConnection {
      * @param bool $toString
      * @return array|string
      */
-    public function getContent($toString = false){
+    public function getContent($toString = false)
+    {
         $arr = array();
         $row = 0;
-        while($this->Fetch()){
+        while ($this->Fetch()) {
             $column = 0;
-            foreach($this->row as $item){
+            foreach ($this->row as $item) {
                 $arr[$row][$column++] = ($item !== null ? $item : "");
             }
             $row++;
         }
-        if($toString){
+        if ($toString) {
             return serialize($arr);
         } else {
             return $arr;
@@ -308,38 +329,38 @@ class oracleConnection extends sqlConnection {
     }
 
 
-
     /**
      * Returns a complete table
      *
      * @param string $classname - css class from table
+     * @param null $tablename
      * @return string
      */
-    public function printTable($classname = null,$tablename = null){
-
-        if(!empty($this->recordset)){
+    public function printTable($classname = null, $tablename = null)
+    {
+        if (!empty($this->recordset)) {
             $tablestr = "<div ";
-            if(is_null($classname)){
-            $tablestr .= ">\n";
+            if (is_null($classname)) {
+                $tablestr .= ">\n";
             } else {
-                $tablestr .= "class='".$classname."'>\n";
+                $tablestr .= "class='" . $classname . "'>\n";
             }
-            if(!is_null($tablename)){
+            if (!is_null($tablename)) {
                 $tablestr .= "<span>{$tablename}</span>";
             }
             $tablestr .= "<table>\n";
             $tablestr .= "<thead><tr>\n";
 
-            for($i=1;$i <= $this->numColumns();$i++){
+            for ($i = 1; $i <= $this->numColumns(); $i++) {
                 $tablestr .= "<th>";
                 $tablestr .= ucfirst(strtolower($this->getFieldname($i)));
                 $tablestr .= "</th>";
             }
             $tablestr .= "</tr></thead><tbody>\n";
-            while($this->Fetch()){
+            while ($this->Fetch()) {
                 $tablestr .= "<tr>\n";
-                foreach($this->row as $item){
-                    $tablestr .=  "<td>".($item !== null ? $item : "")."</td>\n";
+                foreach ($this->row as $item) {
+                    $tablestr .= "<td>" . ($item !== null ? $item : "") . "</td>\n";
                 }
                 $tablestr .= "</tr>\n";
             }

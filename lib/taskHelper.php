@@ -1,21 +1,19 @@
 <?php
+
 /**
  * Project: ss
  * User: Christian Steusloff
  * Date: 14.12.13
  * Time: 13:16
  */
-
-
-class taskHelper {
-
+class taskHelper
+{
     /**
      * The permission on tables
      *
      * @var int - permission on tables
      */
     private $permission;
-
 
     /**
      * @var sqlConnection
@@ -51,7 +49,6 @@ class taskHelper {
         return $this->error;
     }
 
-
     /**
      *
      * Select = 1
@@ -61,10 +58,11 @@ class taskHelper {
      *
      *
      * @param int (array) $permission
+     * @return int
      */
     public function setPermission($permission)
     {
-        if(is_array($permission)){
+        if (is_array($permission)) {
             $this->permission = array_sum($permission);
         } else {
             $this->permission = $permission;
@@ -92,10 +90,12 @@ class taskHelper {
      * @var string - task subject
      */
     private $topic;
+
     /**
      * @var string - task description
      */
     private $text;
+
     /**
      * @var string - sql query solution
      */
@@ -106,14 +106,13 @@ class taskHelper {
      */
     private $userInput;
 
-
     /**
      * @var string SELECT, UPDATE, etc.
      */
     private $taskType;
 
     /**
-     * @param string $taskType
+     * @internal param string $taskType
      */
     public function setTaskType()
     {
@@ -150,9 +149,19 @@ class taskHelper {
      */
     private $tables;
 
+    /**
+     * @var
+     */
     private $table_ids;
+
+    /**
+     * @var
+     */
     private $table_names;
 
+    /**
+     * @var
+     */
     private $tableHeader;
 
     /**
@@ -186,6 +195,10 @@ class taskHelper {
     {
         return $this->tableHeader;
     }
+
+    /**
+     * @var
+     */
     private $tableData;
 
 //    /**
@@ -253,7 +266,6 @@ class taskHelper {
         return $this->user_id;
     }
 
-
     /**
      * @param mixed $table_ids
      */
@@ -286,7 +298,9 @@ class taskHelper {
         return $this->table_names;
     }
 
-
+    /**
+     * @var
+     */
     private $task_id;
 
     /**
@@ -307,6 +321,7 @@ class taskHelper {
 
     /**
      * @param string $solution
+     * @return string
      */
     public function setSolution($solution)
     {
@@ -323,6 +338,7 @@ class taskHelper {
 
     /**
      * @param string $tables
+     * @return string
      */
     public function setTables($tables)
     {
@@ -339,6 +355,7 @@ class taskHelper {
 
     /**
      * @param string $text
+     * @return string
      */
     public function setText($text)
     {
@@ -355,6 +372,7 @@ class taskHelper {
 
     /**
      * @param string $topic
+     * @return string
      */
     public function setTopic($topic)
     {
@@ -372,12 +390,17 @@ class taskHelper {
     /**
      * @param string $topic - subject from task
      * @param string $text - task description
-     * @param string array $tables - names of usable tables
-     * @param int array $permission - access rights of table
+     * @param $tables
+     * @param $permission
      * @param string $solution - SQL query
+     * @param $tableHeader
+     * @param $tableContent
+     * @return mixed
+    @internal param array $string $tables - names of usable tables
+     * @internal param array $int $permission - access rights of table
      */
-    public function createTask($topic,$text,$tables,$permission,$solution,$tableHeader,$tableContent){
-
+    public function createTask($topic, $text, $tables, $permission, $solution, $tableHeader, $tableContent)
+    {
         // set object-attributes
         $this->setTopic($topic);
         $this->setText($text);
@@ -389,19 +412,17 @@ class taskHelper {
 
         // create Task in SYS_TASK
         $this->dbConnection->setQuery("INSERT INTO SYS_TASK (Taskname,tasktext,permission,solution,tableheader,tablecontent)
-                    VALUES ('".$this->getTopic()."',
-                            '".$this->getText()."',
-                            '".$this->getPermission()."',
-                            '".$this->getSolution()."',
-                            '".$tableHeader."',
-                            '".$tableContent."')");
+                    VALUES ('" . $this->getTopic() . "',
+                            '" . $this->getText() . "',
+                            '" . $this->getPermission() . "',
+                            '" . $this->getSolution() . "',
+                            '" . $tableHeader . "',
+                            '" . $tableContent . "')");
         $this->dbConnection->execute();
         $errors = $this->dbConnection->getErrorText();
-//        var_dump($this->dbConnection->sqlquery);
-//        die($errors);
 
         // get task-id from last new task (this current create task)
-        $this->dbConnection->setQuery("SELECT MAX(ID) FROM SYS_TASK WHERE taskname = '".$this->getTopic()."'");
+        $this->dbConnection->setQuery("SELECT MAX(ID) FROM SYS_TASK WHERE taskname = '" . $this->getTopic() . "'");
         $this->dbConnection->execute();
         $this->dbConnection->Fetch(false);
         $task_id = $this->dbConnection->row[0];
@@ -419,41 +440,47 @@ class taskHelper {
         return $errors;
     }
 
-    public function __construct($sqlConnection) {
+    /**
+     * @param $sqlConnection
+     */
+    public function __construct($sqlConnection)
+    {
         $this->setDbConnection($sqlConnection);
-//        if(!is_null($task_id)){
-//            $this->loadTask($task_id);
-//        }
     }
 
     /**
      * @param string $query - input by user
      * @return string - without ; and '
      */
-    public function clearQuery($query){
+    public function clearQuery($query)
+    {
         $newQuery = $query;
-        if(strpos($newQuery,";") !== false){
-            $piece = explode(";",$newQuery);
+        if (strpos($newQuery, ";") !== false) {
+            $piece = explode(";", $newQuery);
 
-            var_dump($piece);
+            // var_dump($piece);
             $newQuery = $piece[0];
         }
-        if(strpos($newQuery,'"') !== false){
-            $newQuery = str_replace('"',"'",$newQuery);
+        if (strpos($newQuery, '"') !== false) {
+            $newQuery = str_replace('"', "'", $newQuery);
         }
 
         return $newQuery;
     }
 
-    public function saveLastUserQuery($lastQuery){
+    /**
+     * @param $lastQuery
+     */
+    public function saveLastUserQuery($lastQuery)
+    {
         $this->setUserInput($lastQuery);
         // mask ' with double '
-        $lastQuery = str_replace("'","''",$lastQuery);
+        $lastQuery = str_replace("'", "''", $lastQuery);
         $this->dbConnection->setQuery("MERGE INTO SYS_USER_TASK U
                                        USING (
-                                            SELECT ".$this->getUserId()." as USER_ID,
-                                                   ".$this->getTaskId()." as TASK_ID,
-                                                   '".$lastQuery."' as QUERY_LAST,
+                                            SELECT " . $this->getUserId() . " as USER_ID,
+                                                   " . $this->getTaskId() . " as TASK_ID,
+                                                   '" . $lastQuery . "' as QUERY_LAST,
                                                    '' as QUERY_CORRECT
                                             FROM DUAL
                                             ) N
@@ -466,17 +493,17 @@ class taskHelper {
         $this->dbConnection->execute();
     }
 
-
     /**
      * @param string $correctQuery - save solution by user
      */
-    public function saveCorrectUserQuery($correctQuery){
+    public function saveCorrectUserQuery($correctQuery)
+    {
         $this->dbConnection->setQuery("MERGE INTO SYS_USER_TASK U
                                        USING (
-                                            SELECT ".$this->getUserId()." as USER_ID,
-                                                   ".$this->getTaskId()." as TASK_ID,
+                                            SELECT " . $this->getUserId() . " as USER_ID,
+                                                   " . $this->getTaskId() . " as TASK_ID,
                                                    '' as QUERY_LAST,
-                                                   '".$correctQuery."' as QUERY_CORRECT
+                                                   '" . $correctQuery . "' as QUERY_CORRECT
                                             FROM DUAL
                                             ) N
                                        ON (U.USER_ID = N.USER_ID AND U.TASK_ID = N.TASK_ID)
@@ -488,15 +515,15 @@ class taskHelper {
         $this->dbConnection->execute();
     }
 
-
-
-
-
-    public function getLastUserQuery(){
+    /**
+     * @return mixed
+     */
+    public function getLastUserQuery()
+    {
         $this->dbConnection->setQuery("SELECT QUERY_LAST
                                        FROM SYS_USER_TASK
-                                       WHERE USER_ID = ".$this->getUserId()."
-                                       AND TASK_ID = ".$this->getTaskId());
+                                       WHERE USER_ID = " . $this->getUserId() . "
+                                       AND TASK_ID = " . $this->getTaskId());
         $this->dbConnection->execute();
         $this->dbConnection->Fetch();
         $lastQuery = $this->dbConnection->row["QUERY_LAST"];
@@ -504,17 +531,26 @@ class taskHelper {
         return $lastQuery;
     }
 
-    public function getCorrectUserQuery(){
+    /**
+     * @return mixed
+     */
+    public function getCorrectUserQuery()
+    {
         $this->dbConnection->setQuery("SELECT QUERY_CORRECT
                                        FROM SYS_USER_TASK
-                                       WHERE USER_ID = ".$this->getUserId()."
-                                       AND TASK_ID = ".$this->getTaskId());
+                                       WHERE USER_ID = " . $this->getUserId() . "
+                                       AND TASK_ID = " . $this->getTaskId());
         $this->dbConnection->execute();
         $this->dbConnection->Fetch();
         return $this->dbConnection->row["QUERY_CORRECT"];
     }
 
-    public function loadTask($task_id,$user_id){
+    /**
+     * @param $task_id
+     * @param $user_id
+     */
+    public function loadTask($task_id, $user_id)
+    {
         $this->dbConnection->setQuery("SELECT taskname,
                            tasktext,
                            permission,
@@ -540,12 +576,13 @@ class taskHelper {
     /*
      * drop and create user tables for task
      */
-    public function resetTask(){
+    public function resetTask()
+    {
         foreach ($this->getTableNames() as $table) {
-            $table = str_replace(ADMIN_TAB_PREFIX,"",$table);
-            $userTable = "user".$this->getUserId()."_".$table;
-            $query_drop = "DROP TABLE ".$userTable;
-            $query_create = "CREATE TABLE ".$userTable." AS (SELECT * FROM MASTER_".$table.")";
+            $table = str_replace(ADMIN_TAB_PREFIX, "", $table);
+            $userTable = "user" . $this->getUserId() . "_" . $table;
+            $query_drop = "DROP TABLE " . $userTable;
+            $query_create = "CREATE TABLE " . $userTable . " AS (SELECT * FROM MASTER_" . $table . ")";
             $this->dbConnection->setQuery($query_drop);
             // Oracle don't have drop if exist, don't show error
             @$this->dbConnection->execute();
@@ -556,9 +593,9 @@ class taskHelper {
 
         // TODO: Zur Sicherheit anlegen ohne Benutzer-Namen
         foreach ($this->getTableNames() as $table) {
-            $tmpTable = str_replace(ADMIN_TAB_PREFIX,"",$table);
-            $query_drop = "DROP TABLE ".$tmpTable;
-            $query_create = "CREATE TABLE ".$tmpTable." AS (SELECT * FROM ".$table.")";
+            $tmpTable = str_replace(ADMIN_TAB_PREFIX, "", $table);
+            $query_drop = "DROP TABLE " . $tmpTable;
+            $query_create = "CREATE TABLE " . $tmpTable . " AS (SELECT * FROM " . $table . ")";
             $this->dbConnection->setQuery($query_drop);
             // Oracle don't have drop if exist, don't show error
             @$this->dbConnection->execute();
@@ -568,24 +605,41 @@ class taskHelper {
         }
     }
 
-
-    public function getPermissionSelect(){
-        $select_array = array(1,3,5,7,9,11,13,15);
-        return in_array($this->getPermission(),$select_array);
-    }
-    public function getPermissionModify(){
-        $mod_array = array(2,3,6,7,10,11,14,15);
-        return in_array($this->getPermission(),$mod_array);
-    }
-    public function getPermissionCreate(){
-        $create_array = array(4,5,6,7,12,13,14,15);
-        return in_array($this->getPermission(),$create_array);
-    }
-    public function getPermissionDrop(){
-        $drop_array = array(8,9,10,11,12,13,14,15);
-        return in_array($this->getPermission(),$drop_array);
+    /**
+     * @return bool
+     */
+    public function getPermissionSelect()
+    {
+        $select_array = array(1, 3, 5, 7, 9, 11, 13, 15);
+        return in_array($this->getPermission(), $select_array);
     }
 
+    /**
+     * @return bool
+     */
+    public function getPermissionModify()
+    {
+        $mod_array = array(2, 3, 6, 7, 10, 11, 14, 15);
+        return in_array($this->getPermission(), $mod_array);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getPermissionCreate()
+    {
+        $create_array = array(4, 5, 6, 7, 12, 13, 14, 15);
+        return in_array($this->getPermission(), $create_array);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getPermissionDrop()
+    {
+        $drop_array = array(8, 9, 10, 11, 12, 13, 14, 15);
+        return in_array($this->getPermission(), $drop_array);
+    }
 
     /**
      * Tablenames are unique, insert via merge if it's in this table
@@ -593,13 +647,14 @@ class taskHelper {
      * @param string array - names of tables
      * @return int array - Table IDs
      */
-    private function addDatabaseTables($table_array){
-
+    private function addDatabaseTables($table_array)
+    {
+        $insert = null;
         $insert_query = "MERGE INTO SYS_TABLES tab USING (";
-        foreach($table_array as $table){
-            $insert[] = "SELECT '".$table."' as name FROM DUAL";
+        foreach ($table_array as $table) {
+            $insert[] = "SELECT '" . $table . "' as name FROM DUAL";
         }
-        $insert_query .= implode(" UNION ALL ",$insert);
+        $insert_query .= implode(" UNION ALL ", $insert);
         $insert_query .= ") src ON (src.name = tab.name) WHEN NOT MATCHED THEN INSERT(name) VALUES (src.name)";
 
         $this->dbConnection->setQuery($insert_query);
@@ -608,27 +663,27 @@ class taskHelper {
         return $this->getDatabaseTablesByTableNames($table_array);
     }
 
-
     /**
      * @param string array $table_names
      * @return int array - Table IDs
      */
-    private function getDatabaseTablesByTableNames($table_names){
-        foreach($table_names as $table){
-            $search[] = "name = '".$table."'";
+    private function getDatabaseTablesByTableNames($table_names)
+    {
+        $search = null;
+        foreach ($table_names as $table) {
+            $search[] = "name = '" . $table . "'";
         }
 
         $id_result = array();
-        $this->dbConnection->setQuery("SELECT ID FROM SYS_TABLES WHERE ".implode(" OR ",$search));
+        $this->dbConnection->setQuery("SELECT ID FROM SYS_TABLES WHERE " . implode(" OR ", $search));
         $this->dbConnection->execute();
-        while($this->dbConnection->Fetch()){
+        while ($this->dbConnection->Fetch()) {
             $id_result[] = $this->dbConnection->row['ID'];
         }
         return $id_result;
     }
 
 //    /**
-//     *
 //     * @return int array - Table IDs
 //     */
 //    private function getDatabaseTables(){
@@ -636,7 +691,7 @@ class taskHelper {
 //        $name_result = array();
 //        $this->dbConnection->Query("SELECT n.table_id,t.name FROM SYS_NEEDTABLES n,SYS_TABLES t ON n.table_id = t.ID WHERE task_id = ".$this->getTaskId());
 //        while($this->dbConnection->Fetch()){
-//            var_dump($this->dbConnection->row);
+//            // var_dump($this->dbConnection->row);
 //            $id_result[] = $this->dbConnection->row['table_id'];
 //            $name_result[] = $this->dbConnection->row['name'];
 //        }
@@ -644,34 +699,34 @@ class taskHelper {
 //        return $id_result;
 //    }
 
-    private function setDatabaseTables(){
+    private function setDatabaseTables()
+    {
         $tablename_array = array();
         $tableid_array = array();
         $this->dbConnection->setQuery("SELECT n.table_id, t.name
                     FROM SYS_NEEDTABLES n,
                     SYS_TABLES t
                     WHERE n.table_id = t.ID
-                    AND task_id = ".$this->getTaskId());
+                    AND task_id = " . $this->getTaskId());
         $this->dbConnection->execute();
-        while($this->dbConnection->Fetch()){
-            //var_dump($this->dbConnection->row);
+        while ($this->dbConnection->Fetch()) {
             $tablename_array[] = $this->dbConnection->row['NAME'];
             $tableid_array[] = $this->dbConnection->row['TABLE_ID'];
         }
 
         $this->setTableNames($tablename_array);
         $this->setTableIds($tableid_array);
-
     }
 
     /**
      * @param int $task_id - task ID
      * @param int[] $table_ids - necessary tables for task
      */
-    private function setNeedTables($task_id,$table_ids){
+    private function setNeedTables($task_id, $table_ids)
+    {
         $insert_query = "INSERT ALL ";
-        foreach($table_ids as $id){
-            $insert_query .= "into SYS_NEEDTABLES(task_id,table_id) VALUES ('".$task_id."','".$id."') ";
+        foreach ($table_ids as $id) {
+            $insert_query .= "into SYS_NEEDTABLES(task_id,table_id) VALUES ('" . $task_id . "','" . $id . "') ";
         }
         $insert_query .= "SELECT * FROM DUAL";
 
@@ -679,20 +734,26 @@ class taskHelper {
         $this->dbConnection->execute();
     }
 
-    public function printTable($classname = null,$commit = true){
-        if(is_null($classname)){
+    /**
+     * @param null $classname
+     * @param bool $commit
+     * @return string
+     */
+    public function printTable($classname = null, $commit = true)
+    {
+        if (is_null($classname)) {
             $classname = "defaultTableClassName";
         }
 
         $tablestr = "";
-        foreach($this->getTableNames() as $table){
+        foreach ($this->getTableNames() as $table) {
             $this->dbConnection->setQuery("SELECT * FROM {$table}");
-            if($commit){
+            if ($commit) {
                 $this->dbConnection->execute();
             } else {
                 $this->dbConnection->executeNoCommit();
             }
-            $tablestr .= $this->dbConnection->printTable($classname,substr(strtoupper($table),strlen(ADMIN_TAB_PREFIX)));
+            $tablestr .= $this->dbConnection->printTable($classname, substr(strtoupper($table), strlen(ADMIN_TAB_PREFIX)));
         }
         return $tablestr;
     }

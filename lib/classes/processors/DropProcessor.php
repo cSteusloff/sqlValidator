@@ -35,17 +35,19 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 
 /**
- * 
+ *
  * This class processes the DROP statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
-class DropProcessor extends AbstractProcessor {
+class DropProcessor extends AbstractProcessor
+{
 
     // TODO: we should enhance it to get the positions for the IF EXISTS keywords
     // look into the CreateProcessor to get an idea.
-    public function process($tokenList) {
+    public function process($tokenList)
+    {
         $skip = 0;
         $warning = true;
         $base_expr = "";
@@ -61,40 +63,40 @@ class DropProcessor extends AbstractProcessor {
             }
 
             if ($skip > 0) {
-                $skip --;
+                $skip--;
                 continue;
             }
 
             switch ($token->getUpper()) {
-            case 'VIEW':
-            case 'SCHEMA':
-            case 'DATABASE':
-            case 'TABLE':
-                $expr_type = strtolower($token->getTrim());
-                break;
+                case 'VIEW':
+                case 'SCHEMA':
+                case 'DATABASE':
+                case 'TABLE':
+                    $expr_type = strtolower($token->getTrim());
+                    break;
 
-            case 'IF':
-                $warning = false;
-                $skip = 1;
-                break;
+                case 'IF':
+                    $warning = false;
+                    $skip = 1;
+                    break;
 
-            case 'TEMPORARY':
-                $expr_type = ExpressionType::TEMPORARY_TABLE;
-                $skip = 1;
-                break;
+                case 'TEMPORARY':
+                    $expr_type = ExpressionType::TEMPORARY_TABLE;
+                    $skip = 1;
+                    break;
 
-            case 'RESTRICT':
-            case 'CASCADE':
-                $option = $token->getUpper();
-                break;
+                case 'RESTRICT':
+                case 'CASCADE':
+                    $option = $token->getUpper();
+                    break;
 
-            case ',':
-                $resultList[] = array('expr_type' => $expr_type, 'base_expr' => $base_expr);
-                $base_expr = "";
-                break;
+                case ',':
+                    $resultList[] = array('expr_type' => $expr_type, 'base_expr' => $base_expr);
+                    $base_expr = "";
+                    break;
 
-            default:
-                $base_expr .= $token->getToken();
+                default:
+                    $base_expr .= $token->getToken();
             }
         }
 
@@ -105,4 +107,5 @@ class DropProcessor extends AbstractProcessor {
         return array('option' => $option, 'warning' => $warning, 'object_list' => $resultList);
     }
 }
+
 ?>
