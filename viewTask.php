@@ -1,12 +1,13 @@
 <?php
 session_start();
 error_reporting(E_ALL);
+
 /**
- * Project: sqlValidator
- * User: Christian Steusloff
- * Date: 05.02.14
- * Time: 21:03
+ * @package    SqlValidator
+ * @author     Christian Steusloff
+ * @author     Jens Wiemann
  */
+
 ?>
 <!doctype html>
 <html lang="de">
@@ -42,60 +43,60 @@ error_reporting(E_ALL);
 
 <body>
 <div class="container">
-    <div class="navbar navbar-default" role="navigation">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">SQL - Validator</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="createTask.php">create Task</a></li>
-                    <li class="active"><a href="viewTask.php">view Task</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="about.php">about</a></li>
-                </ul>
-            </div>
+<div class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">SQL - Validator</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="createTask.php">create Task</a></li>
+                <li class="active"><a href="viewTask.php">view Task</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.php">about</a></li>
+            </ul>
         </div>
     </div>
+</div>
 
-    <?php
-    require_once("lib/define.inc.php");
-    require_once("lib/sqlConnection.class.php");
-    require_once("lib/oracleConnection.class.php");
-    require_once("lib/sqlValidator.class.php");
-    require_once("lib/taskHelper.php");
-    require_once("lib/queryTranslator.class.php");
-    require_once("lib/frontendHelper.class.php");
-    $fH = new frontendHelper();
+<?php
+require_once("lib/define.inc.php");
+require_once("lib/sqlConnection.class.php");
+require_once("lib/oracleConnection.class.php");
+require_once("lib/sqlValidator.class.php");
+require_once("lib/taskHelper.php");
+require_once("lib/queryTranslator.class.php");
+require_once("lib/frontendHelper.class.php");
+$fH = new frontendHelper();
 
-    $db = new oracleConnection();
-    $qT = new queryTranslator();
+$db = new oracleConnection();
+$qT = new queryTranslator();
 
-    // TODO erstelle Tabellen fuer User
-    //$_SESSION["username"] = "demo";
-    $_SESSION["username"] = "demo";
-    $_SESSION["id"] = 2;
+// TODO erstelle Tabellen fuer User
+//$_SESSION["username"] = "demo";
+$_SESSION["username"] = "demo";
+$_SESSION["id"] = 2;
 
-    // special task
-    if (isset($_GET["id"])) {
+// special task
+if (isset($_GET["id"])) {
 
-        $task_id = $_GET["id"];
+    $task_id = $_GET["id"];
 
-        $task = new taskHelper($db);
-        $task->loadTask($_GET["id"],$_SESSION["id"]);
+    $task = new taskHelper($db);
+    $task->loadTask($_GET["id"], $_SESSION["id"]);
 
-        // create table for task depending on user
-        // TODO Darf natürlich nicht ausgeführt werden, wenn das Formular hier gesendet wurde!!!!
-        $task->resetTask();
+    // create table for task depending on user
+    // TODO Darf natürlich nicht ausgeführt werden, wenn das Formular hier gesendet wurde!!!!
+    $task->resetTask();
 
-        $last_sql = $task->getLastUserQuery();
+    $last_sql = $task->getLastUserQuery();
 
 //        $_SESSION["sql"] = "SELECT
 //    c.cname as Cocktail,
@@ -122,138 +123,140 @@ error_reporting(E_ALL);
 //        $fp = fopen("task.obj","w");
 //        fwrite($fp,$s);
 //        fclose($fp);
+    ?>
+    <div class="alert alert-warning">
+        <strong>Demo!</strong> Your Username is '<?php echo $_SESSION["username"]; ?>'<br>
+    </div>
+
+
+    <div class="FormText">
+        <h2><?php echo $task->getTopic(); ?></h2>
+
+        <p>
+            <?php echo $task->getText(); ?>
+        </p>
+    </div>
+
+    <div id="container" class="js-masonry" data-masonry-options='{ "columnWidth": 2, "itemSelector": ".task" }'>
+        <?php echo($task->printTable("task")); ?>
+    </div>
+
+
+    <div class="FormText">
+        <h2>solution output</h2>
+        <?php
+        if ($task->getTaskType() == "CREATE") {
+            echo("See above!");
+        } elseif ($task->getTaskType() == "DROP") {
+            echo("No output!");
+        } else {
+            $db->setSavePoint();
+
+            $querySolution = $task->getSolution();
+            $queryMaster = $qT->translate($querySolution, "MASTER_");
+            $db->setQuery($queryMaster);
+
+            if ($db->getStatementType() == "SELECT") {
+                $db->executeNoCommit();
+                echo $db->printTable("task");
+            } else {
+                $db->executeNoCommit();
+                echo($task->printTable("task", false));
+            }
+
+            $db->rollbackSavePoint();
+        }
         ?>
+
+    </div>
+
+    <div class="FormText">
+        <form class="form-horizontal" role="form" action="validateTask.inc.php" method="post">
+            <fieldset>
+                <!-- Hidden -->
+                <input type="hidden" name="taskid" value="<?php echo $_GET["id"]; ?>">
+
+                <!-- Textarea -->
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" for="sql">Your Solution</label>
+
+                    <div class="col-sm-8">
+                        <textarea id="sql" class="form-control"
+                                  name="sql"><?php echo $task->getLastUserQuery(); ?></textarea>
+                    </div>
+                    <div class="col-sm-3">
+                        <h4>Infos</h4>
+
+                        <p>
+                        <ol>
+                            <li>" becomes '</li>
+                            <li>; at the end is not necessary</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Button -->
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" for="submit"></label>
+
+                    <div class="col-sm-11">
+                        <button id="submit" name="submit" class="btn btn-primary">check</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <?php if (isset($_SESSION["error"]) && !is_null($_SESSION["error"])) { ?>
+        <div class="alert alert-danger">
+            <strong>Error!</strong> <?= $_SESSION["error"]; ?>
+        </div>
+    <?php } elseif (isset($_SESSION["valid"]) && !is_null($_SESSION["valid"])) { ?>
         <div class="alert alert-warning">
-            <strong>Demo!</strong> Your Username is '<?php echo $_SESSION["username"]; ?>'<br>
+            <strong>Mistake!</strong> Your syntax is right but the answer is wrong.<br>
+            <?= $_SESSION["valid"]; ?>
         </div>
-
-
-        <div class="FormText">
-            <h2><?php echo $task->getTopic(); ?></h2>
-
-            <p>
-                <?php echo $task->getText(); ?>
-            </p>
+    <?php } elseif (isset($_SESSION["correct"]) && !is_null($_SESSION["correct"])) { ?>
+        <div class="alert alert-success">
+            <strong>Well done!</strong> Correct sql query.
         </div>
-
-        <div id="container" class="js-masonry" data-masonry-options='{ "columnWidth": 2, "itemSelector": ".task" }'>
-            <?php echo($task->printTable("task")); ?>
-        </div>
-
-
-        <div class="FormText">
-            <h2>solution output</h2>
-            <?php
-                if($task->getTaskType() == "CREATE" ){
-                    echo("See above!");
-                } elseif($task->getTaskType() == "DROP" ){
-                    echo("No output!");
-                } else {
-                    $db->setSavePoint();
-
-                    $querySolution = $task->getSolution();
-                    $queryMaster = $qT->translate($querySolution,"MASTER_");
-                    $db->setQuery($queryMaster);
-
-                    if($db->getStatementType() == "SELECT"){
-                        $db->executeNoCommit();
-                        echo $db->printTable("task");
-                    } else {
-                        $db->executeNoCommit();
-                        echo($task->printTable("task",false));
-                    }
-
-                    $db->rollbackSavePoint();
-                }
-            ?>
-
-        </div>
-
-        <div class="FormText">
-            <form class="form-horizontal" role="form" action="validateTask.inc.php" method="post">
-                <fieldset>
-                    <!-- Hidden -->
-                    <input type="hidden" name="taskid" value="<?php echo $_GET["id"]; ?>">
-
-                    <!-- Textarea -->
-                    <div class="form-group">
-                        <label class="col-sm-1 control-label" for="sql">Your Solution</label>
-
-                        <div class="col-sm-8">
-                            <textarea id="sql" class="form-control"
-                                      name="sql"><?php echo $task->getLastUserQuery();?></textarea>
-                        </div>
-                        <div class="col-sm-3">
-                            <h4>Infos</h4>
-
-                            <p>
-                            <ol>
-                                <li>" becomes '</li>
-                                <li>; at the end is not necessary</li>
-                            </ol>
-                        </div>
-                    </div>
-
-                    <!-- Button -->
-                    <div class="form-group">
-                        <label class="col-sm-1 control-label" for="submit"></label>
-
-                        <div class="col-sm-11">
-                            <button id="submit" name="submit" class="btn btn-primary">check</button>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-        <?php if (isset($_SESSION["error"]) && !is_null($_SESSION["error"])) { ?>
-            <div class="alert alert-danger">
-                <strong>Error!</strong> <?= $_SESSION["error"]; ?>
-            </div>
-        <?php } elseif (isset($_SESSION["valid"]) && !is_null($_SESSION["valid"])) { ?>
-            <div class="alert alert-warning">
-                <strong>Mistake!</strong> Your syntax is right but the answer is wrong.<br>
-                <?= $_SESSION["valid"]; ?>
-            </div>
-        <?php } elseif (isset($_SESSION["correct"]) && !is_null($_SESSION["correct"])) { ?>
-            <div class="alert alert-success">
-                <strong>Well done!</strong> Correct sql query.
-            </div>
-        <?php }
-        ?>
-
-        <div class="FormText">
-            <h2>your result</h2>
-            <div class="js-masonry" data-masonry-options='{ "columnWidth": 2, "itemSelector": ".task" }'>
-                <?php
-                if(isset($_SESSION["userquery"])){
-                    $db->setQuery($_SESSION["userquery"]);
-                    $db->execute();
-                    if(strtoupper($db->getStatementType()) == "SELECT"){
-                        echo $db->printTable("task");
-                    } else {
-
-                        foreach($task->getTableNames() as $table){
-                            // TODO: only for presentation - fix it!!!
-                            $userTab = str_replace(ADMIN_TAB_PREFIX,"user2_",$table);
-                            $db->setQuery("SELECT * FROM {$userTab}");
-                            $db->execute();
-                            echo $db->printTable("task");
-                        }
-                    }
-                }
-                ?>
-            </div>
-        </div>
-        <a name="end"></a>
-
     <?php
+    }
+    ?>
 
-    } else {
-        // overview about tasks
-        $db->setQuery("SELECT ID,TASKNAME,TASKTEXT FROM SYS_TASK ORDER BY TASKNAME");
-        $db->execute();
-        $select = array();
-        echo <<<TABHEAD
+    <div class="FormText">
+        <h2>your result</h2>
+
+        <div class="js-masonry" data-masonry-options='{ "columnWidth": 2, "itemSelector": ".task" }'>
+            <?php
+            if (isset($_SESSION["userquery"])) {
+                $db->setQuery($_SESSION["userquery"]);
+                $db->execute();
+                if (strtoupper($db->getStatementType()) == "SELECT") {
+                    echo $db->printTable("task");
+                } else {
+
+                    foreach ($task->getTableNames() as $table) {
+                        // TODO: only for presentation - fix it!!!
+                        $userTab = str_replace(ADMIN_TAB_PREFIX, "user2_", $table);
+                        $db->setQuery("SELECT * FROM {$userTab}");
+                        $db->execute();
+                        echo $db->printTable("task");
+                    }
+                }
+            }
+            ?>
+        </div>
+    </div>
+    <a name="end"></a>
+
+<?php
+
+} else {
+    // overview about tasks
+    $db->setQuery("SELECT ID,TASKNAME,TASKTEXT FROM SYS_TASK ORDER BY TASKNAME");
+    $db->execute();
+    $select = array();
+    echo <<<TABHEAD
             <table class="table table-striped" >
             <thead>
             <tr>
@@ -264,27 +267,27 @@ error_reporting(E_ALL);
             </thead>
             <tbody>
 TABHEAD;
-        while ($db->Fetch()) {
-            echo("<tr>");
-            echo("<td>" . $db->row['ID'] . "</td>");
-            echo("<td><a href=viewTask.php?id=" . $db->row['ID'] . ">" . $db->row['TASKNAME'] . "</a></td>");
-            echo("<td>" . substr($db->row['TASKTEXT'], 0, 50) . "...</td>");
-            echo("</tr>");
-        }
-        echo("</tbody></table >");
-        $db->closeConnection();
-
+    while ($db->Fetch()) {
+        echo("<tr>");
+        echo("<td>" . $db->row['ID'] . "</td>");
+        echo("<td><a href=viewTask.php?id=" . $db->row['ID'] . ">" . $db->row['TASKNAME'] . "</a></td>");
+        echo("<td>" . substr($db->row['TASKTEXT'], 0, 50) . "...</td>");
+        echo("</tr>");
     }
+    echo("</tbody></table >");
+    $db->closeConnection();
+
+}
 //    echo("<pre>");
 //    var_dump($_SESSION);
 
-    // unset variables from Session
-    $fH->unsetSession($_SESSION,array("error","valid","correct","userquery"));
+// unset variables from Session
+$fH->unsetSession($_SESSION, array("error", "valid", "correct", "userquery"));
 
 //    echo("<pre>");
 //    var_dump($_SESSION);
 
-    ?>
+?>
 
 </div>
 <!-- /container -->

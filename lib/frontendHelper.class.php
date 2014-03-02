@@ -1,12 +1,15 @@
 <?php
 
 /**
- * Project: sqlValidator
- * User: Christian Steusloff
- * Date: 17.02.14
- * Time: 13:12
+ * @package    SqlValidator
+ * @author     Christian Steusloff
+ * @author     Jens Wiemann
+ */
+
+/**
+ * Class frontendHelper
  *
- * only for Frontend
+ * Only for Frontend
  */
 class frontendHelper
 {

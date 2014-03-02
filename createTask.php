@@ -1,10 +1,11 @@
 <?php
+
 /**
- * Project: sqlValidator
- * User: Christian Steusloff
- * Date: 05.02.14
- * Time: 21:00
+ * @package    SqlValidator
+ * @author     Christian Steusloff
+ * @author     Jens Wiemann
  */
+
 session_start();
 
 require_once("lib/define.inc.php");
@@ -13,12 +14,13 @@ require_once("lib/oracleConnection.class.php");
 require_once("lib/frontendHelper.class.php");
 $fH = new frontendHelper();
 $db = new oracleConnection();
-$db->setQuery("SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) LIKE '".ADMIN_TAB_PREFIX."%'");
+$db->setQuery("SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) LIKE '" . ADMIN_TAB_PREFIX . "%'");
 $db->execute();
 
 ?>
 <!doctype html>
-<html lang="de"><head>
+<html lang="de">
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -69,17 +71,18 @@ $db->execute();
     </div>
 
 
-    <?php if(isset($_GET["s"]) && $_GET["s"] == 1){ ?>
+    <?php if (isset($_GET["s"]) && $_GET["s"] == 1) { ?>
         <div class="alert alert-success">
             <strong>Well done!</strong> You successfully created a new task.
         </div>
-    <?php } elseif(isset($_GET["s"]) && $_GET["s"] == 0) { ?>
+    <?php } elseif (isset($_GET["s"]) && $_GET["s"] == 0) { ?>
         <div class="alert alert-danger">
-            <strong>Error!</strong> <?php echo isset($_SESSION["error"]) ? $_SESSION["error"] : "";?>
+            <strong>Error!</strong> <?php echo isset($_SESSION["error"]) ? $_SESSION["error"] : ""; ?>
         </div>
-    <?php }
+    <?php
+    }
     // unset Alert
-    $fH->unsetSession($_SESSION,"error");
+    $fH->unsetSession($_SESSION, "error");
     ?>
 
     <form class="form-horizontal" role="form" name="createTask" action="createTask.inc.php" method="post">
@@ -91,36 +94,40 @@ $db->execute();
             <!-- Text input-->
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="title">Title</label>
+
                 <div class="col-sm-10">
                     <input id="title" name="title" type="text"
                            class="input-xlarge form-control" required=""
-                           value="<?php echo isset($_SESSION["title"]) ? $_SESSION["title"] : "";?>">
+                           value="<?php echo isset($_SESSION["title"]) ? $_SESSION["title"] : ""; ?>">
                 </div>
             </div>
 
             <!-- Textarea -->
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="text">Description</label>
+
                 <div class="col-sm-10">
-                    <textarea id="text" class="form-control" rows="4" required="" name="text"><?php echo isset($_SESSION["text"]) ? $_SESSION["text"] : "";?></textarea>
+                    <textarea id="text" class="form-control" rows="4" required=""
+                              name="text"><?php echo isset($_SESSION["text"]) ? $_SESSION["text"] : ""; ?></textarea>
                 </div>
             </div>
 
             <!-- Select Multiple -->
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="table2">Provided tables</label>
+
                 <div class="col-sm-10">
                     <select id="table" name="table[]" required="" class="form-control" multiple="multiple" size="10">
                         <?php
-                        while($db->Fetch(false)){
-                            $tablename = substr(strtoupper($db->row[0]),strlen(ADMIN_TAB_PREFIX));
+                        while ($db->Fetch(false)) {
+                            $tablename = substr(strtoupper($db->row[0]), strlen(ADMIN_TAB_PREFIX));
                             // var_dump($db->row[0]);
                             // var_dump($_SESSION["table"]);
 
-                            if(in_array($db->row[0],$_SESSION["table"])){
-                                echo("<option value='{$db->row[0]}' selected=selected>".$tablename."</option>");
+                            if (in_array($db->row[0], $_SESSION["table"])) {
+                                echo("<option value='{$db->row[0]}' selected=selected>" . $tablename . "</option>");
                             } else {
-                                echo("<option value='{$db->row[0]}'>".$tablename."</option>");
+                                echo("<option value='{$db->row[0]}'>" . $tablename . "</option>");
                             }
                         }
                         ?>
@@ -136,36 +143,37 @@ $db->execute();
                  -->
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="right">Rights</label>
+
                 <div class="col-sm-10">
                     <div class="checkbox checkbox-inline"><label class="" for="right-0">
                             <input type="radio"
                                    name="right[0]"
-                                   <?php echo (isset($_SESSION["right"][0]) &&
-                                               $_SESSION["right"][0] == 1) ? 'checked="checked"' : '';?>
+                                <?php echo (isset($_SESSION["right"][0]) &&
+                                    $_SESSION["right"][0] == 1) ? 'checked="checked"' : '';?>
                                    id="right-0" value="1">
                             Select
                         </label></div>
                     <div class="checkbox checkbox-inline"><label class="" for="right-1">
                             <input type="radio"
                                    name="right[0]"
-                                   <?php echo (isset($_SESSION["right"][0]) &&
-                                               $_SESSION["right"][0] == 2) ? 'checked="checked"' : '';?>
+                                <?php echo (isset($_SESSION["right"][0]) &&
+                                    $_SESSION["right"][0] == 2) ? 'checked="checked"' : '';?>
                                    id="right-1" value="2">
                             Insert/Update/Delete
                         </label></div>
                     <div class="checkbox checkbox-inline"><label class="" for="right-2">
                             <input type="radio"
                                    name="right[0]"
-                                   <?php echo (isset($_SESSION["right"][0]) &&
-                                               $_SESSION["right"][0] == 4) ? 'checked="checked"' : '';?>
+                                <?php echo (isset($_SESSION["right"][0]) &&
+                                    $_SESSION["right"][0] == 4) ? 'checked="checked"' : '';?>
                                    id="right-2" value="4">
                             Create/Alter
                         </label></div>
                     <div class="checkbox checkbox-inline"><label class="" for="right-3">
                             <input type="radio"
                                    name="right[0]"
-                                   <?php echo (isset($_SESSION["right"][0]) &&
-                                               $_SESSION["right"][0] == 8) ? 'checked="checked"' : '';?>
+                                <?php echo (isset($_SESSION["right"][0]) &&
+                                    $_SESSION["right"][0] == 8) ? 'checked="checked"' : '';?>
                                    id="right-3" value="8">
                             Drop
                         </label></div>
@@ -175,15 +183,17 @@ $db->execute();
             <!-- Textarea -->
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="sql">SQL query</label>
+
                 <div class="col-sm-10">
                     <textarea id="sql" class="form-control"
-                              name="sql"><?php echo isset($_SESSION["sql"]) ? $_SESSION["sql"] : "";?></textarea>
+                              name="sql"><?php echo isset($_SESSION["sql"]) ? $_SESSION["sql"] : ""; ?></textarea>
                 </div>
             </div>
 
             <!-- Button -->
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="submit"></label>
+
                 <div class="col-sm-10">
                     <button id="submit" name="submit" class="btn btn-primary">create</button>
                 </div>
@@ -191,10 +201,11 @@ $db->execute();
         </fieldset>
         <?php
         // unset variables from Session
-        $fH->unsetSession($_SESSION,array("title","text","table","right","sql"));
+        $fH->unsetSession($_SESSION, array("title", "text", "table", "right", "sql"));
         ?>
     </form>
-</div> <!-- /container -->
+</div>
+<!-- /container -->
 
 
 <!-- Bootstrap core JavaScript
@@ -216,7 +227,7 @@ $db->execute();
 <!---->
 <!--</script>-->
 <script>
-    window.onload = function() {
+    window.onload = function () {
 //        var radio = document.getElementById('right-3')
 //        radio.onclick = function() {
 //            alert("test")
@@ -229,7 +240,7 @@ $db->execute();
             indentWithTabs: true,
             smartIndent: true,
             lineNumbers: true,
-            matchBrackets : true
+            matchBrackets: true
         });
     };
 </script>

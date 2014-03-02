@@ -1,9 +1,13 @@
 <?php
 
 /**
- * User: Christian Steusloff
- * Date: 27.11.13
- * Time: 19:26
+ * @package    SqlValidator
+ * @author     Christian Steusloff
+ * @author     Jens Wiemann
+ */
+
+/**
+ * Class oracleConnection
  */
 class oracleConnection extends sqlConnection
 {

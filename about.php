@@ -1,13 +1,15 @@
 <?php
+
 /**
- * Project: sqlValidator
- * User: Christian Steusloff
- * Date: 05.02.14
- * Time: 21:03
+ * @package    SqlValidator
+ * @author     Christian Steusloff
+ * @author     Jens Wiemann
  */
+
 ?>
 <!doctype html>
-<html lang="de"><head>
+<html lang="de">
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,7 +27,6 @@
 
     <!-- Custom styles for this template -->
     <link href="style.css" rel="stylesheet">
-
 
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -69,35 +70,35 @@
     $master_con = new oracleConnection();
     $slave_con = new oracleConnection();
 
-/*//    $master_con->setQuery("SELECT * From tab");
-//    $master_con->execute();
+    /*//    $master_con->setQuery("SELECT * From tab");
+    //    $master_con->execute();
 
-    $master_con->setQuery("SELECT cname,cid FROM MASTER_COCKTAIL WHERE gid between 5 AND 12");
+        $master_con->setQuery("SELECT cname,cid FROM MASTER_COCKTAIL WHERE gid between 5 AND 12");
 
-    //$this->checkConnection->executeNoCommit();
+        //$this->checkConnection->executeNoCommit();
 
-    echo $master_con->printTable();
+        echo $master_con->printTable();
 
-    echo("<br>");
+        echo("<br>");
 
-    $slave_con->setQuery("SELECT cname,gid FROM MASTER_COCKTAIL WHERE gid >= 5 AND gid < 12");
-    echo $slave_con->printTable();
+        $slave_con->setQuery("SELECT cname,gid FROM MASTER_COCKTAIL WHERE gid >= 5 AND gid < 12");
+        echo $slave_con->printTable();
 
-    echo("<br>");
+        echo("<br>");
 
-    $valid = new sqlValidator();
-    $valid->setSqlConnection($master_con,$slave_con);
-    if($valid->validate()){
-        echo("correct");
-    } else {
-        echo $valid->getMistake();
-    }*/
+        $valid = new sqlValidator();
+        $valid->setSqlConnection($master_con,$slave_con);
+        if($valid->validate()){
+            echo("correct");
+        } else {
+            echo $valid->getMistake();
+        }*/
 
     ?>
 
 
-
-</div> <!-- /container -->
+</div>
+<!-- /container -->
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <script src="js/jquery.js"></script>

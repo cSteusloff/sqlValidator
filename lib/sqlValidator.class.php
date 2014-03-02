@@ -1,24 +1,33 @@
 <?php
 
 /**
- * Project: ss
- * User: Christian Steusloff
- * Date: 19.12.13
- * Time: 14:36
+ * @package    SqlValidator
+ * @author     Christian Steusloff
+ * @author     Jens Wiemann
+ */
+
+/**
+ * Class sqlValidator
  */
 class sqlValidator
 {
     /**
+     * Master connection containing solution query
+     *
      * @var sqlConnection
      */
     private $masterConnection = null;
 
     /**
+     * Slave connection containing user query
+     *
      * @var sqlConnection
      */
     private $slaveConnection = null;
 
     /**
+     * Copy of slave connection
+     *
      * @var sqlConnection
      */
     private $checkConnection = null;
@@ -54,6 +63,8 @@ class sqlValidator
     private $mistake = null;
 
     /**
+     * Save found mistake
+     *
      * @param string $mistake
      */
     public function setMistake($mistake)
@@ -62,6 +73,8 @@ class sqlValidator
     }
 
     /**
+     * Get the saved mistake
+     *
      * @return string
      */
     public function getMistake()
@@ -81,15 +94,19 @@ class sqlValidator
     }
 
     /**
+     * Checks all possible Querytypes(Tasktypes) for content errors.
+     * Requires syntactically correct queries
+     *
      * @return bool if answer is correct
      */
     public function validate()
     {
+        //Set savepoints for all connections
         $this->masterConnection->setSavePoint();
         $this->slaveConnection->setSavePoint();
         $this->checkConnection->setSavePoint();
 
-        // TODO: notwendig?
+        //TODO: Überflüssig??
         $this->masterConnection->executeNoCommit();
         $this->slaveConnection->executeNoCommit();
 
@@ -126,16 +143,39 @@ class sqlValidator
     }
 
     /**
+     * Validates Queries of type Drop
+     *
      * @return bool
      */
     private function validateDrop()
     {
-        //TODO: check if Tables still exist
-        $this->task->getTableNames();
-        return false;
+        //TODO: Überflüssig??
+        //TODO: was passiert bei Drop Database {Name}??
+        $this->masterConnection->executeNoCommit();
+        $this->slaveConnection->executeNoCommit();
+
+        //Compares all tables headers of User and Master
+        foreach ($this->task->getTableNames() as $masterTable) {
+            $this->masterConnection->setQuery("SELECT * FROM {$masterTable}");
+            $this->masterConnection->executeNoCommit();
+            $content1 = $this->masterConnection->getHeader(true);
+
+            $userTable = str_replace(ADMIN_TAB_PREFIX, $this->tablePrefix, $masterTable);
+            $this->slaveConnection->setQuery("SELECT * FROM {$userTable}");
+            $this->slaveConnection->executeNoCommit();
+            $content2 = $this->slaveConnection->getHeader(true);
+
+            if (strcmp($content1, $content2) === 0) {
+                $this->setMistake("The correct table was not dropped");
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
+     * Validates Queries of type Select
+     *
      * @return bool
      */
     private function validateSelect()
@@ -143,11 +183,13 @@ class sqlValidator
         if ($this->validateDimensions()) {
             // master without ORDER BY
             if (stripos($this->masterConnection->sqlquery, "ORDER BY") === false) {
-                if ($this->validateHeader())
+                if ($this->validateHeader()){
                     return $this->validateContentiO();
+                }
             } else {
-                if ($this->validateHeader())
+                if ($this->validateHeader()){
                     return $this->validateContent();
+                }
             }
         } else {
             return false;
@@ -156,58 +198,51 @@ class sqlValidator
     }
 
     /**
+     * Validates Queries of type Update
+     *
      * @return bool
      */
     private function validateUpdate()
     {
-        if ($this->validateDimensions()) {
+        //TODO: Überflüssig??
+        $this->masterConnection->executeNoCommit();
+        $this->slaveConnection->executeNoCommit();
 
+        //Compares all tables of User and Master
+        foreach ($this->task->getTableNames() as $masterTable) {
+            $this->masterConnection->setQuery("SELECT * FROM {$masterTable}");
             $this->masterConnection->executeNoCommit();
+            $content1 = $this->masterConnection->getContent();
+
+            $userTable = str_replace(ADMIN_TAB_PREFIX, $this->tablePrefix, $masterTable);
+            $this->slaveConnection->setQuery("SELECT * FROM {$userTable}");
             $this->slaveConnection->executeNoCommit();
+            $content2 = $this->slaveConnection->getContent();
 
-            $TrueArray = array();
-
-            foreach ($this->task->getTableNames() as $masterTable) {
-                $this->masterConnection->setQuery("SELECT * FROM {$masterTable}");
-                $this->masterConnection->executeNoCommit();
-                $content1 = $this->masterConnection->getContent();
-
-                $userTable = str_replace(ADMIN_TAB_PREFIX, $this->tablePrefix, $masterTable);
-                $this->slaveConnection->setQuery("SELECT * FROM {$userTable}");
-                $this->slaveConnection->executeNoCommit();
-                $content2 = $this->slaveConnection->getContent();
-
-                if (!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1)) {
-                    $TrueArray[] = true;
-                } else {
-                    $this->setMistake("Wrong content");
-                    return false;
-                }
-            }
-
-            if (in_array(false, $TrueArray)) {
+            if (!$this->array_diff_reku($content1, $content2) || !$this->array_diff_reku($content2, $content1)) {
                 $this->setMistake("Wrong content");
                 return false;
-            } else {
-                return true;
             }
         }
-        return false;
+        return true;
     }
 
     /**
+     * Validates Queries of type Create
+     *
      * @return bool
      */
     private function validateCreate()
     {
-        if ($this->validateHeader()) {
-            return $this->validateContentiO();
-            //TODO: Check Table parameters!!
-        }
-        return false;
+        //TODO: Check Table parameters!!
+        return $this->validateUpdate();
+
+        //return false;
     }
 
     /**
+     * Checks if the header of both queries equal
+     *
      * @return bool
      */
     private function validateHeader()
@@ -219,14 +254,17 @@ class sqlValidator
         $this->checkConnection->setQuery($this->slaveConnection->sqlquery);
         $this->checkConnection->executeNoCommit();
         $header2 = $this->checkConnection->getHeader(true);
-        if (strcmp($header1, $header2) === 0)
+        if (strcmp($header1, $header2) === 0){
             return true;
+        }
         $this->setMistake("incorrect Solution - names of header incorrect");
         return false;
 
     }
 
     /**
+     * Checks if the content of the queries matches
+     *
      * @return bool
      */
     private function validateContent()
@@ -239,14 +277,16 @@ class sqlValidator
         $this->checkConnection->executeNoCommit();
         $content2 = $this->checkConnection->getContent(true);
 
-
-        if (strcmp($content1, $content2) === 0)
+        if (strcmp($content1, $content2) === 0){
             return true;
+        }
         $this->setMistake("incorrect Solution - content differs");
         return false;
     }
 
     /**
+     * Checks if the content of the queries matches (ignoring order of elements)
+     *
      * @return bool
      */
     private function validateContentiO()
@@ -259,7 +299,7 @@ class sqlValidator
         $this->checkConnection->executeNoCommit();
         $content2 = $this->checkConnection->getContent();
 
-        if (!$this->array_diff2($content1, $content2) && !$this->array_diff2($content2, $content1)) {
+        if ($this->array_diff_reku($content1, $content2) && $this->array_diff_reku($content2, $content1)) {
             return true;
         }
 
@@ -268,11 +308,13 @@ class sqlValidator
     }
 
     /**
-     * @param $array1
-     * @param $array2
-     * @return array
+     *Checks if $array1 contains all elements $array2 contains (ignoring order of elements)
+     *
+     * @param array $array1
+     * @param array $array2
+     * @return bool True if $array1 = $array2 (ignoring order)
      */
-    private function array_diff2($array1, $array2)
+    private function array_diff_reku($array1, $array2)
     {
         array_walk($array1, function (&$arr) {
             $arr = serialize($arr);
@@ -280,10 +322,14 @@ class sqlValidator
         array_walk($array2, function (&$arr) {
             $arr = serialize($arr);
         });
-        return array_diff($array1, $array2);
+        $difference = array_diff($array1, $array2);
+
+        return empty($difference);
     }
 
     /**
+     * Checks if the dimensions of both queries equal
+     *
      * @return bool
      */
     private function validateDimensions()

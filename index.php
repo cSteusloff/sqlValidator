@@ -1,9 +1,9 @@
 <?php
+
 /**
- * Project: sqlValidator
- * User: Christian Steusloff
- * Date: 05.02.14
- * Time: 20:14
+ * @package    SqlValidator
+ * @author     Christian Steusloff
+ * @author     Jens Wiemann
  */
 
 header("LOCATION: viewTask.php");

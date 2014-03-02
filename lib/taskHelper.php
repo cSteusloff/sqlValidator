@@ -1,10 +1,13 @@
 <?php
 
 /**
- * Project: ss
- * User: Christian Steusloff
- * Date: 14.12.13
- * Time: 13:16
+ * @package    SqlValidator
+ * @author     Christian Steusloff
+ * @author     Jens Wiemann
+ */
+
+/**
+ * Class taskHelper
  */
 class taskHelper
 {
@@ -396,7 +399,7 @@ class taskHelper
      * @param $tableHeader
      * @param $tableContent
      * @return mixed
-    @internal param array $string $tables - names of usable tables
+     * @internal param array $string $tables - names of usable tables
      * @internal param array $int $permission - access rights of table
      */
     public function createTask($topic, $text, $tables, $permission, $solution, $tableHeader, $tableContent)
@@ -698,7 +701,9 @@ class taskHelper
 //        $this->setTables($name_result);
 //        return $id_result;
 //    }
-
+    /**
+     *
+     */
     private function setDatabaseTables()
     {
         $tablename_array = array();

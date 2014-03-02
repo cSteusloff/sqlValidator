@@ -1,8 +1,9 @@
 <?php
+
 /**
- * User: Christian Steusloff
- * Date: 27.11.13
- * Time: 19:19
+ * @package    SqlValidator
+ * @author     Christian Steusloff
+ * @author     Jens Wiemann
  */
 
 /****************************************/
