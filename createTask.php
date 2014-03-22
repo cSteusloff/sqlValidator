@@ -24,10 +24,10 @@ $db->execute();
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="SQLValidator">
+    <meta name="description" content="SQL - Validierung">
     <meta name="author" content="Christian Steusloff, Jens Wiemann">
     <link rel="shortcut icon" href="assets/ico/favicon.ico">
-    <title>SQL-Validator</title>
+    <title>SQL - Validierung</title>
 
     <!-- SQL-Syntax Highlighting -->
     <link rel="stylesheet" href="css/codemirror.css">
@@ -108,7 +108,7 @@ $db->execute();
 
                 <div class="col-sm-10">
                     <textarea id="text" class="form-control" rows="4" required=""
-                              name="text"><?php echo isset($_SESSION["text"]) ? $_SESSION["text"] : ""; ?></textarea>
+                              name="text"><?php echo isset($_SESSION["text"]) ? htmlspecialchars_decode($_SESSION["text"]) : ""; ?></textarea>
                 </div>
             </div>
 
@@ -165,7 +165,7 @@ $db->execute();
                                 <?php echo (isset($_SESSION["right"][0]) &&
                                     $_SESSION["right"][0] == 4) ? 'checked="checked"' : '';?>
                                    id="right-2" value="4">
-                            Create/Alter
+                            Create
                         </label></div>
                     <div class="checkbox checkbox-inline"><label class="" for="right-3">
                             <input type="radio"

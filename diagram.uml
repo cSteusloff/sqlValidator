@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>PHP</ID>
+  <OriginalElement>\oracleConnection</OriginalElement>
+  <nodes>
+    <node x="1498.5" y="680.0">\oracleConnection</node>
+    <node x="586.0" y="1415.0">\queryTranslator</node>
+    <node x="1489.0" y="0.0">\sqlConnection</node>
+    <node x="926.0" y="1415.0">\frontendHelper</node>
+    <node x="0.0" y="1415.0">\sqlValidator</node>
+    <node x="0.0" y="0.0">\taskHelper</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="\oracleConnection" target="\sqlConnection">
+      <point x="0.0" y="-295.0" />
+      <point x="0.0" y="315.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.4759689922480621" x="860.418566775244" y="773.0260586319216" />
+  <SelectedNodes>
+    <node>\oracleConnection</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Methods</Category>
+    <Category>Constants</Category>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+  </Categories>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

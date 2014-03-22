@@ -59,19 +59,16 @@ if($slave->getStatementType() == "CREATE"){
     // delete exist table for syntax check
     foreach($task->getTableNames() as $table){
         $slave->setQuery("DROP TABLE ".str_replace("MASTER_","",$table));
-        //var_dump("DROP TABLE ".str_replace("MASTER_","",$table));
         @$slave->executeNoCommit();
     }
 }
 // to default table NOT user-table
 $slave->setQuery($formattedQueryInput);
-//var_dump($formattedQueryInput);
 // CREATE would commit by oracle
 @$slave->executeNoCommit();
 if($slave->getStatementType() == "CREATE"){
     $sql = "DROP TABLE ".$task->getTableNameFromCreate($formattedQueryInput);
     $db->setQuery($sql);
-    //var_dump($sql);
     $db->execute();
 }
 $_SESSION["error"] = $slave->getErrortext();

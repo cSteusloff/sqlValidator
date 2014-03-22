@@ -1,0 +1,2742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>    API Documentation &raquo; \SqlFormatter
+</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+            <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+            <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+        <![endif]-->
+        <script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script>
+        <script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>
+        <script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script>
+        <script src="../js/bootstrap.js" type="text/javascript"></script>
+        <script src="../js/template.js" type="text/javascript"></script>
+        <script src="../js/prettify/prettify.min.js" type="text/javascript"></script>
+    
+            <link rel="shortcut icon" href="../img/favicon.ico"/>
+        <link rel="apple-touch-icon" href="../img/apple-touch-icon.png"/>
+        <link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png"/>
+        <link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png"/>
+    </head>
+<body>
+
+        <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span> <span class="icon-bar"></span>
+                    <span class="icon-bar"></span> </a>
+                <a class="brand" href="../index.html">API Documentation</a>
+
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li class="dropdown">
+                            <a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                API Documentation <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                                                                            </ul>
+                        </li>
+                        <li class="dropdown" id="charts-menu">
+                            <a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                Charts <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="../graph_class.html">
+                                        <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown" id="reports-menu">
+                            <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                Reports <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="../errors.html">
+                                        <i class="icon-list-alt"></i>&#160;Errors
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="../markers.html">
+                                        <i class="icon-list-alt"></i>&#160;Markers
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="../deprecated.html">
+                                        <i class="icon-list-alt"></i>&#160;Deprecated
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="go_to_top">
+            <a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>
+        </div>
+    </div>
+    
+    <div id="___" class="container">
+        <noscript>
+            <div class="alert alert-warning">
+                Javascript is disabled; several features are only available if Javascript is enabled.
+            </div>
+        </noscript>
+
+        
+            <style>
+        .deprecated h2 {
+            text-decoration: line-through;
+        }
+    </style>
+    <div class="row">
+        <div class="span4">
+                    <div class="btn-group view pull-right" data-toggle="buttons-radio">
+        <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button>
+        <button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+    </div>
+    <div class="btn-group visibility" data-toggle="buttons-checkbox">
+        <button class="btn public active" title="Show public elements">Public</button>
+        <button class="btn protected" title="Show protected elements">Protected</button>
+        <button class="btn private" title="Show private elements">Private</button>
+        <button class="btn inherited active" title="Show inherited elements">Inherited</button>
+    </div>
+
+        <ul class="side-nav nav nav-list">
+        <li class="nav-header">
+            <i class="icon-custom icon-method"></i> Methods
+            <ul>
+                                                                                                    <li class="method public">
+        <a href="#method_getCacheStats" title="getCacheStats :: Get stats about the token cache">
+            <span class="description">Get stats about the token cache</span><pre>getCacheStats</pre>
+        </a>
+    </li>
+
+                                                                                                                                                                                                                                                                                                                                        <li class="method public">
+        <a href="#method_format" title="format :: Format the whitespace in a SQL string to make it easier to read.">
+            <span class="description">Format the whitespace in a SQL string to make it easier to read.</span><pre>format</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_highlight" title="highlight :: Add syntax highlighting to a SQL string">
+            <span class="description">Add syntax highlighting to a SQL string</span><pre>highlight</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_splitQuery" title="splitQuery :: Split a SQL string into multiple queries.">
+            <span class="description">Split a SQL string into multiple queries.</span><pre>splitQuery</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_removeComments" title="removeComments :: Remove all comments from a SQL string">
+            <span class="description">Remove all comments from a SQL string</span><pre>removeComments</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_compress" title="compress :: Compress a query by collapsing white space and removing comments">
+            <span class="description">Compress a query by collapsing white space and removing comments</span><pre>compress</pre>
+        </a>
+    </li>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </ul>
+        </li>
+        <li class="nav-header protected">» Protected
+            <ul>
+                                                                                                                <li class="method protected">
+                            <a href="#method_init" title="init :: Stuff that only needs to be done once.  Builds regular expressions and sorts the reserved words.">
+                                <span class="description">Stuff that only needs to be done once.  Builds regular expressions and sorts the reserved words.</span><pre>init</pre>
+                            </a>
+                        </li>
+                                                                                <li class="method protected">
+                            <a href="#method_getNextToken" title="getNextToken :: Return the next token and token type in a SQL string.">
+                                <span class="description">Return the next token and token type in a SQL string.</span><pre>getNextToken</pre>
+                            </a>
+                        </li>
+                                                                                <li class="method protected">
+                            <a href="#method_getQuotedString" title="getQuotedString :: ">
+                                <span class="description"></span><pre>getQuotedString</pre>
+                            </a>
+                        </li>
+                                                                                <li class="method protected">
+                            <a href="#method_tokenize" title="tokenize :: Takes a SQL string and breaks it into tokens.">
+                                <span class="description">Takes a SQL string and breaks it into tokens.</span><pre>tokenize</pre>
+                            </a>
+                        </li>
+                                                                                                                                                                                                                                                                    <li class="method protected">
+                            <a href="#method_highlightToken" title="highlightToken :: Highlights a token depending on its type.">
+                                <span class="description">Highlights a token depending on its type.</span><pre>highlightToken</pre>
+                            </a>
+                        </li>
+                                                                                <li class="method protected">
+                            <a href="#method_highlightQuote" title="highlightQuote :: Highlights a quoted string">
+                                <span class="description">Highlights a quoted string</span><pre>highlightQuote</pre>
+                            </a>
+                        </li>
+                                                                                <li class="method protected">
+                            <a href="#method_highlightBacktickQuote" title="highlightBacktickQuote :: Highlights a backtick quoted string">
+                                <span class="description">Highlights a backtick quoted string</span><pre>highlightBacktickQuote</pre>
+                            </a>
+                        </li>
+                                                                                <li class="method protected">
+                            <a href="#method_highlightReservedWord" title="highlightReservedWord :: Highlights a reserved word">
+                                <span class="description">Highlights a reserved word</span><pre>highlightReservedWord</pre>
+                            </a>
+                        </li>
+                                                                                <li class="method protected">
+                            <a href="#method_highlightBoundary" title="highlightBoundary :: Highlights a boundary token">
+                                <span class="description">Highlights a boundary token</span><pre>highlightBoundary</pre>
+                            </a>
+                        </li>
+                                                                                <li class="method protected">
+                            <a href="#method_highlightNumber" title="highlightNumber :: Highlights a number">
+                                <span class="description">Highlights a number</span><pre>highlightNumber</pre>
+                            </a>
+                        </li>
+                                                                                <li class="method protected">
+                            <a href="#method_highlightError" title="highlightError :: Highlights an error">
+                                <span class="description">Highlights an error</span><pre>highlightError</pre>
+                            </a>
+                        </li>
+                                                                                <li class="method protected">
+                            <a href="#method_highlightComment" title="highlightComment :: Highlights a comment">
+                                <span class="description">Highlights a comment</span><pre>highlightComment</pre>
+                            </a>
+                        </li>
+                                                                                <li class="method protected">
+                            <a href="#method_highlightWord" title="highlightWord :: Highlights a word token">
+                                <span class="description">Highlights a word token</span><pre>highlightWord</pre>
+                            </a>
+                        </li>
+                                                                                <li class="method protected">
+                            <a href="#method_highlightVariable" title="highlightVariable :: Highlights a variable token">
+                                <span class="description">Highlights a variable token</span><pre>highlightVariable</pre>
+                            </a>
+                        </li>
+                                                                                                                                                            </ul>
+        </li>
+        <li class="nav-header private">» Private
+            <ul>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <li class="method private">
+                            <a href="#method_quote_regex" title="quote_regex :: Helper function for building regular expressions for reserved words and boundary characters">
+                                <span class="description">Helper function for building regular expressions for reserved words and boundary characters</span><pre>quote_regex</pre>
+                            </a>
+                        </li>
+                                                                                <li class="method private">
+                            <a href="#method_output" title="output :: Helper function for building string output">
+                                <span class="description">Helper function for building string output</span><pre>output</pre>
+                            </a>
+                        </li>
+                                                                                <li class="method private">
+                            <a href="#method_is_cli" title="is_cli :: ">
+                                <span class="description"></span><pre>is_cli</pre>
+                            </a>
+                        </li>
+                                                </ul>
+        </li>
+        <li class="nav-header">
+            <i class="icon-custom icon-constant"></i> Constants
+            <ul>
+                                <li class="constant ">
+                    <a href="#constant_TOKEN_TYPE_WHITESPACE" title="TOKEN_TYPE_WHITESPACE :: ">
+                        <span class="description"></span><pre>TOKEN_TYPE_WHITESPACE</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_TOKEN_TYPE_WORD" title="TOKEN_TYPE_WORD :: ">
+                        <span class="description"></span><pre>TOKEN_TYPE_WORD</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_TOKEN_TYPE_QUOTE" title="TOKEN_TYPE_QUOTE :: ">
+                        <span class="description"></span><pre>TOKEN_TYPE_QUOTE</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_TOKEN_TYPE_BACKTICK_QUOTE" title="TOKEN_TYPE_BACKTICK_QUOTE :: ">
+                        <span class="description"></span><pre>TOKEN_TYPE_BACKTICK_QUOTE</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_TOKEN_TYPE_RESERVED" title="TOKEN_TYPE_RESERVED :: ">
+                        <span class="description"></span><pre>TOKEN_TYPE_RESERVED</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_TOKEN_TYPE_RESERVED_TOPLEVEL" title="TOKEN_TYPE_RESERVED_TOPLEVEL :: ">
+                        <span class="description"></span><pre>TOKEN_TYPE_RESERVED_TOPLEVEL</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_TOKEN_TYPE_RESERVED_NEWLINE" title="TOKEN_TYPE_RESERVED_NEWLINE :: ">
+                        <span class="description"></span><pre>TOKEN_TYPE_RESERVED_NEWLINE</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_TOKEN_TYPE_BOUNDARY" title="TOKEN_TYPE_BOUNDARY :: ">
+                        <span class="description"></span><pre>TOKEN_TYPE_BOUNDARY</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_TOKEN_TYPE_COMMENT" title="TOKEN_TYPE_COMMENT :: ">
+                        <span class="description"></span><pre>TOKEN_TYPE_COMMENT</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_TOKEN_TYPE_BLOCK_COMMENT" title="TOKEN_TYPE_BLOCK_COMMENT :: ">
+                        <span class="description"></span><pre>TOKEN_TYPE_BLOCK_COMMENT</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_TOKEN_TYPE_NUMBER" title="TOKEN_TYPE_NUMBER :: ">
+                        <span class="description"></span><pre>TOKEN_TYPE_NUMBER</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_TOKEN_TYPE_ERROR" title="TOKEN_TYPE_ERROR :: ">
+                        <span class="description"></span><pre>TOKEN_TYPE_ERROR</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_TOKEN_TYPE_VARIABLE" title="TOKEN_TYPE_VARIABLE :: ">
+                        <span class="description"></span><pre>TOKEN_TYPE_VARIABLE</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_TOKEN_TYPE" title="TOKEN_TYPE :: ">
+                        <span class="description"></span><pre>TOKEN_TYPE</pre>
+                    </a>
+                </li>
+                                <li class="constant ">
+                    <a href="#constant_TOKEN_VALUE" title="TOKEN_VALUE :: ">
+                        <span class="description"></span><pre>TOKEN_VALUE</pre>
+                    </a>
+                </li>
+                            </ul>
+        </li>
+    </ul>
+
+
+        </div>
+
+        <div class="span8">
+            <div class="element class">
+                <h1>SqlFormatter</h1>
+                <small style="display: block; text-align: right">
+                                                        </small>
+                <p class="short_description">SQL Formatter is a collection of utilities for debugging SQL queries.</p>
+                <div class="details">
+                    <div class="long_description">
+                        <p>It includes methods for formatting, syntax highlighting, removing comments, etc.</p>
+                    </div>
+                    <table class="table table-bordered">
+                                                                                    <tr>
+                                    <th>
+                                        package
+                                                                            </th>
+                                    <td>
+                                                                                    
+                                                                                <p>SqlFormatter</p>
+                                    </td>
+                                </tr>
+                                                                                                                <tr>
+                                    <th>
+                                        author
+                                                                            </th>
+                                    <td>
+                                                                                    
+                                                                                <p>Jeremy Dorn <a href="mailto:jeremy@jeremydorn.com">jeremy@jeremydorn.com</a></p>
+                                    </td>
+                                </tr>
+                                                            <tr>
+                                    <th>
+                                        author
+                                                                            </th>
+                                    <td>
+                                                                                    
+                                                                                <p>Florin Patan <a href="mailto:florinpatan@gmail.com">florinpatan@gmail.com</a></p>
+                                    </td>
+                                </tr>
+                                                                                                                <tr>
+                                    <th>
+                                        copyright
+                                                                            </th>
+                                    <td>
+                                                                                    
+                                                                                <p>2013 Jeremy Dorn</p>
+                                    </td>
+                                </tr>
+                                                                                                                <tr>
+                                    <th>
+                                        license
+                                                                            </th>
+                                    <td>
+                                                                                    
+                                                                                <p><a href="http://opensource.org/licenses/MIT">http://opensource.org/licenses/MIT</a></p>
+                                    </td>
+                                </tr>
+                                                                                                                <tr>
+                                    <th>
+                                        link
+                                                                            </th>
+                                    <td>
+                                                                                    
+                                                                                <p><a href="http://github.com/jdorn/sql-formatter">http://github.com/jdorn/sql-formatter</a></p>
+                                    </td>
+                                </tr>
+                                                                                                                <tr>
+                                    <th>
+                                        version
+                                                                            </th>
+                                    <td>
+                                                                                    1.2.17
+                                                                                
+                                    </td>
+                                </tr>
+                                                                                                                                                                                                                                    </table>
+
+                    <h3><i class="icon-custom icon-method"></i> Methods</h3>
+                                                                <a id="method_getCacheStats"></a>
+                        <div class="element clickable method public  method_getCacheStats" data-toggle="collapse" data-target=".method_getCacheStats .collapse">
+                            <h2>Get stats about the token cache</h2>
+                            <pre>getCacheStats() : Array</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>Array</code><p><p>An array containing the keys 'hits', 'misses', 'entries', and 'size' in bytes</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_init"></a>
+                        <div class="element clickable method protected  method_init" data-toggle="collapse" data-target=".method_init .collapse">
+                            <h2>Stuff that only needs to be done once.  Builds regular expressions and sorts the reserved words.</h2>
+                            <pre>init() </pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_getNextToken"></a>
+                        <div class="element clickable method protected  method_getNextToken" data-toggle="collapse" data-target=".method_getNextToken .collapse">
+                            <h2>Return the next token and token type in a SQL string.</h2>
+                            <pre>getNextToken(String $string, array $previous = null) : Array</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"><p>Quoted strings, comments, reserved words, whitespace, and punctuation are all their own tokens.</p></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$string</h4>
+                                                <code>String</code><p><p>The SQL string</p></p>
+                                            </div>
+                                                                                    <div class="subelement argument">
+                                                <h4>$previous</h4>
+                                                <code>array</code><p><p>The result of the previous getNextToken() call</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>Array</code><p><p>An associative array containing the type and value of the token.</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_getQuotedString"></a>
+                        <div class="element clickable method protected  method_getQuotedString" data-toggle="collapse" data-target=".method_getQuotedString .collapse">
+                            <h2>getQuotedString</h2>
+                            <pre>getQuotedString($string) </pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$string</h4>
+                                                <code></code><p></p>
+                                            </div>
+                                                                            
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_tokenize"></a>
+                        <div class="element clickable method protected  method_tokenize" data-toggle="collapse" data-target=".method_tokenize .collapse">
+                            <h2>Takes a SQL string and breaks it into tokens.</h2>
+                            <pre>tokenize(String $string) : Array</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"><p>Each token is an associative array with type and value.</p></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$string</h4>
+                                                <code>String</code><p><p>The SQL string</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>Array</code><p><p>An array of tokens.</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_format"></a>
+                        <div class="element clickable method public  method_format" data-toggle="collapse" data-target=".method_format .collapse">
+                            <h2>Format the whitespace in a SQL string to make it easier to read.</h2>
+                            <pre>format(String $string, boolean $highlight = true) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$string</h4>
+                                                <code>String</code><p><p>The SQL string</p></p>
+                                            </div>
+                                                                                    <div class="subelement argument">
+                                                <h4>$highlight</h4>
+                                                <code>boolean</code><p><p>If true, syntax highlighting will also be performed</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>The SQL string with HTML styles and formatting wrapped in a <pre> tag</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_highlight"></a>
+                        <div class="element clickable method public  method_highlight" data-toggle="collapse" data-target=".method_highlight .collapse">
+                            <h2>Add syntax highlighting to a SQL string</h2>
+                            <pre>highlight(String $string) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$string</h4>
+                                                <code>String</code><p><p>The SQL string</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>The SQL string with HTML styles applied</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_splitQuery"></a>
+                        <div class="element clickable method public  method_splitQuery" data-toggle="collapse" data-target=".method_splitQuery .collapse">
+                            <h2>Split a SQL string into multiple queries.</h2>
+                            <pre>splitQuery(String $string) : Array</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"><p>Uses ";" as a query delimiter.</p></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$string</h4>
+                                                <code>String</code><p><p>The SQL string</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>Array</code><p><p>An array of individual query strings without trailing semicolons</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_removeComments"></a>
+                        <div class="element clickable method public  method_removeComments" data-toggle="collapse" data-target=".method_removeComments .collapse">
+                            <h2>Remove all comments from a SQL string</h2>
+                            <pre>removeComments(String $string) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$string</h4>
+                                                <code>String</code><p><p>The SQL string</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>The SQL string without comments</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_compress"></a>
+                        <div class="element clickable method public  method_compress" data-toggle="collapse" data-target=".method_compress .collapse">
+                            <h2>Compress a query by collapsing white space and removing comments</h2>
+                            <pre>compress(String $string) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$string</h4>
+                                                <code>String</code><p><p>The SQL string</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>The SQL string without comments</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_highlightToken"></a>
+                        <div class="element clickable method protected  method_highlightToken" data-toggle="collapse" data-target=".method_highlightToken .collapse">
+                            <h2>Highlights a token depending on its type.</h2>
+                            <pre>highlightToken(Array $token) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$token</h4>
+                                                <code>Array</code><p><p>An associative array containing type and value.</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>HTML code of the highlighted token.</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_highlightQuote"></a>
+                        <div class="element clickable method protected  method_highlightQuote" data-toggle="collapse" data-target=".method_highlightQuote .collapse">
+                            <h2>Highlights a quoted string</h2>
+                            <pre>highlightQuote(String $value) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$value</h4>
+                                                <code>String</code><p><p>The token's value</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>HTML code of the highlighted token.</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_highlightBacktickQuote"></a>
+                        <div class="element clickable method protected  method_highlightBacktickQuote" data-toggle="collapse" data-target=".method_highlightBacktickQuote .collapse">
+                            <h2>Highlights a backtick quoted string</h2>
+                            <pre>highlightBacktickQuote(String $value) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$value</h4>
+                                                <code>String</code><p><p>The token's value</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>HTML code of the highlighted token.</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_highlightReservedWord"></a>
+                        <div class="element clickable method protected  method_highlightReservedWord" data-toggle="collapse" data-target=".method_highlightReservedWord .collapse">
+                            <h2>Highlights a reserved word</h2>
+                            <pre>highlightReservedWord(String $value) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$value</h4>
+                                                <code>String</code><p><p>The token's value</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>HTML code of the highlighted token.</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_highlightBoundary"></a>
+                        <div class="element clickable method protected  method_highlightBoundary" data-toggle="collapse" data-target=".method_highlightBoundary .collapse">
+                            <h2>Highlights a boundary token</h2>
+                            <pre>highlightBoundary(String $value) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$value</h4>
+                                                <code>String</code><p><p>The token's value</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>HTML code of the highlighted token.</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_highlightNumber"></a>
+                        <div class="element clickable method protected  method_highlightNumber" data-toggle="collapse" data-target=".method_highlightNumber .collapse">
+                            <h2>Highlights a number</h2>
+                            <pre>highlightNumber(String $value) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$value</h4>
+                                                <code>String</code><p><p>The token's value</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>HTML code of the highlighted token.</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_highlightError"></a>
+                        <div class="element clickable method protected  method_highlightError" data-toggle="collapse" data-target=".method_highlightError .collapse">
+                            <h2>Highlights an error</h2>
+                            <pre>highlightError(String $value) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$value</h4>
+                                                <code>String</code><p><p>The token's value</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>HTML code of the highlighted token.</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_highlightComment"></a>
+                        <div class="element clickable method protected  method_highlightComment" data-toggle="collapse" data-target=".method_highlightComment .collapse">
+                            <h2>Highlights a comment</h2>
+                            <pre>highlightComment(String $value) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$value</h4>
+                                                <code>String</code><p><p>The token's value</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>HTML code of the highlighted token.</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_highlightWord"></a>
+                        <div class="element clickable method protected  method_highlightWord" data-toggle="collapse" data-target=".method_highlightWord .collapse">
+                            <h2>Highlights a word token</h2>
+                            <pre>highlightWord(String $value) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$value</h4>
+                                                <code>String</code><p><p>The token's value</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>HTML code of the highlighted token.</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_highlightVariable"></a>
+                        <div class="element clickable method protected  method_highlightVariable" data-toggle="collapse" data-target=".method_highlightVariable .collapse">
+                            <h2>Highlights a variable token</h2>
+                            <pre>highlightVariable(String $value) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$value</h4>
+                                                <code>String</code><p><p>The token's value</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>HTML code of the highlighted token.</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_quote_regex"></a>
+                        <div class="element clickable method private  method_quote_regex" data-toggle="collapse" data-target=".method_quote_regex .collapse">
+                            <h2>Helper function for building regular expressions for reserved words and boundary characters</h2>
+                            <pre>quote_regex(String $a) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$a</h4>
+                                                <code>String</code><p><p>The string to be quoted</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>The quoted string</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_output"></a>
+                        <div class="element clickable method private  method_output" data-toggle="collapse" data-target=".method_output .collapse">
+                            <h2>Helper function for building string output</h2>
+                            <pre>output(String $string) : String</pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                                                            <h3>Arguments</h3>
+                                                                                    <div class="subelement argument">
+                                                <h4>$string</h4>
+                                                <code>String</code><p><p>The string to be quoted</p></p>
+                                            </div>
+                                                                            
+                                                                            <h3>Response</h3>
+                                        <code>String</code><p><p>The quoted string</p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_is_cli"></a>
+                        <div class="element clickable method private  method_is_cli" data-toggle="collapse" data-target=".method_is_cli .collapse">
+                            <h2>is_cli</h2>
+                            <pre>is_cli() </pre>
+                            <div class="labels">
+                                                                <span class="label">static</span>                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                    </div>
+                            </div>
+                        </div>
+                    
+                                            <h3><i class="icon-custom icon-constant"></i> Constants</h3>
+                                                    <a id="constant_TOKEN_TYPE_WHITESPACE"> </a>
+                            <div class="element clickable constant  constant_TOKEN_TYPE_WHITESPACE" data-toggle="collapse" data-target=".constant_TOKEN_TYPE_WHITESPACE .collapse">
+                                <h2>TOKEN_TYPE_WHITESPACE</h2>
+                                <pre>TOKEN_TYPE_WHITESPACE</pre>
+                                <div class="labels">
+                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_TOKEN_TYPE_WORD"> </a>
+                            <div class="element clickable constant  constant_TOKEN_TYPE_WORD" data-toggle="collapse" data-target=".constant_TOKEN_TYPE_WORD .collapse">
+                                <h2>TOKEN_TYPE_WORD</h2>
+                                <pre>TOKEN_TYPE_WORD</pre>
+                                <div class="labels">
+                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_TOKEN_TYPE_QUOTE"> </a>
+                            <div class="element clickable constant  constant_TOKEN_TYPE_QUOTE" data-toggle="collapse" data-target=".constant_TOKEN_TYPE_QUOTE .collapse">
+                                <h2>TOKEN_TYPE_QUOTE</h2>
+                                <pre>TOKEN_TYPE_QUOTE</pre>
+                                <div class="labels">
+                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_TOKEN_TYPE_BACKTICK_QUOTE"> </a>
+                            <div class="element clickable constant  constant_TOKEN_TYPE_BACKTICK_QUOTE" data-toggle="collapse" data-target=".constant_TOKEN_TYPE_BACKTICK_QUOTE .collapse">
+                                <h2>TOKEN_TYPE_BACKTICK_QUOTE</h2>
+                                <pre>TOKEN_TYPE_BACKTICK_QUOTE</pre>
+                                <div class="labels">
+                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_TOKEN_TYPE_RESERVED"> </a>
+                            <div class="element clickable constant  constant_TOKEN_TYPE_RESERVED" data-toggle="collapse" data-target=".constant_TOKEN_TYPE_RESERVED .collapse">
+                                <h2>TOKEN_TYPE_RESERVED</h2>
+                                <pre>TOKEN_TYPE_RESERVED</pre>
+                                <div class="labels">
+                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_TOKEN_TYPE_RESERVED_TOPLEVEL"> </a>
+                            <div class="element clickable constant  constant_TOKEN_TYPE_RESERVED_TOPLEVEL" data-toggle="collapse" data-target=".constant_TOKEN_TYPE_RESERVED_TOPLEVEL .collapse">
+                                <h2>TOKEN_TYPE_RESERVED_TOPLEVEL</h2>
+                                <pre>TOKEN_TYPE_RESERVED_TOPLEVEL</pre>
+                                <div class="labels">
+                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_TOKEN_TYPE_RESERVED_NEWLINE"> </a>
+                            <div class="element clickable constant  constant_TOKEN_TYPE_RESERVED_NEWLINE" data-toggle="collapse" data-target=".constant_TOKEN_TYPE_RESERVED_NEWLINE .collapse">
+                                <h2>TOKEN_TYPE_RESERVED_NEWLINE</h2>
+                                <pre>TOKEN_TYPE_RESERVED_NEWLINE</pre>
+                                <div class="labels">
+                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_TOKEN_TYPE_BOUNDARY"> </a>
+                            <div class="element clickable constant  constant_TOKEN_TYPE_BOUNDARY" data-toggle="collapse" data-target=".constant_TOKEN_TYPE_BOUNDARY .collapse">
+                                <h2>TOKEN_TYPE_BOUNDARY</h2>
+                                <pre>TOKEN_TYPE_BOUNDARY</pre>
+                                <div class="labels">
+                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_TOKEN_TYPE_COMMENT"> </a>
+                            <div class="element clickable constant  constant_TOKEN_TYPE_COMMENT" data-toggle="collapse" data-target=".constant_TOKEN_TYPE_COMMENT .collapse">
+                                <h2>TOKEN_TYPE_COMMENT</h2>
+                                <pre>TOKEN_TYPE_COMMENT</pre>
+                                <div class="labels">
+                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_TOKEN_TYPE_BLOCK_COMMENT"> </a>
+                            <div class="element clickable constant  constant_TOKEN_TYPE_BLOCK_COMMENT" data-toggle="collapse" data-target=".constant_TOKEN_TYPE_BLOCK_COMMENT .collapse">
+                                <h2>TOKEN_TYPE_BLOCK_COMMENT</h2>
+                                <pre>TOKEN_TYPE_BLOCK_COMMENT</pre>
+                                <div class="labels">
+                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_TOKEN_TYPE_NUMBER"> </a>
+                            <div class="element clickable constant  constant_TOKEN_TYPE_NUMBER" data-toggle="collapse" data-target=".constant_TOKEN_TYPE_NUMBER .collapse">
+                                <h2>TOKEN_TYPE_NUMBER</h2>
+                                <pre>TOKEN_TYPE_NUMBER</pre>
+                                <div class="labels">
+                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_TOKEN_TYPE_ERROR"> </a>
+                            <div class="element clickable constant  constant_TOKEN_TYPE_ERROR" data-toggle="collapse" data-target=".constant_TOKEN_TYPE_ERROR .collapse">
+                                <h2>TOKEN_TYPE_ERROR</h2>
+                                <pre>TOKEN_TYPE_ERROR</pre>
+                                <div class="labels">
+                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_TOKEN_TYPE_VARIABLE"> </a>
+                            <div class="element clickable constant  constant_TOKEN_TYPE_VARIABLE" data-toggle="collapse" data-target=".constant_TOKEN_TYPE_VARIABLE .collapse">
+                                <h2>TOKEN_TYPE_VARIABLE</h2>
+                                <pre>TOKEN_TYPE_VARIABLE</pre>
+                                <div class="labels">
+                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_TOKEN_TYPE"> </a>
+                            <div class="element clickable constant  constant_TOKEN_TYPE" data-toggle="collapse" data-target=".constant_TOKEN_TYPE .collapse">
+                                <h2>TOKEN_TYPE</h2>
+                                <pre>TOKEN_TYPE</pre>
+                                <div class="labels">
+                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <a id="constant_TOKEN_VALUE"> </a>
+                            <div class="element clickable constant  constant_TOKEN_VALUE" data-toggle="collapse" data-target=".constant_TOKEN_VALUE .collapse">
+                                <h2>TOKEN_VALUE</h2>
+                                <pre>TOKEN_VALUE</pre>
+                                <div class="labels">
+                                                                    </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                                            
+                                                                <h3><i class="icon-custom icon-property"></i> Properties</h3>
+                                                    <a id="property_reserved"> </a>
+                            <div class="element clickable property  protected property_reserved" data-toggle="collapse" data-target=".property_reserved .collapse">
+                                <h2>reserved</h2>
+                                <pre>reserved : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_reserved_toplevel"> </a>
+                            <div class="element clickable property  protected property_reserved_toplevel" data-toggle="collapse" data-target=".property_reserved_toplevel .collapse">
+                                <h2>reserved_toplevel</h2>
+                                <pre>reserved_toplevel : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_reserved_newline"> </a>
+                            <div class="element clickable property  protected property_reserved_newline" data-toggle="collapse" data-target=".property_reserved_newline .collapse">
+                                <h2>reserved_newline</h2>
+                                <pre>reserved_newline : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_functions"> </a>
+                            <div class="element clickable property  protected property_functions" data-toggle="collapse" data-target=".property_functions .collapse">
+                                <h2>functions</h2>
+                                <pre>functions : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_boundaries"> </a>
+                            <div class="element clickable property  protected property_boundaries" data-toggle="collapse" data-target=".property_boundaries .collapse">
+                                <h2>boundaries</h2>
+                                <pre>boundaries : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_quote_attributes"> </a>
+                            <div class="element clickable property  public property_quote_attributes" data-toggle="collapse" data-target=".property_quote_attributes .collapse">
+                                <h2>quote_attributes</h2>
+                                <pre>quote_attributes : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_backtick_quote_attributes"> </a>
+                            <div class="element clickable property  public property_backtick_quote_attributes" data-toggle="collapse" data-target=".property_backtick_quote_attributes .collapse">
+                                <h2>backtick_quote_attributes</h2>
+                                <pre>backtick_quote_attributes : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_reserved_attributes"> </a>
+                            <div class="element clickable property  public property_reserved_attributes" data-toggle="collapse" data-target=".property_reserved_attributes .collapse">
+                                <h2>reserved_attributes</h2>
+                                <pre>reserved_attributes : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_boundary_attributes"> </a>
+                            <div class="element clickable property  public property_boundary_attributes" data-toggle="collapse" data-target=".property_boundary_attributes .collapse">
+                                <h2>boundary_attributes</h2>
+                                <pre>boundary_attributes : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_number_attributes"> </a>
+                            <div class="element clickable property  public property_number_attributes" data-toggle="collapse" data-target=".property_number_attributes .collapse">
+                                <h2>number_attributes</h2>
+                                <pre>number_attributes : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_word_attributes"> </a>
+                            <div class="element clickable property  public property_word_attributes" data-toggle="collapse" data-target=".property_word_attributes .collapse">
+                                <h2>word_attributes</h2>
+                                <pre>word_attributes : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_error_attributes"> </a>
+                            <div class="element clickable property  public property_error_attributes" data-toggle="collapse" data-target=".property_error_attributes .collapse">
+                                <h2>error_attributes</h2>
+                                <pre>error_attributes : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_comment_attributes"> </a>
+                            <div class="element clickable property  public property_comment_attributes" data-toggle="collapse" data-target=".property_comment_attributes .collapse">
+                                <h2>comment_attributes</h2>
+                                <pre>comment_attributes : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_variable_attributes"> </a>
+                            <div class="element clickable property  public property_variable_attributes" data-toggle="collapse" data-target=".property_variable_attributes .collapse">
+                                <h2>variable_attributes</h2>
+                                <pre>variable_attributes : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_pre_attributes"> </a>
+                            <div class="element clickable property  public property_pre_attributes" data-toggle="collapse" data-target=".property_pre_attributes .collapse">
+                                <h2>pre_attributes</h2>
+                                <pre>pre_attributes : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_cli"> </a>
+                            <div class="element clickable property  public property_cli" data-toggle="collapse" data-target=".property_cli .collapse">
+                                <h2>cli</h2>
+                                <pre>cli : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_cli_quote"> </a>
+                            <div class="element clickable property  public property_cli_quote" data-toggle="collapse" data-target=".property_cli_quote .collapse">
+                                <h2>cli_quote</h2>
+                                <pre>cli_quote : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_cli_backtick_quote"> </a>
+                            <div class="element clickable property  public property_cli_backtick_quote" data-toggle="collapse" data-target=".property_cli_backtick_quote .collapse">
+                                <h2>cli_backtick_quote</h2>
+                                <pre>cli_backtick_quote : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_cli_reserved"> </a>
+                            <div class="element clickable property  public property_cli_reserved" data-toggle="collapse" data-target=".property_cli_reserved .collapse">
+                                <h2>cli_reserved</h2>
+                                <pre>cli_reserved : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_cli_boundary"> </a>
+                            <div class="element clickable property  public property_cli_boundary" data-toggle="collapse" data-target=".property_cli_boundary .collapse">
+                                <h2>cli_boundary</h2>
+                                <pre>cli_boundary : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_cli_number"> </a>
+                            <div class="element clickable property  public property_cli_number" data-toggle="collapse" data-target=".property_cli_number .collapse">
+                                <h2>cli_number</h2>
+                                <pre>cli_number : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_cli_word"> </a>
+                            <div class="element clickable property  public property_cli_word" data-toggle="collapse" data-target=".property_cli_word .collapse">
+                                <h2>cli_word</h2>
+                                <pre>cli_word : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_cli_error"> </a>
+                            <div class="element clickable property  public property_cli_error" data-toggle="collapse" data-target=".property_cli_error .collapse">
+                                <h2>cli_error</h2>
+                                <pre>cli_error : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_cli_comment"> </a>
+                            <div class="element clickable property  public property_cli_comment" data-toggle="collapse" data-target=".property_cli_comment .collapse">
+                                <h2>cli_comment</h2>
+                                <pre>cli_comment : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_cli_functions"> </a>
+                            <div class="element clickable property  public property_cli_functions" data-toggle="collapse" data-target=".property_cli_functions .collapse">
+                                <h2>cli_functions</h2>
+                                <pre>cli_functions : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_cli_variable"> </a>
+                            <div class="element clickable property  public property_cli_variable" data-toggle="collapse" data-target=".property_cli_variable .collapse">
+                                <h2>cli_variable</h2>
+                                <pre>cli_variable : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_tab"> </a>
+                            <div class="element clickable property  public property_tab" data-toggle="collapse" data-target=".property_tab .collapse">
+                                <h2>tab</h2>
+                                <pre>tab : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_use_pre"> </a>
+                            <div class="element clickable property  public property_use_pre" data-toggle="collapse" data-target=".property_use_pre .collapse">
+                                <h2>use_pre</h2>
+                                <pre>use_pre : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_init"> </a>
+                            <div class="element clickable property  protected property_init" data-toggle="collapse" data-target=".property_init .collapse">
+                                <h2>init</h2>
+                                <pre>init : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_regex_boundaries"> </a>
+                            <div class="element clickable property  protected property_regex_boundaries" data-toggle="collapse" data-target=".property_regex_boundaries .collapse">
+                                <h2>regex_boundaries</h2>
+                                <pre>regex_boundaries : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_regex_reserved"> </a>
+                            <div class="element clickable property  protected property_regex_reserved" data-toggle="collapse" data-target=".property_regex_reserved .collapse">
+                                <h2>regex_reserved</h2>
+                                <pre>regex_reserved : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_regex_reserved_newline"> </a>
+                            <div class="element clickable property  protected property_regex_reserved_newline" data-toggle="collapse" data-target=".property_regex_reserved_newline .collapse">
+                                <h2>regex_reserved_newline</h2>
+                                <pre>regex_reserved_newline : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_regex_reserved_toplevel"> </a>
+                            <div class="element clickable property  protected property_regex_reserved_toplevel" data-toggle="collapse" data-target=".property_regex_reserved_toplevel .collapse">
+                                <h2>regex_reserved_toplevel</h2>
+                                <pre>regex_reserved_toplevel : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_regex_function"> </a>
+                            <div class="element clickable property  protected property_regex_function" data-toggle="collapse" data-target=".property_regex_function .collapse">
+                                <h2>regex_function</h2>
+                                <pre>regex_function : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_max_cachekey_size"> </a>
+                            <div class="element clickable property  public property_max_cachekey_size" data-toggle="collapse" data-target=".property_max_cachekey_size .collapse">
+                                <h2>max_cachekey_size</h2>
+                                <pre>max_cachekey_size : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_token_cache"> </a>
+                            <div class="element clickable property  protected property_token_cache" data-toggle="collapse" data-target=".property_token_cache .collapse">
+                                <h2>token_cache</h2>
+                                <pre>token_cache : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_cache_hits"> </a>
+                            <div class="element clickable property  protected property_cache_hits" data-toggle="collapse" data-target=".property_cache_hits .collapse">
+                                <h2>cache_hits</h2>
+                                <pre>cache_hits : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                    <a id="property_cache_misses"> </a>
+                            <div class="element clickable property  protected property_cache_misses" data-toggle="collapse" data-target=".property_cache_misses .collapse">
+                                <h2>cache_misses</h2>
+                                <pre>cache_misses : </pre>
+                                <div class="labels">
+                                                                        <span class="label">static</span>                                </div>
+                                <div class="row collapse">
+                                    <div class="detail-description">
+                                        <div class="long_description"></div>
+
+                                        <table class="table">
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                            <tr>
+                                                    <th>
+                                                        
+                                                    </th>
+                                                    <td>
+                                                                                                            </td>
+                                                </tr>
+                                                                                    </table>
+
+                                                                            </div>
+                                </div>
+                            </div>
+                                                            </div>
+            </div>
+            <a id="\SqlFormatter"></a>
+            <ul class="breadcrumb">
+                <li><a href="../index.html"><i class="icon-custom icon-class"></i></a></li>
+                    
+    
+    <li><span class="divider">\</span><a href="../namespaces/default.html">\</a></li>
+
+                <li class="active"><span class="divider">\</span><a href="../classes/SqlFormatter.html">SqlFormatter</a></li>
+            </ul>
+        </div>
+    </div>
+
+    </div>
+
+        <footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by
+            <a href="http://glyphicons.com/">Glyphicons</a>.<br/>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and<br/>
+            generated on Sat, 22 Mar 2014 15:53:54 +0100.<br/>
+    </footer>
+    </body>
+</html>

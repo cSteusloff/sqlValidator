@@ -13,11 +13,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="SQLValidator">
+    <meta name="description" content="SQL - Validierung">
     <meta name="author" content="Christian Steusloff, Jens Wiemann">
     <link rel="shortcut icon" href="assets/ico/favicon.ico">
 
-    <title>SQL-Validator</title>
+    <title>SQL - Validierung</title>
 
     <!-- SQL-Syntax Highlighting -->
     <link rel="stylesheet" href="css/codemirror.css">
@@ -47,7 +47,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="viewTask.php">SQL - Validator</a>
+                <a class="navbar-brand" href="viewTask.php">SQL - Validierung</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -67,7 +67,7 @@
             <ul class="list-group">
                 <li class="list-group-item">Projektname: SQL-Validierung</li>
                 <li class="list-group-item">Projektteam: Jens Wiemann, Christian Steusloff</li>
-                <li class="list-group-item">Projektverantwortlicher: Prof. Saake</li>
+                <li class="list-group-item">Projektverantwortlicher: Prof. Dr. rer. nat. habil. Gunter Saake</li>
                 <li class="list-group-item">Projektbetreuer: M.Sc. David Broneske</li>
                 <li class="list-group-item">Projektzeitraum: 11.11.13 - 24.03.14</li>
             </ul>

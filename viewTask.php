@@ -1,7 +1,5 @@
 <?php
 session_start();
-error_reporting(E_ALL);
-ini_set("display_errors",1);
 
 /**
  * @package    SqlValidator
@@ -16,11 +14,11 @@ ini_set("display_errors",1);
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="SQLValidator">
+    <meta name="description" content="SQL - Validierung">
     <meta name="author" content="Christian Steusloff, Jens Wiemann">
     <link rel="shortcut icon" href="assets/ico/favicon.ico">
 
-    <title>SQL-Validator</title>
+    <title>SQL - Validierung</title>
 
     <!-- SQL-Syntax Highlighting -->
     <link rel="stylesheet" href="css/codemirror.css">
@@ -53,7 +51,7 @@ ini_set("display_errors",1);
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="viewTask.php">SQL - Validator</a>
+            <a class="navbar-brand" href="viewTask.php">SQL - Validierung</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -186,6 +184,7 @@ if (isset($_GET["id"])) {
                         <ol>
                             <li>" becomes '</li>
                             <li>; at the end is not necessary</li>
+                            <li>use tables aliases for attribute access</li>
                         </ol>
                     </div>
                 </div>
@@ -232,7 +231,6 @@ if (isset($_GET["id"])) {
                 @$db->execute();
 
                 $createTable = str_replace($table,$prefix.$table,strtoupper($_SESSION["userquery"]));
-                //var_dump($createTable);
                 $db->setQuery($createTable);
                 $db->execute();
 
@@ -258,7 +256,7 @@ if (isset($_GET["id"])) {
                     echo "<div class=\"js-masonry\" data-masonry-options='{ \"columnWidth\": 2, \"itemSelector\": \".task\" }'>";
                     echo $db->printTable("task");
                     echo "</div>";
-                } elseif($task->getTaskType() == "DROP" && !is_null($_SESSION["correct"])){
+                } elseif(@$task->getTaskType() == "DROP" && !@is_null($_SESSION["correct"])){
                     echo "<div>Database droped!</div>";
                 } else {
                     foreach ($task->getTableNames() as $table) {
@@ -281,7 +279,7 @@ if (isset($_GET["id"])) {
 
 } else {
     // overview about tasks
-    $db->setQuery("SELECT ID,TASKNAME,TASKTEXT FROM SYS_TASK ORDER BY TASKNAME");
+    $db->setQuery("SELECT ID,TASKNAME,TASKTEXT FROM SYS_TASK ORDER BY ID");
     $db->execute();
     $select = array();
     echo <<<TABHEAD

@@ -23,7 +23,7 @@ $qT = new queryTranslator();
 // check inputs
 $empty = 0;
 !empty($_POST['title']) ? $_SESSION['title'] = $_POST['title'] : $empty++;
-!empty($_POST['text']) ? $_SESSION['text'] = $_POST['text'] : $empty++;
+!empty($_POST['text']) ? $_SESSION['text'] = htmlspecialchars($_POST['text']) : $empty++;
 !empty($_POST['table']) ? $_SESSION['table'] = $_POST['table'] : $empty++;
 !empty($_POST['right']) ? $_SESSION['right'] = $_POST['right'] : $empty++;
 if (empty($_POST["sql"]) && (in_array("1", $_POST["right"]) || in_array("2", $_POST["right"]))) $empty++;
@@ -48,7 +48,7 @@ if ($empty > 0) {
         header("LOCATION: createTask.php?s=0");
     } else {
         $error = $task->createTask($_POST['title'],
-            $_POST['text'],
+            htmlspecialchars($_POST['text']),
             $_POST['table'],
             $_POST['right'],
             str_replace("'", "''", $_POST['sql']),
