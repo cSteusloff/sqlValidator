@@ -53,14 +53,12 @@ class taskHelper
     }
 
     /**
-     *
      * Select = 1
      * Insert/Update/Delete = 2
      * Create = 4
      * Drop = 8
      *
-     *
-     * @param int (array) $permission
+     * @param int[] $permission
      * @return int
      */
     public function setPermission($permission)
@@ -73,13 +71,6 @@ class taskHelper
 
         return $this->getPermission();
     }
-
-//    private function pemissionToType(){
-//        // TODO: Permission = Zahl 1 bis 15
-//        // Type ist SELECT, UPDATE etc. Jedoch steht 2 für INSERT, UPDATE oder DELETE
-//        // Type als String-Array?
-//        // Oder kurz Solution laden als Connection und gucken, was es ist.
-//    }
 
     /**
      * @return int
@@ -115,7 +106,7 @@ class taskHelper
     private $taskType;
 
     /**
-     * @internal param string $taskType
+     * set task type from query type
      */
     public function setTaskType()
     {
@@ -153,22 +144,23 @@ class taskHelper
     private $tables;
 
     /**
-     * @var
+     * @var int[] id's from necessary tables
      */
+
     private $table_ids;
 
     /**
-     * @var
+     * @var string[] names's from necessary tables
      */
     private $table_names;
 
     /**
-     * @var
+     * @var string
      */
     private $tableHeader;
 
     /**
-     * @param mixed $tableData
+     * @param string $tableData
      */
     public function setTableContent($tableData)
     {
@@ -176,7 +168,7 @@ class taskHelper
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getTableData()
     {
@@ -184,7 +176,7 @@ class taskHelper
     }
 
     /**
-     * @param mixed $tableHeader
+     * @param string $tableHeader
      */
     public function setTableHeader($tableHeader)
     {
@@ -192,7 +184,7 @@ class taskHelper
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getTableHeader()
     {
@@ -200,51 +192,9 @@ class taskHelper
     }
 
     /**
-     * @var
+     * @var string
      */
     private $tableData;
-
-//    /**
-//     * @var string sql Query
-//     */
-//    private $user_queryLast;
-//
-//    /**
-//     * @var string sql Query
-//     */
-//    private $user_queryCorrect;
-//
-//    /**
-//     * @param string sql Query
-//     */
-//    public function setUserQueryLast($user_queryLast)
-//    {
-//        $this->user_queryLast = $user_queryLast;
-//    }
-//
-//    /**
-//     * @return string sql Query
-//     */
-//    public function getUserQueryLast()
-//    {
-//        return $this->user_queryLast;
-//    }
-//
-//    /**
-//     * @param string sql Query
-//     */
-//    public function setUserQueryCorrect($user_queryCorrect)
-//    {
-//        $this->user_queryCorrect = $user_queryCorrect;
-//    }
-//
-//    /**
-//     * @return string sql Query
-//     */
-//    public function getUserQueryCorrect()
-//    {
-//        return $this->user_queryCorrect;
-//    }
 
     /**
      * user / student who works there
@@ -270,7 +220,7 @@ class taskHelper
     }
 
     /**
-     * @param mixed $table_ids
+     * @param int[] $table_ids
      */
     public function setTableIds($table_ids)
     {
@@ -278,7 +228,7 @@ class taskHelper
     }
 
     /**
-     * @return mixed
+     * @return int[]
      */
     public function getTableIds()
     {
@@ -286,7 +236,7 @@ class taskHelper
     }
 
     /**
-     * @param mixed $table_names
+     * @param string[] $table_names
      */
     public function setTableNames($table_names)
     {
@@ -294,7 +244,7 @@ class taskHelper
     }
 
     /**
-     * @return mixed
+     * @return string[]
      */
     public function getTableNames()
     {
@@ -302,12 +252,12 @@ class taskHelper
     }
 
     /**
-     * @var
+     * @var int
      */
     private $task_id;
 
     /**
-     * @param mixed $task_id
+     * @param int $task_id
      */
     public function setTaskId($task_id)
     {
@@ -315,7 +265,7 @@ class taskHelper
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getTaskId()
     {
@@ -444,7 +394,7 @@ class taskHelper
     }
 
     /**
-     * @param $sqlConnection
+     * @param sqlConnection $sqlConnection
      */
     public function __construct($sqlConnection)
     {
@@ -519,7 +469,7 @@ class taskHelper
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getLastUserQuery()
     {
@@ -535,7 +485,7 @@ class taskHelper
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getCorrectUserQuery()
     {
@@ -549,8 +499,8 @@ class taskHelper
     }
 
     /**
-     * @param $task_id
-     * @param $user_id
+     * @param int $task_id
+     * @param int $user_id
      */
     public function loadTask($task_id, $user_id)
     {
@@ -560,7 +510,7 @@ class taskHelper
                            solution,
                            tableheader,
                            tablecontent
-                    FROM SYS_TASK WHERE ID = {$task_id}");
+                    FROM SYS_TASK WHERE ID = ".$task_id);
         $this->dbConnection->execute();
         $this->dbConnection->Fetch();
         $this->setTopic($this->dbConnection->row['TASKNAME']);
@@ -573,7 +523,6 @@ class taskHelper
         $this->setUserId($user_id);
         $this->setDatabaseTables();
         $this->setTaskType();
-
     }
 
     /*
@@ -594,7 +543,7 @@ class taskHelper
 
         }
 
-        // TODO: Zur Sicherheit anlegen ohne Benutzer-Namen
+        // security mechanism
         foreach ($this->getTableNames() as $table) {
             $tmpTable = str_replace(ADMIN_TAB_PREFIX, "", $table);
             $query_drop = "DROP TABLE " . $tmpTable;
@@ -648,7 +597,7 @@ class taskHelper
      * Tablenames are unique, insert via merge if it's in this table
      *
      * @param string array - names of tables
-     * @return int array - Table IDs
+     * @return int array - table IDs
      */
     private function addDatabaseTables($table_array)
     {
@@ -686,23 +635,8 @@ class taskHelper
         return $id_result;
     }
 
-//    /**
-//     * @return int array - Table IDs
-//     */
-//    private function getDatabaseTables(){
-//        $id_result = array();
-//        $name_result = array();
-//        $this->dbConnection->Query("SELECT n.table_id,t.name FROM SYS_NEEDTABLES n,SYS_TABLES t ON n.table_id = t.ID WHERE task_id = ".$this->getTaskId());
-//        while($this->dbConnection->Fetch()){
-//            // var_dump($this->dbConnection->row);
-//            $id_result[] = $this->dbConnection->row['table_id'];
-//            $name_result[] = $this->dbConnection->row['name'];
-//        }
-//        $this->setTables($name_result);
-//        return $id_result;
-//    }
     /**
-     *
+     * set tables from necessary tables (SYS_NEEDTABLES)
      */
     private function setDatabaseTables()
     {
@@ -740,7 +674,7 @@ class taskHelper
     }
 
     /**
-     * @param null $classname
+     * @param string $classname
      * @param bool $commit
      * @return string
      */
@@ -761,5 +695,118 @@ class taskHelper
             $tablestr .= $this->dbConnection->printTable($classname, substr(strtoupper($table), strlen(ADMIN_TAB_PREFIX)));
         }
         return $tablestr;
+    }
+
+    /**
+     * from error position in query to correct position in formatted query by line (row) and position in line (column)
+     *
+     * @param string $formattedQueryInput
+     * @param int $posError
+     * @param string $formattedDelimiter
+     * @return array
+     */
+    public function getErrorPositionInFormattedQuery($formattedQueryInput, $posError, $formattedDelimiter = "\n")
+    {
+        $lines = explode($formattedDelimiter, $formattedQueryInput);
+        $row = 1;
+        $column = 0;
+        $word = "";
+        $checkLine = $posError;
+        foreach ($lines as $line) {
+            $checkLine -= strlen($line);
+            if ($checkLine < 0) {
+                $column = $checkLine + strlen($line);
+
+                $word_start = strrpos(substr($line, 0, $column), ' ');
+                $word_length = strpos($line, ' ', $column) - $word_start;
+                $word = trim(substr($line, $word_start, $word_length));
+                break;
+            } else {
+                $row++;
+            }
+        }
+
+        if (empty($word)) {
+            return array("row" => $row, "column" => $column);
+        } else {
+            return array("row" => $row, "column" => $column, "word" => $word);
+        }
+    }
+
+    /**
+     * @param string $prefix - displayed name of table without prefix
+     * @param string $table - information from table
+     * @return string - sql query
+     */
+    function getTableSchema($prefix = ADMIN_TAB_PREFIX,$table = null){
+        if(is_null($table)){
+            $table = $this->getTableNames();
+            $table = $table[0];
+        }
+
+        $sql = "SELECT
+                  substr(TABLE_NAME,".(1+strlen($prefix)).") tablename,
+                  COLUMN_NAME columnname,
+                  DATA_TYPE columntype,
+                  DATA_LENGTH typelength
+                FROM
+                  ALL_TAB_COLUMNS
+                WHERE
+                  TABLE_NAME = '".$table."'
+                ORDER BY COLUMN_ID";
+        return $sql;
+    }
+
+    /**
+     * @param string $table - index from table
+     * @return string - sql query
+     */
+    function getTableIndex($table = null){
+        if(is_null($table)){
+            $table = $this->getTableNames();
+            $table = $table[0];
+        }
+
+        $sql = "SELECT user_indexes.uniqueness as uniqueness,
+                  user_ind_columns.column_name as Columnname
+                FROM user_tables
+                JOIN user_indexes on user_indexes.table_name = user_tables.table_name
+                JOIN user_ind_columns ON user_indexes.index_name = user_ind_columns.index_name
+                WHERE user_tables.table_name = '".$table."'
+                ORDER BY user_ind_columns.column_name";
+        return $sql;
+    }
+
+    /**
+     * @param string $table - primary key from table
+     * @return string - sql query
+     */
+    function getTablePrimary($table = null){
+        if(is_null($table)){
+            $table = $this->getTableNames();
+            $table = $table[0];
+        }
+
+        $sql = "SELECT cols.column_name primarykey
+                FROM all_constraints cons, all_cons_columns cols
+                WHERE cols.table_name = '".$table."'
+                AND cons.constraint_type = 'P'
+                AND cons.constraint_name = cols.constraint_name
+                AND cons.owner = cols.owner";
+        return $sql;
+    }
+
+
+    /**
+     * @param string $query - create statement
+     * @return string - name from table
+     */
+    function getTableNameFromCreate($query){
+        $query = strtoupper($query);
+        $query = str_replace(" ","",$query);
+        $query = str_replace("\"","'",$query);
+        $query = str_replace("'","",$query);
+        // at position 11 is name of table
+        return substr($query,11,strpos($query,"(")-11);
     }
 } 

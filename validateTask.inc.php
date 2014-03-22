@@ -27,7 +27,6 @@ $task_id = $_POST["taskid"];
 $task = new taskHelper($db);
 $task->loadTask($_POST["taskid"], $_SESSION["id"]);
 
-
 $_POST["sql"] = $task->clearQuery($_POST["sql"]);
 
 
@@ -37,112 +36,99 @@ $slave->setQuery($_POST["sql"]);
 // format user input
 $formattedQueryInput = SqlFormatter::format($_POST["sql"], false);
 
+
 // SQL Query to correct format
 $task->saveLastUserQuery($formattedQueryInput);
 
-// TODO: folgendes sollte genügen!
+// check permission
 $allow = ($slave->getStatementType() == $task->getTaskType());
 
-// Old way:
-//$allow = false;
-//switch($slave->getStatementType()){
-//    case 'SELECT' : $allow = $task->getPermissionSelect();
-//        break;
-//    case 'INSERT' :
-//    case 'DELETE' :
-//    case 'UPDATE' : $allow = $task->getPermissionModify();
-//        break;
-//    case 'ALTER' :
-//    case 'CREATE' : $allow = $task->getPermissionCreate();
-//        break;
-//    case 'DROP' : $allow = $task->getPermissionDrop();
-//        break;
-//    default : $allow = false;
-//        // CALL, BEGIN, DECLARE, UNKNOWN
-//        break;
-//}
 if (!$allow) {
     // set error-message
     $_SESSION["error"] = $slave->getStatementType($_POST["sql"]) . " not allowed by this task";
     session_write_close();
     header("LOCATION: viewTask.php?id=" . $_POST["taskid"]);
-    // TODO: notwendig oder else?
+    // stop task
     die();
 }
 
-
-// TODO: Auslagern
-
-function getErrorPositionInFormattedQuery($formattedQueryInput, $posError, $formattedDelimiter = "\n")
-{
-    $lines = explode($formattedDelimiter, $formattedQueryInput);
-    $row = 1;
-    $column = 0;
-    $word = "";
-    $checkLine = $posError;
-    foreach ($lines as $line) {
-        $checkLine -= strlen($line);
-        if ($checkLine < 0) {
-            $column = $checkLine + strlen($line);
-
-            $word_start = strrpos(substr($line, 0, $column), ' ');
-            $word_length = strpos($line, ' ', $column) - $word_start;
-            $word = trim(substr($line, $word_start, $word_length));
-            break;
-        } else {
-            $row++;
-        }
-    }
-
-    if (empty($word)) {
-        return array("row" => $row, "column" => $column);
-    } else {
-        return array("row" => $row, "column" => $column, "word" => $word);
-    }
-}
-
-
 // check Syntax-Error
 $slave->setSavePoint();
+
+if($slave->getStatementType() == "CREATE"){
+    // delete exist table for syntax check
+    foreach($task->getTableNames() as $table){
+        $slave->setQuery("DROP TABLE ".str_replace("MASTER_","",$table));
+        //var_dump("DROP TABLE ".str_replace("MASTER_","",$table));
+        @$slave->executeNoCommit();
+    }
+}
 // to default table NOT user-table
 $slave->setQuery($formattedQueryInput);
+//var_dump($formattedQueryInput);
+// CREATE would commit by oracle
 @$slave->executeNoCommit();
+if($slave->getStatementType() == "CREATE"){
+    $sql = "DROP TABLE ".$task->getTableNameFromCreate($formattedQueryInput);
+    $db->setQuery($sql);
+    //var_dump($sql);
+    $db->execute();
+}
 $_SESSION["error"] = $slave->getErrortext();
 if (!empty($_SESSION["error"])) {
-    // TODO: umschreiben, ermittelt Position im String
-    $pos = getErrorPositionInFormattedQuery($formattedQueryInput, $slave->getErrorPosition());
+    // get correct position in formatted query
+    $pos = $task->getErrorPositionInFormattedQuery($formattedQueryInput, $slave->getErrorPosition());
     $_SESSION["error"] .= "<br>Error in row: " . $pos["row"] . " column: " . $pos["column"];
     $_SESSION["error"] .= !empty($pos["word"]) ? " by <b>" . $pos["word"] . "</b>" : "";
 }
+
 $slave->rollbackSavePoint();
-
-
-// USER-solution without prefix
-$queryTry = $_POST["sql"];
-// to correct table
-$querySlave = $qT->translate($queryTry, "user" . $_SESSION["id"] . "_");
-
-// slave connection with user-query
-$slave->setQuery($querySlave);
 
 if (empty($_SESSION["error"])) {
 
-    // save query by user
-    $_SESSION["userquery"] = $querySlave;
-    // Master-Solution without prefix
-    $querySolution = $task->getSolution();
+    // USER-solution without prefix
+    $queryTry = $_POST["sql"];
     // to correct table
-    $queryMaster = $qT->translate($querySolution, ADMIN_TAB_PREFIX);
+    if($slave->getStatementType() == "CREATE"){
+        $tab = $task->getTableNameFromCreate($queryTry);
+        $querySlave = str_replace($tab,"user" . $_SESSION["id"] . "_".$tab,strtoupper($queryTry));
+
+        // set master solution query
+        $table = $task->getTableNames();
+        $table = $table[0];
+        // create Query (Master-Solution with prefix from exist table)
+        $queryCreate = "SELECT DBMS_METADATA.GET_DDL('TABLE','".$table."') createQuery FROM dual";
+        $master->setQuery($queryCreate);
+        $master->execute();
+        $master->Fetch();
+        // Master-Solution with prefix
+        $queryMaster = $master->row['CREATEQUERY']->load();
+
+    } else {
+        $querySlave = $qT->translate($queryTry, "user" . $_SESSION["id"] . "_");
+        // Master-Solution without prefix
+        $querySolution = $task->getSolution();
+        // to correct table
+        $queryMaster = $qT->translate($querySolution, ADMIN_TAB_PREFIX);
+    }
+
+    // slave connection with user-query
+    $slave->setQuery($querySlave);
+
     // master connection with solution-query
     $master->setQuery($queryMaster);
+
+    // save query by user
+    $_SESSION["userquery"] = $querySlave;
+
 
     $validator = new sqlValidator($master, $slave, $task);
     if ($validator->validate()) {
         $_SESSION["correct"] = true;
         $task->saveCorrectUserQuery(SqlFormatter::format($_POST["sql"], false));
+    } else {
+        $_SESSION["valid"] = $validator->getMistake();
     }
-    $_SESSION["valid"] = $validator->getMistake();
-
 }
 
 session_write_close();

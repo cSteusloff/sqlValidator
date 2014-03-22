@@ -8,17 +8,19 @@
 
 /**
  * Class oracleConnection
+ * require define.inc.php
  */
+
 class oracleConnection extends sqlConnection
 {
 
     /**
-     * @var null oci-object - error massage
+     * @var array string - error information
      */
     private $errortext = null;
 
     /**
-     * @return string
+     * @return string - error message
      */
     public function getErrortext()
     {
@@ -26,7 +28,7 @@ class oracleConnection extends sqlConnection
     }
 
     /**
-     * @return mixed
+     * @return int - error position in string
      */
     public function getErrorPosition()
     {
@@ -61,15 +63,15 @@ class oracleConnection extends sqlConnection
             $this->conn = oci_connect($this->username, $this->password, $this->hostname . '/' . $this->database . ':' . $this->port, DB_CHARSET);
             if (!$this->conn) {
                 //$e = oci_error();
-                // TODO Ausgabe
+                // TODO error handling possible
             }
         } catch (Exception $e) {
-            // TODO Ausgabe
+            // TODO error handling possible
         }
     }
 
     /**
-     * Try to running SQL query
+     * set database query
      *
      * @param string $sql SQL Query
      * @return mixed
@@ -84,12 +86,13 @@ class oracleConnection extends sqlConnection
             $this->sqlquery = empty($sql) ? $this->sqlquery : $sql;
             $this->recordset = oci_parse($this->conn, $this->sqlquery);
         } catch (Exception $e) {
-            // TODO Ausgabe
+            // TODO error handling possible
         }
     }
 
     /**
-     * running SQL query
+     * running SQL query with commit
+     *
      * @return void
      */
     public function execute()
@@ -99,7 +102,9 @@ class oracleConnection extends sqlConnection
     }
 
     /**
-     * @return mixed|void
+     * running SQL query without commit
+     *
+     * @return void
      */
     public function executeNoCommit()
     {
@@ -108,12 +113,12 @@ class oracleConnection extends sqlConnection
     }
 
     /**
-     * @param null $name
-     * @return mixed|void
+     * @param string $name - name for savepoint
+     * @return void
      */
     public function setSavePoint($name = null)
     {
-        // TODO: Statt String wird hier time() getestet
+        // set default unique savepoint name
         $point = "p" . time();
         $this->savepoint = is_null($name) ? $point : $name;
         $query = 'SAVEPOINT ' . $this->savepoint;
@@ -122,8 +127,10 @@ class oracleConnection extends sqlConnection
     }
 
     /**
+     * rollback to last savepoint
+     *
      * @param bool $commit
-     * @return mixed|void
+     * @return void
      */
     public function rollbackSavePoint($commit = true)
     {
@@ -134,7 +141,7 @@ class oracleConnection extends sqlConnection
     }
 
     /**
-     * Commit to DB
+     * commit queries
      */
     public function commit()
     {
@@ -158,14 +165,14 @@ class oracleConnection extends sqlConnection
                 }
                 return is_array($this->row);
             } catch (Exception $e) {
-                // TODO Ausgabe
+                // TODO error handling possible
             }
         }
         return false;
     }
 
     /**
-     * Returns the number of affected Rows by SQL query
+     * Returns the number of affected rows by SQL query
      *
      * @return int
      */
@@ -240,28 +247,28 @@ class oracleConnection extends sqlConnection
         try {
             $this->closeConnection();
         } catch (Exception $e) {
-            // TODO Ausgabe
+            // TODO error handling possible
         }
     }
 
     /**
-     * Close the connection
+     * close oracle connection
      *
-     * @return boolean
+     * @return bool
      */
     public function closeConnection()
     {
         // get database type
         $type = (is_resource($this->conn) ? get_resource_type($this->conn) : 'unknown');
         if (strstr($type, "oci8")) {
-            oci_close($this->conn);
+            return oci_close($this->conn);
         } else {
-            // TODO Ausgabe
+            // TODO error handling possible
         }
     }
 
     /**
-     * Returns info of connection
+     * Returns information's of connection
      *
      * @return string
      */
@@ -271,10 +278,9 @@ class oracleConnection extends sqlConnection
     }
 
     /**
-     * Returns the columnname
+     * Returns the name of column
      *
-     * @param $num
-     * @internal param $number
+     * @param $num - column position
      * @return string
      */
     public function getFieldname($num)
@@ -289,7 +295,7 @@ class oracleConnection extends sqlConnection
     /**
      * get names of header from table
      *
-     * @param bool $toString
+     * @param bool $toString - serialize header
      * @return array|string
      */
     public function getHeader($toString = false)
@@ -336,7 +342,7 @@ class oracleConnection extends sqlConnection
     /**
      * Returns a complete table
      *
-     * @param string $classname - css class from table
+     * @param string $classname - css class for table div
      * @param null $tablename
      * @return string
      */

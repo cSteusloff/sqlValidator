@@ -56,7 +56,7 @@ $db->execute();
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">SQL - Validator</a>
+                <a class="navbar-brand" href="viewTask.php">SQL - Validator</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -121,8 +121,6 @@ $db->execute();
                         <?php
                         while ($db->Fetch(false)) {
                             $tablename = substr(strtoupper($db->row[0]), strlen(ADMIN_TAB_PREFIX));
-                            // var_dump($db->row[0]);
-                            // var_dump($_SESSION["table"]);
 
                             if (in_array($db->row[0], $_SESSION["table"])) {
                                 echo("<option value='{$db->row[0]}' selected=selected>" . $tablename . "</option>");
@@ -137,7 +135,7 @@ $db->execute();
 
             <!-- Multiple Checkboxes -->
             <!-- it's possible to change radio-Button to checkbox, the taskHelper can handle it.
-                 At Moment one task for one operation, so use radio.
+                 At moment one task for one operation, so use radio.
                  Change this: <input type="radio" name="right[0]" id="right-#" value="#">
                  to this: <input type="checkbox" name="right[#]" id="right-#" value="#">
                  -->
@@ -184,9 +182,10 @@ $db->execute();
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="sql">SQL query</label>
 
-                <div class="col-sm-10">
+                <div class="col-sm-10" id="sql_area">
                     <textarea id="sql" class="form-control"
                               name="sql"><?php echo isset($_SESSION["sql"]) ? $_SESSION["sql"] : ""; ?></textarea>
+                    <div id="hint" class="alert alert-success hidden"></div>
                 </div>
             </div>
 
@@ -217,24 +216,49 @@ $db->execute();
 ================================================== -->
 <script src="js/codemirror.js"></script>
 <script src="js/sql.js"></script>
-<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js">-->
-<!--<script>-->
-<!--    $(document).ready(function){-->
-<!--        $('#right-3').click(function(){-->
-<!--            $('#sql').append("DROP TABLE"));-->
-<!--        })-->
-<!--    }-->
-<!---->
-<!--</script>-->
+<script>
+    $(document).ready(function()
+    {
+
+        $('#right-0').on('keyup click', function () {
+            $('#hint').addClass('hidden');
+            $('#sql_area').removeClass('hidden');
+        });
+
+        $('#right-1').on('keyup click', function () {
+            $('#hint').addClass('hidden');
+            $('#sql_area').removeClass('hidden');
+        });
+
+        $('#right-2').on('keyup click', function () {
+            $('#hint').addClass('hidden');
+            $('#sql_area').addClass('hidden');
+            // via ajax it is possible to get create statement:
+            // SELECT DBMS_METADATA.GET_DDL('TABLE','table_name') FROM dual;
+        });
+
+        $('#right-3').on('keyup click', function () {
+            $('#sql_area').removeClass('hidden');
+
+            var table = new Array();
+            $('#table :selected').each(function(i, selected){
+                table.push($(selected).text());
+            });
+
+            var query = "DROP TABLE ";
+            if(table.length > 1){
+                query = "Choose only one table";
+            } else {
+                query += table[0];
+            }
+
+            $('#hint').removeClass('hidden');
+            $('#hint').text(query);
+        });
+    });
+</script>
 <script>
     window.onload = function () {
-//        var radio = document.getElementById('right-3')
-//        radio.onclick = function() {
-//            alert("test")
-//           document.getElementById('test').value = "DROP TABLE HALLO"
-//        }
-
-
         window.editor = CodeMirror.fromTextArea(document.getElementById('sql'), {
             mode: 'text/x-mysql',
             indentWithTabs: true,

@@ -10,19 +10,6 @@
 /****************DATABASE****************/
 /****************************************/
 
-//define('DB_CHARSET', 'UTF8');
-//
-//define('DB_HOST', 'cSteusloff-PC');
-//
-//define('DB_DATABASE', 'XE');
-//
-//define('DB_USER', 'test');
-//
-//define('DB_PASSWORD', 'test');
-//
-//define('DB_PORT', '1521');
-
-
 define('DB_CHARSET', 'UTF8');
 define('DB_HOST', 'oban.cs.uni-magdeburg.de');
 define('DB_DATABASE', 'tox');

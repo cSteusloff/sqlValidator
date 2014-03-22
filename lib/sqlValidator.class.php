@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * This class validate SQL queries.
+ *
  * @package    SqlValidator
  * @author     Christian Steusloff
  * @author     Jens Wiemann
@@ -46,7 +48,6 @@ class sqlValidator
      * @param sqlConnection $masterConnection
      * @param sqlConnection $slaveConnection
      * @param taskHelper $task
-     * @internal param \sqlConnection $null
      */
     public function setSqlConnection(sqlConnection $masterConnection, sqlConnection $slaveConnection, taskHelper $task)
     {
@@ -54,6 +55,7 @@ class sqlValidator
         $this->slaveConnection = $slaveConnection;
         $this->checkConnection = clone $slaveConnection;
         $this->task = $task;
+        // TODO: without login system, this parameter is fix
         $this->tablePrefix = "user2_";
     }
 
@@ -63,7 +65,7 @@ class sqlValidator
     private $mistake = null;
 
     /**
-     * Save found mistake
+     * set found mistake
      *
      * @param string $mistake
      */
@@ -86,7 +88,6 @@ class sqlValidator
      * @param sqlConnection $masterConnection
      * @param sqlConnection $slaveConnection
      * @param taskHelper $task
-     * @internal param \sqlConnection $sqlConnection
      */
     function __construct(sqlConnection $masterConnection, sqlConnection $slaveConnection, taskHelper $task)
     {
@@ -94,7 +95,7 @@ class sqlValidator
     }
 
     /**
-     * Checks all possible Querytypes(Tasktypes) for content errors.
+     * Checks all possible querytypes(tasktypes) for content errors.
      * Requires syntactically correct queries
      *
      * @return bool if answer is correct
@@ -106,9 +107,9 @@ class sqlValidator
         $this->slaveConnection->setSavePoint();
         $this->checkConnection->setSavePoint();
 
-        //TODO: Überflüssig??
-        $this->masterConnection->executeNoCommit();
-        $this->slaveConnection->executeNoCommit();
+        //for safety reasons it is performed
+//        $this->masterConnection->executeNoCommit();
+//        $this->slaveConnection->executeNoCommit();
 
         $var = false;
         if (strcasecmp(preg_replace('/\s+/', '', $this->task->getSolution()), preg_replace('/\s+/', '', $this->task->getUserInput())) == 0) {
@@ -143,18 +144,16 @@ class sqlValidator
     }
 
     /**
-     * Validates Queries of type Drop
+     * Validates queries of type Drop
      *
      * @return bool
      */
     private function validateDrop()
     {
-        //TODO: Überflüssig??
-        //TODO: was passiert bei Drop Database {Name}??
         $this->masterConnection->executeNoCommit();
         $this->slaveConnection->executeNoCommit();
 
-        //Compares all tables headers of User and Master
+        //Compares all tables headers of user and master
         foreach ($this->task->getTableNames() as $masterTable) {
             $this->masterConnection->setQuery("SELECT * FROM {$masterTable}");
             $this->masterConnection->executeNoCommit();
@@ -174,7 +173,7 @@ class sqlValidator
     }
 
     /**
-     * Validates Queries of type Select
+     * Validates queries of type Select
      *
      * @return bool
      */
@@ -198,15 +197,17 @@ class sqlValidator
     }
 
     /**
-     * Validates Queries of type Update
+     * Validates queries of type Update
      *
      * @return bool
      */
     private function validateUpdate()
     {
-        //TODO: Überflüssig??
+
         $this->masterConnection->executeNoCommit();
         $this->slaveConnection->executeNoCommit();
+
+        $return = true;
 
         //Compares all tables of User and Master
         foreach ($this->task->getTableNames() as $masterTable) {
@@ -219,25 +220,77 @@ class sqlValidator
             $this->slaveConnection->executeNoCommit();
             $content2 = $this->slaveConnection->getContent();
 
-            if (!$this->array_diff_reku($content1, $content2) || !$this->array_diff_reku($content2, $content1)) {
+            asort($content1);
+            asort($content2);
+            $a =serialize($content1);
+            $b =serialize($content2);
+
+            if($a != $b){
                 $this->setMistake("Wrong content");
-                return false;
+                $return = false;
+                break;
             }
         }
-        return true;
+        return $return;
     }
 
     /**
-     * Validates Queries of type Create
+     * Validates queries of type Create
      *
      * @return bool
      */
     private function validateCreate()
     {
-        //TODO: Check Table parameters!!
-        return $this->validateUpdate();
+        $table = $this->task->getTableNames();
+        $masterTable = $table[0];
+        $prefix = "CREATE_";
 
-        //return false;
+
+        $userTable = $this->task->getTableNameFromCreate($this->slaveConnection->sqlquery);
+        $prePrefix = $prefix.substr($userTable,0,strpos($userTable,"_")+1);
+        $userCreateTable = $prefix.$userTable;
+
+        // create table from user input
+        $this->slaveConnection->setQuery(str_replace($userTable,$userCreateTable,strtoupper($this->slaveConnection->sqlquery)));
+        $this->slaveConnection->executeNoCommit();
+
+        // check schema:
+        $this->slaveConnection->setQuery($this->task->getTableSchema($prePrefix,$userCreateTable));
+        $this->slaveConnection->executeNoCommit();
+
+        $this->masterConnection->setQuery($this->task->getTableSchema(ADMIN_TAB_PREFIX,$masterTable));
+        $this->masterConnection->executeNoCommit();
+
+        if($this->slaveConnection->printTable() != $this->masterConnection->printTable()){
+            $this->setMistake("Wrong schema");
+            return false;
+        }
+
+        // check primary
+        $this->slaveConnection->setQuery($this->task->getTablePrimary($userCreateTable));
+        $this->slaveConnection->executeNoCommit();
+
+        $this->masterConnection->setQuery($this->task->getTablePrimary($masterTable));
+        $this->masterConnection->executeNoCommit();
+
+        if($this->slaveConnection->printTable() != $this->masterConnection->printTable()){
+            $this->setMistake("Wrong primary key");
+            return false;
+        }
+
+        // check index
+        $this->slaveConnection->setQuery($this->task->getTableIndex($userCreateTable));
+        $this->slaveConnection->executeNoCommit();
+
+        $this->masterConnection->setQuery($this->task->getTableIndex($masterTable));
+        $this->masterConnection->executeNoCommit();
+
+        if($this->slaveConnection->printTable() != $this->masterConnection->printTable()){
+            $this->setMistake("Wrong indices");
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -352,5 +405,4 @@ class sqlValidator
         }
         return false;
     }
-
 }

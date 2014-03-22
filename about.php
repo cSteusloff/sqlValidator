@@ -47,7 +47,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">SQL - Validator</a>
+                <a class="navbar-brand" href="viewTask.php">SQL - Validator</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -61,41 +61,19 @@
         </div>
     </div>
 
-    <?php
-    require("lib/define.inc.php");
-    require("lib/sqlConnection.class.php");
-    require("lib/oracleConnection.class.php");
-    require("lib/sqlValidator.class.php");
-
-    $master_con = new oracleConnection();
-    $slave_con = new oracleConnection();
-
-    /*//    $master_con->setQuery("SELECT * From tab");
-    //    $master_con->execute();
-
-        $master_con->setQuery("SELECT cname,cid FROM MASTER_COCKTAIL WHERE gid between 5 AND 12");
-
-        //$this->checkConnection->executeNoCommit();
-
-        echo $master_con->printTable();
-
-        echo("<br>");
-
-        $slave_con->setQuery("SELECT cname,gid FROM MASTER_COCKTAIL WHERE gid >= 5 AND gid < 12");
-        echo $slave_con->printTable();
-
-        echo("<br>");
-
-        $valid = new sqlValidator();
-        $valid->setSqlConnection($master_con,$slave_con);
-        if($valid->validate()){
-            echo("correct");
-        } else {
-            echo $valid->getMistake();
-        }*/
-
-    ?>
-
+    <div class="panel panel-primary">
+        <div class="panel-heading">Softwareprojekt</div>
+        <div class="panel-body">
+            <ul class="list-group">
+                <li class="list-group-item">Projektname: SQL-Validierung</li>
+                <li class="list-group-item">Projektteam: Jens Wiemann, Christian Steusloff</li>
+                <li class="list-group-item">Projektverantwortlicher: Prof. Saake</li>
+                <li class="list-group-item">Projektbetreuer: M.Sc. David Broneske</li>
+                <li class="list-group-item">Projektzeitraum: 11.11.13 - 24.03.14</li>
+            </ul>
+            <img src="images/logo.png">
+        </div>
+    </div>
 
 </div>
 <!-- /container -->

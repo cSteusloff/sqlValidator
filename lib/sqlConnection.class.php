@@ -54,19 +54,19 @@ abstract class sqlConnection
     public $port;
 
     /**
-     * Array with current Row from Fetch
-     * Data come from $recordset
-     *
-     * @var array
-     */
-    public $row = array();
-
-    /**
      * The current recordset
      *
      * @var object - active recordset
      */
     public $recordset;
+
+    /**
+     * Array with current row from fetch
+     * Data coming from $recordset
+     *
+     * @var array
+     */
+    public $row = array();
 
     /**
      * The last/active SQL query
@@ -102,17 +102,30 @@ abstract class sqlConnection
     abstract public function setQuery($sql = '');
 
     /**
+     * running SQL query with commit
+     *
+     * @return mixed
+     */
+    abstract public function execute();
+
+    /**
+     * running SQL query without commit
+     *
+     * @return mixed
+     */
+    abstract public function executeNoCommit();
+
+    /**
+     * set savepoint
+     *
      * @param null $name
      * @return mixed
      */
     abstract public function setSavePoint($name = null);
 
     /**
-     * @return mixed
-     */
-    abstract public function executeNoCommit();
-
-    /**
+     * rollback to last savepoint
+     *
      * @param bool $commit
      * @return mixed
      */
@@ -125,6 +138,8 @@ abstract class sqlConnection
     abstract public function getContent($toString = false);
 
     /**
+     * return error message
+     *
      * @return mixed
      */
     abstract public function getErrortext();
@@ -136,13 +151,6 @@ abstract class sqlConnection
     abstract public function getHeader($toString = false);
 
     /**
-     * Try running the SQL query
-     *
-     * @return mixed
-     */
-    abstract public function execute();
-
-    /**
      * Create an (associative) array with the following record.
      * Returns true if array can create
      *
@@ -152,7 +160,7 @@ abstract class sqlConnection
     abstract public function Fetch($assoc = true);
 
     /**
-     * Returns the number of affected Rows by SQL query
+     * Returns the number of affected rows by SQL query
      *
      * @return int
      */
@@ -209,7 +217,7 @@ abstract class sqlConnection
     /**
      * Returns a complete table
      *
-     * @param string $classname - css class from table
+     * @param string $classname - css class for table div
      * @return string
      */
     abstract public function printTable($classname = null);

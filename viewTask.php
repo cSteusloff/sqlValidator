@@ -1,6 +1,7 @@
 <?php
 session_start();
 error_reporting(E_ALL);
+ini_set("display_errors",1);
 
 /**
  * @package    SqlValidator
@@ -52,7 +53,7 @@ error_reporting(E_ALL);
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">SQL - Validator</a>
+            <a class="navbar-brand" href="viewTask.php">SQL - Validator</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -79,10 +80,10 @@ $fH = new frontendHelper();
 $db = new oracleConnection();
 $qT = new queryTranslator();
 
-// TODO erstelle Tabellen fuer User
-//$_SESSION["username"] = "demo";
-$_SESSION["username"] = "demo";
+// TODO without login system, this parameter is fix
+$_SESSION["username"] = "user";
 $_SESSION["id"] = 2;
+$_userPrefix = "user2_";
 
 // special task
 if (isset($_GET["id"])) {
@@ -92,37 +93,14 @@ if (isset($_GET["id"])) {
     $task = new taskHelper($db);
     $task->loadTask($_GET["id"], $_SESSION["id"]);
 
-    // create table for task depending on user
-    // TODO Darf natürlich nicht ausgeführt werden, wenn das Formular hier gesendet wurde!!!!
-    $task->resetTask();
+    if(!@isset($_POST["userquery"])){
+        // create table for task depending on user
+        $task->resetTask();
+    }
+
 
     $last_sql = $task->getLastUserQuery();
 
-//        $_SESSION["sql"] = "SELECT
-//    c.cname as Cocktail,
-//  z.zname as Zutat,
-//  zc.menge as Menge
-//FROM
-//(
-//    SELECT
-//      cid,
-//      cname
-//    FROM
-//      Cocktail
-//    WHERE
-//      alkoholisch = 'n'
-//  ) c
-//  INNER JOIN Zutat_Cocktail zc ON c.cid = zc.cid
-//  INNER JOIN Zutat z ON zc.zid = z.zid";
-
-//        echo("<pre>");
-//        var_dump($_SESSION["error"]);
-
-//        // save Object
-//        $s = serialize($task);
-//        $fp = fopen("task.obj","w");
-//        fwrite($fp,$s);
-//        fclose($fp);
     ?>
     <div class="alert alert-warning">
         <strong>Demo!</strong> Your Username is '<?php echo $_SESSION["username"]; ?>'<br>
@@ -138,7 +116,24 @@ if (isset($_GET["id"])) {
     </div>
 
     <div id="container" class="js-masonry" data-masonry-options='{ "columnWidth": 2, "itemSelector": ".task" }'>
-        <?php echo($task->printTable("task")); ?>
+        <?php
+        if ($task->getTaskType() == "CREATE") {
+
+            $db->setQuery($task->getTableSchema());
+            $db->execute();
+            echo $db->printTable("task","Schema");
+
+            $db->setQuery($task->getTableIndex());
+            $db->execute();
+            echo $db->printTable("task","Index");
+
+            $db->setQuery($task->getTablePrimary());
+            $db->execute();
+            echo $db->printTable("task","Primary-Key");
+        } else {
+            echo($task->printTable("task"));
+        }
+        ?>
     </div>
 
 
@@ -146,14 +141,14 @@ if (isset($_GET["id"])) {
         <h2>solution output</h2>
         <?php
         if ($task->getTaskType() == "CREATE") {
-            echo("See above!");
+            echo("See above");
         } elseif ($task->getTaskType() == "DROP") {
             echo("No output!");
         } else {
             $db->setSavePoint();
 
             $querySolution = $task->getSolution();
-            $queryMaster = $qT->translate($querySolution, "MASTER_");
+            $queryMaster = $qT->translate($querySolution, ADMIN_TAB_PREFIX);
             $db->setQuery($queryMaster);
 
             if ($db->getStatementType() == "SELECT") {
@@ -208,12 +203,12 @@ if (isset($_GET["id"])) {
     </div>
     <?php if (isset($_SESSION["error"]) && !is_null($_SESSION["error"])) { ?>
         <div class="alert alert-danger">
-            <strong>Error!</strong> <?= $_SESSION["error"]; ?>
+            <strong>Error!</strong> <?php echo($_SESSION["error"]); ?>
         </div>
     <?php } elseif (isset($_SESSION["valid"]) && !is_null($_SESSION["valid"])) { ?>
         <div class="alert alert-warning">
             <strong>Mistake!</strong> Your syntax is right but the answer is wrong.<br>
-            <?= $_SESSION["valid"]; ?>
+            <?php echo $_SESSION["valid"]; ?>
         </div>
     <?php } elseif (isset($_SESSION["correct"]) && !is_null($_SESSION["correct"])) { ?>
         <div class="alert alert-success">
@@ -225,27 +220,60 @@ if (isset($_GET["id"])) {
 
     <div class="FormText">
         <h2>your result</h2>
+        <?php
+        if (isset($_SESSION["userquery"])) {
+            if($task->getTaskType() == "CREATE"){
+                $prefix = "CREATE_";
+                $prePrefix = $prefix."USER" . $_SESSION["id"] . "_";
+                $table = $task->getTableNameFromCreate($_SESSION["userquery"]);
 
-        <div class="js-masonry" data-masonry-options='{ "columnWidth": 2, "itemSelector": ".task" }'>
-            <?php
-            if (isset($_SESSION["userquery"])) {
+                $dropTable = "DROP TABLE ".$prefix.$table;
+                $db->setQuery($dropTable);
+                @$db->execute();
+
+                $createTable = str_replace($table,$prefix.$table,strtoupper($_SESSION["userquery"]));
+                //var_dump($createTable);
+                $db->setQuery($createTable);
+                $db->execute();
+
+                $db->setQuery($task->getTableSchema($prePrefix,$prefix.$table));
+                $db->execute();
+                echo $db->printTable("task","Schema");
+
+                $db->setQuery($task->getTableIndex($prefix.$table));
+                $db->execute();
+                echo $db->printTable("task","Index");
+
+                $db->setQuery($task->getTablePrimary($prefix.$table));
+                $db->execute();
+                echo $db->printTable("task","Primary-Key");
+
+                $dropTable = "DROP TABLE ".$prefix.$table;
+                $db->setQuery($dropTable);
+                @$db->execute();
+            } else {
                 $db->setQuery($_SESSION["userquery"]);
                 $db->execute();
-                if (strtoupper($db->getStatementType()) == "SELECT") {
+                if ($task->getTaskType() == "SELECT") {
+                    echo "<div class=\"js-masonry\" data-masonry-options='{ \"columnWidth\": 2, \"itemSelector\": \".task\" }'>";
                     echo $db->printTable("task");
+                    echo "</div>";
+                } elseif($task->getTaskType() == "DROP" && !is_null($_SESSION["correct"])){
+                    echo "<div>Database droped!</div>";
                 } else {
-
                     foreach ($task->getTableNames() as $table) {
-                        // TODO: only for presentation - fix it!!!
-                        $userTab = str_replace(ADMIN_TAB_PREFIX, "user2_", $table);
+                        $userTab = str_replace(ADMIN_TAB_PREFIX, $_userPrefix, $table);
                         $db->setQuery("SELECT * FROM {$userTab}");
                         $db->execute();
+                        echo "<div class=\"js-masonry\" data-masonry-options='{ \"columnWidth\": 2, \"itemSelector\": \".task\" }'>";
                         echo $db->printTable("task");
+                        echo "</div>";
                     }
                 }
             }
-            ?>
-        </div>
+            $task->resetTask();
+        }
+        ?>
     </div>
     <a name="end"></a>
 
@@ -278,14 +306,9 @@ TABHEAD;
     $db->closeConnection();
 
 }
-//    echo("<pre>");
-//    var_dump($_SESSION);
 
 // unset variables from Session
 $fH->unsetSession($_SESSION, array("error", "valid", "correct", "userquery"));
-
-//    echo("<pre>");
-//    var_dump($_SESSION);
 
 ?>
 
